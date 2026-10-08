@@ -1,0 +1,45 @@
+/* Estilos comunes de Pasatiempos: tema claro/oscuro, botones, diálogos, estadísticas */
+:root{--bg:#fff;--fg:#1a1a1b;--muted:#787c7e;--line:#d3d6da;--key:#d3d6da;--key-fg:#1a1a1b;--tile-b:#878a8c;
+--ok:#538d4e;--mid:#b59f3b;--no:#787c7e;--card:#fff;--shadow:0 8px 30px #0003}
+:root[data-cb="1"]{--ok:#f5793a;--mid:#85c0f9}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121213;--fg:#fff;--muted:#818384;--line:#3a3a3c;--key:#818384;--key-fg:#fff;--tile-b:#565758;--no:#3a3a3c;--card:#1d1d1f}}
+:root[data-theme="dark"]{--bg:#121213;--fg:#fff;--muted:#818384;--line:#3a3a3c;--key:#818384;--key-fg:#fff;--tile-b:#565758;--no:#3a3a3c;--card:#1d1d1f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.ib{text-decoration:none;color:inherit;width:40px;height:40px;border-radius:8px;font-size:20px;display:grid;place-items:center}
+.ib:hover,.ib:focus-visible{background:var(--line)}
+.btn{padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-weight:600;font-size:14px}
+.btn:hover{background:var(--line)}
+.btn.main{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+dialog{border:0;border-radius:14px;background:var(--card);color:var(--fg);padding:20px;width:min(92vw,420px);max-height:90dvh;box-shadow:var(--shadow);user-select:text}
+dialog::backdrop{background:#0008}
+dialog h2{margin:0 0 12px;font-size:18px;text-align:center;text-transform:uppercase;letter-spacing:.05em}
+.x{position:absolute;right:10px;top:10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;gap:4px;margin-bottom:14px}
+.stats b{display:block;font-size:30px;line-height:1.1}.stats span{font-size:11px;color:var(--muted)}
+.dist{display:grid;grid-template-columns:14px 1fr;gap:4px 6px;align-items:center;font-size:13px;margin-bottom:14px}
+.bar{background:var(--no);color:#fff;padding:1px 6px;text-align:right;min-width:20px;font-weight:700;border-radius:2px}
+.bar.hl{background:var(--ok)}
+.opt{margin:0 0 14px}.opt p{margin:0 0 6px;font-weight:700;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:48px;padding:8px 10px;border:2px solid var(--line);border-radius:8px;font-weight:700}
+.seg button[aria-pressed="true"]{border-color:var(--ok);background:var(--ok);color:#fff}
+.opt small{display:block;margin-top:4px;color:var(--muted);font-size:12px}
+.chk{display:flex;gap:10px;align-items:center;margin:8px 0;font-size:15px}
+.res{text-align:center;margin-bottom:12px}
+.res .w{font-size:28px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.res p{margin:4px 0}
+.acts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}}
+
+/* variables extra del Sudoku y la home (no molestan a otros juegos) */
+:root{--sel:#bbdefb;--peer:#eceff1;--same:#c5e1a5;--errbg:#ffcdd2;--err:#c62828;--given:#1a1a1b;--mine:#1565c0;--note:#5f6368}
+:root[data-cb="1"]{--same:#ffe0b2}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--sel:#27506f;--peer:#232427;--same:#3b5a2f;--errbg:#5a2327;--err:#ff8a80;--given:#fff;--mine:#82b1ff;--note:#9aa0a6}}
+:root[data-theme="dark"]{--sel:#27506f;--peer:#232427;--same:#3b5a2f;--errbg:#5a2327;--err:#ff8a80;--given:#fff;--mine:#82b1ff;--note:#9aa0a6}
+:root[data-theme="dark"][data-cb="1"]{--same:#6d4c1f}
+a{color:inherit}

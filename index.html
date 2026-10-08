@@ -2,438 +2,77 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#121213">
-<meta name="description" content="Palabra o Palabro: adivina la palabra en español o inglés. Partidas ilimitadas, rachas y modo fácil o difícil.">
-<title>Palabra o Palabro</title>
+<meta name="description" content="Pasatiempos: Palabra o Palabro y Sudoku. Juega todas las partidas que quieras, con rachas y niveles de dificultad.">
+<title>Pasatiempos</title>
+<script src="shared.js"></script>
+<link rel="stylesheet" href="shared.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23538d4e'/%3E%3Ctext x='16' y='23' font-size='20' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E">
 <style>
-:root{--bg:#fff;--fg:#1a1a1b;--muted:#787c7e;--line:#d3d6da;--key:#d3d6da;--key-fg:#1a1a1b;--tile-b:#878a8c;
---ok:#538d4e;--mid:#b59f3b;--no:#787c7e;--card:#fff;--shadow:0 8px 30px #0003}
-:root[data-cb="1"]{--ok:#f5793a;--mid:#85c0f9}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121213;--fg:#fff;--muted:#818384;--line:#3a3a3c;--key:#818384;--key-fg:#fff;--tile-b:#565758;--no:#3a3a3c;--card:#1d1d1f}}
-:root[data-theme="dark"]{--bg:#121213;--fg:#fff;--muted:#818384;--line:#3a3a3c;--key:#818384;--key-fg:#fff;--tile-b:#565758;--no:#3a3a3c;--card:#1d1d1f}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;
-max-width:560px;margin:0 auto;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);overflow:hidden;touch-action:manipulation;user-select:none}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
-h1{font-size:clamp(18px,5vw,26px);margin:0;letter-spacing:.02em;font-weight:800}
+html,body{height:auto;min-height:100%}
+body{background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:720px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:22px}
+h1{margin:0;font-size:clamp(30px,9vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.01em}
 h1 span{color:var(--ok)}
-.hbar{display:flex;gap:2px;align-items:center}
-.ib{width:40px;height:40px;border-radius:8px;font-size:20px;display:grid;place-items:center}
-.ib:hover,.ib:focus-visible{background:var(--line)}
-.streak{font-weight:700;font-size:15px;padding:0 6px;white-space:nowrap}
-.sub{display:flex;justify-content:center;gap:8px;padding:6px 0 0;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:6px 0}
-#msg{height:24px;font-size:14px;font-weight:600;text-align:center;color:var(--muted)}
-#board{display:grid;gap:5px;width:min(100%,calc((100dvh - 330px) * var(--cols) / 6),calc(var(--cols) * 62px + (var(--cols) - 1) * 5px));margin:auto 0}
-.row{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:5px}
-.row.shake{animation:shake .5s}
-.t{aspect-ratio:1;border:2px solid var(--line);display:grid;place-items:center;font-weight:800;text-transform:uppercase;font-size:clamp(20px,6.5vw,32px);transition:transform .12s}
-.t.f{border-color:var(--tile-b)}
-.t.pop{animation:pop .1s}
-.t.ghost{color:var(--muted);opacity:.45;border-color:var(--ok)}
-.t.s2,.t.s1,.t.s0{color:#fff;border-color:transparent}
-.t.s2{background:var(--ok)}.t.s1{background:var(--mid)}.t.s0{background:var(--no)}
-.t.flip{animation:flip .5s ease both;animation-delay:calc(var(--i) * .25s)}
-.t.win{animation:bounce .6s ease both;animation-delay:calc(var(--i) * .08s)}
-@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
-@keyframes pop{50%{transform:scale(1.12)}}
-@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
-@keyframes bounce{40%{transform:translateY(-14px)}70%{transform:translateY(3px)}}
-.tools{display:flex;gap:8px;min-height:36px}
-.btn{padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-weight:600;font-size:14px}
-.btn:hover{background:var(--line)}
-.btn.main{background:var(--ok);border-color:var(--ok);color:#fff}
-.btn:disabled{opacity:.4;cursor:default}
-#kb{display:flex;flex-direction:column;gap:6px;padding:6px 0 10px}
-.kr{display:flex;gap:5px;justify-content:center}
-.k{flex:1;max-width:44px;height:clamp(46px,8dvh,58px);border-radius:6px;background:var(--key);color:var(--key-fg);font-weight:700;font-size:15px;text-transform:uppercase;display:grid;place-items:center;transition:background .2s}
-.k.w{flex:1.6;max-width:68px;font-size:12px}
-.k:active{filter:brightness(.9)}
-.k.s2,.k.s1,.k.s0{color:#fff}.k.s2{background:var(--ok)}.k.s1{background:var(--mid)}.k.s0{background:var(--no)}
-.k.sp{flex:.5;max-width:22px;visibility:hidden}
-#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30;max-width:90vw;text-align:center}
-#toast.on{opacity:1}
-dialog{border:0;border-radius:14px;background:var(--card);color:var(--fg);padding:20px;width:min(92vw,420px);max-height:90dvh;box-shadow:var(--shadow);user-select:text}
-dialog::backdrop{background:#0008}
-dialog h2{margin:0 0 12px;font-size:18px;text-align:center;text-transform:uppercase;letter-spacing:.05em}
-.x{position:absolute;right:10px;top:10px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;gap:4px;margin-bottom:14px}
-.stats b{display:block;font-size:30px;line-height:1.1}.stats span{font-size:11px;color:var(--muted)}
-.dist{display:grid;grid-template-columns:14px 1fr;gap:4px 6px;align-items:center;font-size:13px;margin-bottom:14px}
-.bar{background:var(--no);color:#fff;padding:1px 6px;text-align:right;min-width:20px;font-weight:700;border-radius:2px}
-.bar.hl{background:var(--ok)}
-.opt{margin:0 0 14px}.opt p{margin:0 0 6px;font-weight:700;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.seg{display:flex;gap:6px;flex-wrap:wrap}
-.seg button{flex:1;min-width:48px;padding:8px 10px;border:2px solid var(--line);border-radius:8px;font-weight:700}
-.seg button[aria-pressed="true"]{border-color:var(--ok);background:var(--ok);color:#fff}
-.opt small{display:block;margin-top:4px;color:var(--muted);font-size:12px}
-.chk{display:flex;gap:10px;align-items:center;margin:8px 0;font-size:15px}
-.res{text-align:center;margin-bottom:12px}
-.res .w{font-size:28px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
-.res p{margin:4px 0}
-.acts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
-.help p{margin:8px 0;font-size:14px}.help .row{width:240px;margin:6px 0}
-.help .t{font-size:22px}
-#load{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;font-weight:700;color:var(--muted)}
-#load[hidden]{display:none}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}}
+.tag{margin:6px 0 0;color:var(--muted);font-size:15px}
+.hb{display:flex;gap:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{display:flex;flex-direction:column;gap:10px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--card);text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s,border-color .15s}
+.card:hover,.card:focus-visible{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--ok)}
+.pv{height:112px;border-radius:10px;display:grid;place-items:center;overflow:hidden}
+.pv.w{grid-template-columns:repeat(5,28px);grid-auto-rows:28px;gap:4px;align-content:center;justify-content:center;background:var(--peer)}
+.pv.w i{width:100%;height:100%;display:grid;place-items:center;border-radius:3px;font:800 16px system-ui;font-style:normal;color:#fff}
+.pv.w .lg{background:var(--ok)}.pv.w .ly{background:var(--mid)}.pv.w .ln{background:var(--no)}
+.pv.s{background:var(--peer)}
+.pv.s svg{width:96px;height:96px}
+.card h2{margin:0;font-size:21px}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;font-size:14px;font-weight:700}
+.go{color:var(--ok)}
+.streak{white-space:nowrap}
+footer{margin-top:26px;text-align:center;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
 <header>
-  <button class="ib" id="bHelp" aria-label="Ayuda">?</button>
-  <h1>Palabra <span>o</span> Palabro</h1>
-  <div class="hbar">
-    <span class="streak" id="streak" title="Racha"></span>
-    <button class="ib" id="bStats" aria-label="Estadísticas">📊</button>
-    <button class="ib" id="bSet" aria-label="Ajustes">⚙️</button>
-  </div>
+  <div><h1>Pasa<span>tiempos</span></h1><p class="tag" id="tag"></p></div>
+  <div class="hb"><button class="ib" id="bLang" aria-label="Idioma" style="font-size:14px;font-weight:700"></button><button class="ib" id="bTheme" aria-label="Tema">🌓</button></div>
 </header>
-<div class="sub" id="sub"></div>
-<main>
-  <div id="msg" aria-live="polite"></div>
-  <div id="board" role="grid"></div>
-  <div class="tools"><button class="btn" id="bHint"></button><button class="btn" id="bNew"></button></div>
+<main class="grid">
+  <a class="card" href="palabra/">
+    <div class="pv w" aria-hidden="true"><i class="lg">P</i><i class="ln">A</i><i class="ly">L</i><i class="ln">A</i><i class="lg">B</i><i class="ln">R</i><i class="lg">A</i><i class="lg">O</i><i class="ly">P</i><i class="lg">A</i></div>
+    <h2>Palabra o Palabro</h2><p id="d1"></p>
+    <div class="row"><span class="streak" id="s1"></span><span class="go" id="g1"></span></div>
+  </a>
+  <a class="card" href="sudoku/">
+    <div class="pv s" aria-hidden="true"><svg viewBox="0 0 90 90"><rect x="2" y="2" width="86" height="86" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M30.7 2v86M59.3 2v86M2 30.7h86M2 59.3h86" stroke="currentColor" stroke-width="3"/><path d="M16.3 2v86M45 2v86M73.7 2v86M2 16.3h86M2 45h86M2 73.7h86" stroke="currentColor" stroke-width="1" opacity=".4"/><g font-family="system-ui" font-size="13" font-weight="700" fill="var(--mine)" text-anchor="middle"><text x="16.3" y="21">5</text><text x="45" y="50">3</text><text x="73.7" y="79">9</text><text x="73.7" y="21">1</text><text x="16.3" y="79">7</text></g></svg></div>
+    <h2>Sudoku</h2><p id="d2"></p>
+    <div class="row"><span class="streak" id="s2"></span><span class="go" id="g2"></span></div>
+  </a>
 </main>
-<div id="kb"></div>
-<div id="toast" role="status"></div>
-<div id="load">…</div>
-
-<dialog id="dHelp"><button class="ib x" data-close aria-label="Cerrar">✕</button><div class="help" id="helpBody"></div></dialog>
-<dialog id="dStats"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="statsBody"></div></dialog>
-<dialog id="dSet"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="setBody"></div></dialog>
-
+<footer id="foot"></footer>
 <script>
 "use strict";
-const MAX_TRIES = 6, DEFAULT_LEN = 5, LENS = [4, 5, 6, 7, 8];
-const ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 const T = {
-  es: {
-    lang: "Español", easy: "Fácil", hard: "Difícil", len: "Letras", mode: "Modo", language: "Idioma",
-    easyD: "Palabras comunes y una pista gratis por partida.", hardD: "Palabras raras y conjugaciones. Debes usar las pistas que ya descubriste.",
-    hint: "💡 Pista", newW: "Nueva palabra", next: "Siguiente palabra", share: "Compartir", copied: "Copiado",
-    notEnough: "Faltan letras", notWord: "No está en el diccionario", hardMiss: (m) => m,
-    pos: (n, l) => `La letra ${n} de la palabra es ${l.toUpperCase()}`, hintUsed: "Ya usaste tu pista",
-    win: ["¡Genial!", "¡Increíble!", "¡Excelente!", "¡Muy bien!", "¡Bien!", "¡Uf, por poco!"], lose: "Era", won: "¡Palabra!", lost: "¡Palabro!",
-    played: "Jugadas", winPct: "% Victorias", streak: "Racha", best: "Mejor racha", dist: "Intentos", abandon: "Si cambias de palabra ahora, esta partida cuenta como perdida y tu racha vuelve a 0. ¿Continuar?",
-    loading: "Cargando…", err: "No se pudo cargar el diccionario. Reintentar", theme: "Modo oscuro", cb: "Colores para daltónicos", themeAuto: "Auto", on: "Sí", off: "No",
-    ordinal: (n) => `${n}ª`, mustPos: (n, l) => `La letra ${n} debe ser ${l.toUpperCase()}`, mustHave: (l) => `Debe incluir la letra ${l.toUpperCase()}`,
-    helpT: "Cómo jugar", h1: (n) => `Adivina la palabra de ${n} letras en ${MAX_TRIES} intentos. Juega todas las partidas que quieras.`,
-    h2: "Cada intento debe ser una palabra válida (con conjugaciones, plurales y femeninos). Las tildes no hace falta escribirlas.",
-    h3: "Verde: letra correcta en su lugar. Amarillo: está en la palabra, pero en otro lugar. Gris: no está.",
-    h4: "Tu racha cuenta las victorias seguidas; si pierdes, vuelve a 0. Se guarda por idioma y por modo.",
-    ex: ["L", "I", "B", "R", "O"], settings: "Ajustes", stats: "Estadísticas", sub: (l, m, n) => `${l} · ${m} · ${n} letras`,
-  },
-  en: {
-    lang: "English", easy: "Easy", hard: "Hard", len: "Letters", mode: "Mode", language: "Language",
-    easyD: "Common words and one free hint per game.", hardD: "Rare words and verb forms. You must reuse the clues you've found.",
-    hint: "💡 Hint", newW: "New word", next: "Next word", share: "Share", copied: "Copied",
-    notEnough: "Not enough letters", notWord: "Not in word list", hardMiss: (m) => m,
-    pos: (n, l) => `Letter ${n} of the word is ${l.toUpperCase()}`, hintUsed: "You already used your hint",
-    win: ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"], lose: "It was", won: "Palabra!", lost: "Palabro!",
-    played: "Played", winPct: "Win %", streak: "Streak", best: "Best streak", dist: "Guesses", abandon: "If you skip now, this game counts as a loss and your streak resets to 0. Continue?",
-    loading: "Loading…", err: "Couldn't load the word list. Retry", theme: "Dark mode", cb: "Colorblind colors", themeAuto: "Auto", on: "On", off: "Off",
-    ordinal: (n) => `#${n}`, mustPos: (n, l) => `Letter ${n} must be ${l.toUpperCase()}`, mustHave: (l) => `Guess must contain ${l.toUpperCase()}`,
-    helpT: "How to play", h1: (n) => `Guess the ${n}-letter word in ${MAX_TRIES} tries. Play as many games as you like.`,
-    h2: "Every guess must be a valid word (including plurals and verb forms).",
-    h3: "Green: right letter, right place. Yellow: in the word, wrong place. Gray: not in the word.",
-    h4: "Your streak counts consecutive wins; a loss resets it to 0. It's tracked per language and mode.",
-    ex: ["W", "O", "R", "D", "S"], settings: "Settings", stats: "Statistics", sub: (l, m, n) => `${l} · ${m} · ${n} letters`,
-  },
+  es: { tag: "Juega todas las partidas que quieras.", d1: "Adivina la palabra en español o inglés. Modo fácil y difícil.", d2: "Tres niveles, notas que se borran solas y pistas.", go: "Jugar →", streak: "Racha", foot: "Tus rachas y partidas se guardan en este navegador." },
+  en: { tag: "Play as many games as you like.", d1: "Guess the word in Spanish or English. Easy and hard modes.", d2: "Three levels, notes that clear themselves, and hints.", go: "Play →", streak: "Streak", foot: "Your streaks and games are saved in this browser." },
 };
-
-/* ---------- utilidades ---------- */
-const $ = (id) => document.getElementById(id);
-const store = {
-  get(k, d) { try { const v = localStorage.getItem("pp." + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
-  set(k, v) { try { localStorage.setItem("pp." + k, JSON.stringify(v)); } catch {} },
-};
-const norm = (w) => w.toLowerCase().replace(/ñ/g, "\u0001").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\u0001/g, "ñ");
-const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-/* ---------- estado ---------- */
-let S = Object.assign({ lang: (navigator.language || "es").startsWith("en") ? "en" : "es", mode: "easy", len: DEFAULT_LEN, theme: "auto", cb: false }, store.get("settings", {}));
-if (!T[S.lang]) S.lang = "es"; if (!LENS.includes(S.len)) S.len = DEFAULT_LEN; if (S.mode !== "hard") S.mode = "easy";
-let G = null;            // partida actual
-let DICT = null;         // {valid:Set, easy:[], hard:[]}
-let busy = false, hist = [];   // hist: evaluaciones de la partida actual
-const cache = new Map();
-const t = () => T[S.lang];
-
-/* ---------- diccionario (carga bajo demanda + caché en memoria; el SW lo guarda sin conexión) ---------- */
-async function loadDict(lang, len) {
-  const key = lang + len;
-  if (cache.has(key)) return cache.get(key);
-  const p = fetch(`data/${lang}/${len}.txt`).then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); }).then((txt) => {
-    const lines = txt.split("\n"); const [nv, ne, nh] = lines[0].split(" ").map(Number);
-    return { valid: new Set(lines.slice(1, 1 + nv)), easy: lines.slice(1 + nv, 1 + nv + ne), hard: lines.slice(1 + nv + ne, 1 + nv + ne + nh) };
-  });
-  cache.set(key, p);
-  p.catch(() => cache.delete(key));
-  return p;
+let UI = PAS.prefs().ui || ((navigator.language || "es").startsWith("en") ? "en" : "es");
+const best = (keys) => Math.max(0, ...keys.map((k) => (PAS.get(k, {}) || {}).streak || 0));
+function render() {
+  const t = T[UI]; document.documentElement.lang = UI;
+  $("tag").textContent = t.tag; $("d1").textContent = t.d1; $("d2").textContent = t.d2; $("foot").textContent = t.foot;
+  $("g1").textContent = $("g2").textContent = t.go; $("bLang").textContent = UI === "es" ? "EN" : "ES";
+  const w = best(["es", "en"].flatMap((l) => ["easy", "hard"].map((m) => `pp.stats.${l}.${m}`)));
+  const s = best(["easy", "medium", "hard"].map((d) => "sd.stats." + d));
+  $("s1").textContent = `🔥 ${t.streak}: ${w}`; $("s2").textContent = `🔥 ${t.streak}: ${s}`;
 }
-
-/* ---------- selección de palabra sin repetir hasta agotar el pool ---------- */
-function pickTarget(pool, bagKey) {
-  let seen = store.get(bagKey, []);
-  if (!Array.isArray(seen) || seen.length >= pool.length) seen = [];
-  const used = new Set(seen);
-  let i; do { i = Math.floor(Math.random() * pool.length); } while (used.has(i) && used.size < pool.length);
-  seen.push(i); store.set(bagKey, seen);
-  return pool[i];
-}
-
-/* ---------- estadísticas ---------- */
-const statsKey = () => `stats.${S.lang}.${S.mode}`;
-const getStats = () => Object.assign({ played: 0, wins: 0, streak: 0, best: 0, dist: Array(MAX_TRIES).fill(0) }, store.get(statsKey(), {}));
-function recordResult(win, tries) {
-  const s = getStats(); s.played++;
-  if (win) { s.wins++; s.streak++; s.best = Math.max(s.best, s.streak); s.dist[tries - 1]++; } else s.streak = 0;
-  store.set(statsKey(), s); renderStreak();
-}
-function renderStreak() { const s = getStats(); $("streak").textContent = "🔥 " + s.streak; }
-
-/* ---------- lógica de evaluación ---------- */
-function evaluate(g, target) {
-  const n = g.length, r = Array(n).fill(0), cnt = {};
-  for (let i = 0; i < n; i++) if (g[i] === target[i]) r[i] = 2; else cnt[target[i]] = (cnt[target[i]] || 0) + 1;
-  for (let i = 0; i < n; i++) if (!r[i] && cnt[g[i]] > 0) { r[i] = 1; cnt[g[i]]--; }
-  return r;
-}
-function hardViolation(g) {   // reglas del modo difícil: reutilizar pistas
-  for (let k = 0; k < G.guesses.length; k++) {
-    const pg = G.guesses[k], ev = hist[k], need = {};
-    for (let i = 0; i < pg.length; i++) {
-      if (ev[i] === 2 && g[i] !== pg[i]) return t().mustPos(i + 1, pg[i]);
-      if (ev[i] > 0) need[pg[i]] = (need[pg[i]] || 0) + 1;
-    }
-    for (const l in need) {
-      let c = 0; for (const ch of g) if (ch === l) c++;
-      if (c < need[l]) return t().mustHave(l);
-    }
-  }
-  return null;
-}
-
-/* ---------- UI: tablero y teclado ---------- */
-let rows = [], keys = {};
-function buildBoard() {
-  const b = $("board"); b.textContent = ""; b.style.setProperty("--cols", G.n); rows = [];
-  for (let r = 0; r < MAX_TRIES; r++) {
-    const row = el("div", "row"); row.setAttribute("role", "row"); row.style.setProperty("--cols", G.n);
-    const tiles = [];
-    for (let c = 0; c < G.n; c++) { const tile = el("div", "t"); tile.style.setProperty("--i", c); row.appendChild(tile); tiles.push(tile); }
-    b.appendChild(row); rows.push({ row, tiles });
-  }
-}
-function buildKeyboard() {
-  const kb = $("kb"); kb.textContent = ""; keys = {};
-  ROWS.forEach((letters, ri) => {
-    const r = el("div", "kr");
-    if (ri === 1 && S.lang === "en") r.appendChild(el("div", "k sp"));
-    if (ri === 2) { const e = el("button", "k w", "↵"); e.dataset.k = "Enter"; e.setAttribute("aria-label", "Enter"); r.appendChild(e); }
-    const list = [...letters]; if (ri === 1 && S.lang === "es") list.push("ñ");
-    for (const l of list) { const k = el("button", "k", l); k.dataset.k = l; keys[l] = k; r.appendChild(k); }
-    if (ri === 2) { const e = el("button", "k w", "⌫"); e.dataset.k = "Backspace"; e.setAttribute("aria-label", "Backspace"); r.appendChild(e); }
-    if (ri === 1 && S.lang === "en") r.appendChild(el("div", "k sp"));
-    kb.appendChild(r);
-  });
-}
-function paintRow(r, word, ev, animate) {
-  const { tiles } = rows[r];
-  for (let c = 0; c < G.n; c++) {
-    const tile = tiles[c], ch = word && word[c];
-    tile.className = "t"; tile.textContent = ch || "";
-    if (ch) tile.classList.add("f");
-    if (ev) { tile.classList.add("s" + ev[c]); if (animate) tile.classList.add("flip"); }
-  }
-}
-function paintCurrent() {
-  if (G.over) return;
-  const r = G.guesses.length, { tiles } = rows[r];
-  for (let c = 0; c < G.n; c++) {
-    const ch = G.cur[c], tile = tiles[c];
-    tile.className = "t"; tile.textContent = ch || "";
-    if (ch) tile.classList.add("f");
-    else if (G.hint && G.hint.pos === c) { tile.classList.add("ghost"); tile.textContent = G.hint.letter; }
-  }
-}
-function paintKeys() {
-  const best = {};
-  G.guesses.forEach((g, k) => { for (let i = 0; i < g.length; i++) best[g[i]] = Math.max(best[g[i]] ?? -1, hist[k][i]); });
-  for (const l in keys) keys[l].className = "k" + (best[l] !== undefined ? " s" + best[l] : "");
-}
-function toast(m, ms = 1600) { const e = $("toast"); e.textContent = m; e.classList.add("on"); clearTimeout(toast.id); toast.id = setTimeout(() => e.classList.remove("on"), ms); }
-function setMsg(m) { $("msg").textContent = m || ""; }
-
-/* ---------- partida ---------- */
-const saveGame = () => store.set("game", { lang: S.lang, mode: S.mode, len: S.len, target: G.target, guesses: G.guesses, hint: G.hint, over: G.over, won: G.won, counted: G.counted });
-
-async function startGame(resume) {
-  $("load").hidden = false; $("load").textContent = t().loading;
-  const lang = S.lang, len = S.len;
-  try { DICT = await loadDict(lang, len); }
-  catch { $("load").innerHTML = ""; const b = el("button", "btn main", t().err); b.onclick = () => startGame(resume); $("load").appendChild(b); return; }
-  if (lang !== S.lang || len !== S.len) return;     // el usuario cambió ajustes mientras cargaba
-  const saved = resume && store.get("game", null);
-  const pool = S.mode === "easy" ? DICT.easy : DICT.hard;
-  const ok = saved && saved.lang === S.lang && saved.mode === S.mode && saved.len === S.len && typeof saved.target === "string" && norm(saved.target).length === len;
-  const target = ok ? saved.target : pickTarget(pool, `bag.${S.lang}.${S.mode}.${S.len}`);
-  G = { target, tn: norm(target), n: len, guesses: ok ? saved.guesses : [], cur: "", hint: ok ? saved.hint : null, over: ok ? saved.over : false, won: ok ? saved.won : false, counted: ok ? saved.counted : false };
-  hist = G.guesses.map((g) => evaluate(g, G.tn));
-  buildBoard(); buildKeyboard(); setMsg("");
-  G.guesses.forEach((g, i) => paintRow(i, g, hist[i], false));
-  paintKeys(); paintCurrent(); renderUI();
-  $("load").hidden = true;
-  if (!ok) saveGame();
-  if (G.over) showResult(false);
-}
-
-function renderUI() {
-  document.documentElement.lang = S.lang;
-  $("sub").textContent = t().sub(t().lang, t()[S.mode], S.len);
-  $("bHint").textContent = t().hint; $("bNew").textContent = t().newW;
-  $("bHint").style.display = S.mode === "easy" ? "" : "none";
-  $("bHint").disabled = !!(G && (G.hint || G.over));
-  renderStreak();
-}
-
-function typeLetter(l) { if (busy || !G || G.over || G.cur.length >= G.n) return; G.cur += l; paintCurrent(); const tl = rows[G.guesses.length].tiles[G.cur.length - 1]; tl.classList.add("pop"); }
-function backspace() { if (busy || !G || G.over) return; G.cur = G.cur.slice(0, -1); paintCurrent(); }
-function reject(msg) { toast(msg); const r = rows[G.guesses.length].row; r.classList.remove("shake"); void r.offsetWidth; r.classList.add("shake"); }
-
-async function submit() {
-  if (busy || !G || G.over) return;
-  const g = G.cur;
-  if (g.length < G.n) return reject(t().notEnough);
-  if (!DICT.valid.has(g)) return reject(t().notWord);
-  if (S.mode === "hard") { const v = hardViolation(g); if (v) return reject(v); }
-  busy = true;
-  const ev = evaluate(g, G.tn), r = G.guesses.length;
-  G.guesses.push(g); hist.push(ev); G.cur = "";
-  if (G.hint && ev[G.hint.pos] === 2) G.hint = null;
-  paintRow(r, g, ev, true);
-  await sleep(G.n * 250 + 300);
-  paintKeys();
-  const won = ev.every((x) => x === 2);
-  if (won || G.guesses.length >= MAX_TRIES) {
-    G.over = true; G.won = won; G.counted = true; recordResult(won, G.guesses.length); saveGame();
-    if (won) { rows[r].tiles.forEach((x) => { x.classList.remove("flip"); x.classList.add("win"); }); setMsg(t().win[Math.min(r, 5)]); await sleep(900); }
-    else setMsg(`${t().lose} ${G.target.toUpperCase()}`);
-    busy = false; renderUI(); showResult(true);
-  } else { saveGame(); busy = false; paintCurrent(); }
-}
-
-function useHint() {
-  if (!G || G.over || G.hint || S.mode !== "easy") return toast(t().hintUsed);
-  const greens = new Set(); hist.forEach((ev) => ev.forEach((x, i) => { if (x === 2) greens.add(i); }));
-  const free = [...Array(G.n).keys()].filter((i) => !greens.has(i));
-  if (!free.length) return;
-  const pos = free[Math.floor(Math.random() * free.length)];
-  G.hint = { pos, letter: G.tn[pos] }; saveGame(); paintCurrent(); renderUI(); setMsg(t().pos(pos + 1, G.tn[pos]));
-}
-
-async function newWord(force) {
-  if (busy) return;
-  if (!force && G && !G.over && G.guesses.length > 0) { if (!confirm(t().abandon)) return false; recordResult(false, 0); }
-  store.set("game", null); await startGame(false); return true;
-}
-
-/* ---------- diálogos ---------- */
-function openDlg(d) { if (!d.open) d.showModal(); }
-document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => b.closest("dialog").close()));
-document.querySelectorAll("dialog").forEach((d) => d.addEventListener("click", (e) => { if (e.target === d) d.close(); }));
-
-function statsHTML(body, highlight) {
-  const s = getStats(), max = Math.max(1, ...s.dist);
-  const g = el("div", "stats");
-  [[s.played, t().played], [s.played ? Math.round((s.wins / s.played) * 100) : 0, t().winPct], [s.streak, t().streak], [s.best, t().best]].forEach(([v, l]) => { const d = el("div"); d.append(el("b", "", v), el("span", "", l)); g.appendChild(d); });
-  body.appendChild(g);
-  body.appendChild(el("h2", "", t().dist));
-  const dist = el("div", "dist");
-  s.dist.forEach((v, i) => { dist.appendChild(el("span", "", i + 1)); const bar = el("div", "bar" + (highlight === i + 1 ? " hl" : ""), v); bar.style.width = Math.max(8, (v / max) * 100) + "%"; dist.appendChild(bar); });
-  body.appendChild(dist);
-}
-function showStats() { const b = $("statsBody"); b.textContent = ""; b.appendChild(el("h2", "", `${t().stats} · ${t().lang} · ${t()[S.mode]}`)); statsHTML(b); openDlg($("dStats")); }
-
-function shareText() {
-  const sq = ["⬛", "🟨", "🟩"].map((x, i) => (S.cb ? ["⬛", "🟦", "🟧"][i] : x));
-  const head = `Palabra o Palabro · ${t().lang} · ${t()[S.mode]} ${G.won ? G.guesses.length : "X"}/${MAX_TRIES} 🔥${getStats().streak}`;
-  return head + "\n\n" + hist.map((ev) => ev.map((x) => sq[x]).join("")).join("\n");
-}
-function showResult(animated) {
-  const b = $("statsBody"); b.textContent = "";
-  const res = el("div", "res");
-  res.append(el("div", "w", G.won ? t().won : t().lost), el("p", "", G.target.toUpperCase()));
-  b.appendChild(res); statsHTML(b, G.won ? G.guesses.length : 0);
-  const a = el("div", "acts");
-  const sh = el("button", "btn", t().share); sh.onclick = async () => {
-    const txt = shareText();
-    try { if (navigator.share) await navigator.share({ text: txt }); else { await navigator.clipboard.writeText(txt); toast(t().copied); } } catch { try { await navigator.clipboard.writeText(txt); toast(t().copied); } catch {} }
-  };
-  const nx = el("button", "btn main", t().next); nx.onclick = () => { $("dStats").close(); newWord(true); };
-  a.append(sh, nx); b.appendChild(a); openDlg($("dStats"));
-}
-
-function seg(parent, title, items, current, onPick, note) {
-  const o = el("div", "opt"); o.appendChild(el("p", "", title)); const s = el("div", "seg");
-  items.forEach(([v, label]) => { const b = el("button", "", label); b.setAttribute("aria-pressed", String(v === current)); b.onclick = () => onPick(v); s.appendChild(b); });
-  o.appendChild(s); if (note) o.appendChild(el("small", "", note)); parent.appendChild(o);
-}
-function showSettings() {
-  const b = $("setBody"); b.textContent = ""; b.appendChild(el("h2", "", t().settings));
-  seg(b, t().language, [["es", "Español"], ["en", "English"]], S.lang, (v) => change({ lang: v }));
-  seg(b, t().mode, [["easy", t().easy], ["hard", t().hard]], S.mode, (v) => change({ mode: v }), S.mode === "easy" ? t().easyD : t().hardD);
-  seg(b, t().len, LENS.map((n) => [n, String(n)]), S.len, (v) => change({ len: v }));
-  seg(b, t().theme, [["auto", t().themeAuto], ["dark", t().on], ["light", t().off]], S.theme, (v) => { S.theme = v; store.set("settings", S); applyTheme(); showSettings(); });
-  seg(b, t().cb, [[true, t().on], [false, t().off]], S.cb, (v) => { S.cb = v; store.set("settings", S); applyTheme(); showSettings(); });
-  openDlg($("dSet"));
-}
-async function change(patch) {
-  if (G && !G.over && G.guesses.length > 0) { if (!confirm(t().abandon)) return; recordResult(false, 0); }
-  Object.assign(S, patch); store.set("settings", S); store.set("game", null);
-  await startGame(false); showSettings();
-}
-function showHelp() {
-  const b = $("helpBody"); b.textContent = ""; b.appendChild(el("h2", "", t().helpT));
-  [t().h1(S.len), t().h2].forEach((x) => b.appendChild(el("p", "", x)));
-  const row = el("div", "row"); row.style.setProperty("--cols", 5);
-  t().ex.forEach((l, i) => row.appendChild(el("div", "t" + (i === 0 ? " s2" : i === 2 ? " s1" : i === 4 ? " s0" : " f"), l)));
-  b.append(row, el("p", "", t().h3), el("p", "", t().h4));
-  openDlg($("dHelp"));
-}
-function applyTheme() {
-  const r = document.documentElement;
-  if (S.theme === "auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", S.theme);
-  r.dataset.cb = S.cb ? "1" : "0";
-}
-
-/* ---------- eventos ---------- */
-$("kb").addEventListener("click", (e) => {
-  const k = e.target.closest("[data-k]"); if (!k) return; const v = k.dataset.k;
-  if (v === "Enter") submit(); else if (v === "Backspace") backspace(); else typeLetter(v);
-});
-document.addEventListener("keydown", (e) => {
-  if (e.ctrlKey || e.metaKey || e.altKey || document.querySelector("dialog[open]")) return;
-  if (e.key === "Enter") { e.preventDefault(); submit(); }
-  else if (e.key === "Backspace") backspace();
-  else if (e.key.length === 1) {
-    const l = norm(e.key);
-    if (/^[a-zñ]$/.test(l) && (l !== "ñ" || S.lang === "es")) typeLetter(l);
-  }
-});
-$("bHelp").onclick = showHelp; $("bStats").onclick = showStats; $("bSet").onclick = showSettings;
-$("bHint").onclick = useHint; $("bNew").onclick = () => newWord(false);
-
-/* ---------- arranque ---------- */
-applyTheme();
-startGame(true);
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(() => {});
+function $(id) { return document.getElementById(id); }
+$("bLang").onclick = () => { UI = UI === "es" ? "en" : "es"; PAS.setPrefs({ ui: UI }); render(); };
+$("bTheme").onclick = () => { const p = PAS.prefs().theme; PAS.setPrefs({ theme: p === "dark" ? "light" : p === "light" ? "auto" : "dark" }); };
+render(); PAS.registerSW("sw.js");
+addEventListener("pageshow", render);
 </script>
 </body>
 </html>
