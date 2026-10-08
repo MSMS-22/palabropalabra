@@ -129,5 +129,5 @@ def build(lang, cfg, src, out):
 
 if __name__ == "__main__":
     src = Path(sys.argv[1])
-    out = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(__file__).resolve().parent.parent / "data"
+    out = Path(sys.argv[2]) if len(sys.argv) > 2 else Path(__file__).resolve().parent.parent / "palabra" / "data"
     for lang, cfg in LANGS.items(): build(lang, cfg, src, out)

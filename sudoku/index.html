@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#121213">
+<meta name="description" content="Sudoku con notas automáticas, tres niveles de dificultad, racha de victorias y partidas ilimitadas.">
+<title>Sudoku · Pasatiempos</title>
+<script src="../shared.js"></script>
+<link rel="stylesheet" href="../shared.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231565c0'/%3E%3Cpath d='M11 4v24M21 4v24M4 11h24M4 21h24' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+body{background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;
+max-width:560px;margin:0 auto;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);overflow:hidden;touch-action:manipulation;user-select:none}
+header{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 0;border-bottom:1px solid var(--line)}
+header .ib{width:36px;height:36px;font-size:18px}
+h1{font-size:clamp(18px,5vw,26px);margin:0;font-weight:800;letter-spacing:.02em}
+.hbar{display:flex;gap:2px;align-items:center;min-width:76px}.hbar:last-child{justify-content:flex-end}
+.streak{font-weight:700;font-size:15px;padding:0 4px;white-space:nowrap}
+#diff{margin:8px 0 4px}#diff button{padding:6px 8px}
+.info{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--muted);padding:2px 2px}
+.info button{font-weight:700}
+#timer{font-variant-numeric:tabular-nums;min-width:56px;text-align:left}
+main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+#wrap{position:relative;width:min(100%,calc(100dvh - 300px),520px);aspect-ratio:1}
+#board{container-type:inline-size;display:grid;grid-template-columns:repeat(9,1fr);width:100%;height:100%;border:2px solid var(--muted);background:var(--bg);touch-action:manipulation}
+#board.paused{filter:blur(14px)}
+.c{position:relative;display:grid;place-items:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);cursor:pointer;min-width:0}
+.c.cr{border-right:2px solid var(--muted)}.c.cb{border-bottom:2px solid var(--muted)}
+.c.c8{border-right:0}.c.r8{border-bottom:0}
+.c.peer{background:var(--peer)}.c.same{background:var(--same)}.c.sel{background:var(--sel)}
+.c.err{background:var(--errbg)}.c.err .v{color:var(--err)}
+.c.hint{outline:3px solid var(--ok);outline-offset:-3px;z-index:1}
+.v{font-size:6cqw;font-weight:500;color:var(--mine);line-height:1}
+.c.g .v{font-weight:800;color:var(--given)}
+.nt{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);font-size:3.2cqw;line-height:1;color:var(--note);text-align:center;pointer-events:none}
+.nt span{display:grid;place-items:center}
+.nt span.hl{color:var(--fg);font-weight:800}
+#pause{position:absolute;inset:0;display:grid;place-items:center;z-index:3}
+#pause[hidden]{display:none}
+#msg{min-height:22px;font-size:14px;font-weight:600;text-align:center;color:var(--muted);padding:0 6px}
+#pad{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;padding:4px 0}
+.n{height:clamp(44px,7.5dvh,54px);border-radius:8px;background:var(--key);color:var(--key-fg);font-size:22px;font-weight:700;position:relative;transition:opacity .15s}
+.n small{position:absolute;right:4px;bottom:1px;font-size:10px;font-weight:600;opacity:.75}
+.n:active{filter:brightness(.9)}
+.n.done{opacity:.25;pointer-events:none}
+#pad.notes .n{background:var(--sel);color:var(--fg);font-size:17px}
+.tools{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:2px 0 8px}
+.tl{display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 0;border-radius:8px;font-size:10px;font-weight:600;color:var(--muted);line-height:1.2}
+.tl b{font-size:19px;color:var(--fg);font-weight:400}
+.tl:hover{background:var(--line)}
+.tl[aria-pressed="true"]{background:var(--ok);color:#fff}.tl[aria-pressed="true"] b{color:#fff}
+.tl:disabled{opacity:.35;cursor:default}
+.help p{margin:8px 0;font-size:14px}
+#load{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;font-weight:700;color:var(--muted)}
+#load[hidden]{display:none}
+@keyframes win{40%{transform:scale(1.03)}}
+#board.won{animation:win .6s}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 14px;text-align:center}
+.times b{display:block;font-size:22px}.times span{font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar"><a class="ib" href="../" aria-label="Pasatiempos" title="Pasatiempos">🏠</a><button class="ib" id="bHelp" aria-label="Ayuda">?</button></div>
+  <h1>Sudoku</h1>
+  <div class="hbar"><span class="streak" id="streak" title="Racha"></span><button class="ib" id="bStats" aria-label="Estadísticas">📊</button><button class="ib" id="bSet" aria-label="Ajustes">⚙️</button></div>
+</header>
+<div class="seg" id="diff" role="group"></div>
+<div class="info"><button id="timer" aria-label="Pausa">00:00</button><span id="hints"></span><button id="bNew"></button></div>
+<main>
+  <div id="wrap"><div id="board" role="grid"></div><div id="pause" hidden><button class="btn main" id="bResume"></button></div></div>
+  <div id="msg" aria-live="polite"></div>
+</main>
+<div id="pad"></div>
+<div class="tools">
+  <button class="tl" id="tNotes" aria-pressed="false"><b>✏️</b><span></span></button>
+  <button class="tl" id="tUndo"><b>↶</b><span></span></button>
+  <button class="tl" id="tRedo"><b>↷</b><span></span></button>
+  <button class="tl" id="tErase"><b>⌫</b><span></span></button>
+  <button class="tl" id="tAuto"><b>✨</b><span></span></button>
+  <button class="tl" id="tHint"><b>💡</b><span></span></button>
+</div>
+<div id="toast" role="status"></div>
+<div id="load">…</div>
+
+<dialog id="dHelp"><button class="ib x" data-close aria-label="Cerrar">✕</button><div class="help" id="helpBody"></div></dialog>
+<dialog id="dStats"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="statsBody"></div></dialog>
+<dialog id="dSet"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="setBody"></div></dialog>
+
+<script src="engine.js"></script>
+<script>
+"use strict";
+const E = SudokuEngine, DIFFS = ["easy", "medium", "hard"], HINTS = 3;
+const T = {
+  es: {
+    easy: "Fácil", medium: "Medio", hard: "Difícil", newG: "🔄 Nuevo", pause: "Pausa", resume: "Continuar", hintsL: (n) => `💡 ${n}`,
+    notes: "Notas", undo: "Deshacer", redo: "Rehacer", erase: "Borrar", auto: "Auto-notas", hint: "Pista",
+    noHints: "Ya usaste las 3 pistas", abandon: "Si empiezas otra partida ahora, esta cuenta como perdida y tu racha vuelve a 0. ¿Continuar?",
+    won: "¡Sudoku resuelto!", time: "Tiempo", best: "Mejor tiempo", avg: "Tiempo medio", hinted: "con pistas",
+    played: "Jugadas", winPct: "% Victorias", streak: "Racha", bestStreak: "Mejor racha", stats: "Estadísticas", settings: "Ajustes",
+    language: "Idioma", theme: "Modo oscuro", cb: "Colores para daltónicos", themeAuto: "Auto", on: "Sí", off: "No", next: "Siguiente",
+    gen: "Generando…", notesOn: "Modo notas activado", notesOff: "Modo notas desactivado", autoDone: "Notas rellenadas",
+    hNaked: (d) => `Esta casilla solo admite el ${d}`, hHidden: (d, u) => `El ${d} solo cabe aquí en ${u}`, hReveal: (d) => `Prueba con el ${d}`,
+    hWrong: (d) => `Esta casilla tiene un error: aquí va el ${d}`, units: { row: "su fila", col: "su columna", box: "su bloque" },
+    helpT: "Cómo jugar",
+    h1: "Rellena la cuadrícula para que cada fila, columna y bloque de 3×3 tenga los números del 1 al 9 sin repetir.",
+    h2: "✏️ Notas: activa el modo notas y toca varios números para anotar posibles candidatos en una casilla. Cuando colocas un número, desaparece automáticamente de las notas de su fila, columna y bloque.",
+    h3: "✨ Auto-notas rellena todos los candidatos de las casillas vacías de una vez. ↶ Deshacer también restaura las notas que se habían borrado.",
+    h4: "💡 Tienes 3 pistas por partida. La racha cuenta las victorias seguidas por dificultad; si pierdes o abandonas una partida empezada, vuelve a 0.",
+    h5: "Teclado: 1–9 colocan, Mayús+1–9 anotan, N cambia de modo, flechas mueven, Supr borra, Ctrl+Z deshace.",
+    cell: (r, c, v) => `Fila ${r}, columna ${c}${v ? ", " + v : ", vacía"}`,
+  },
+  en: {
+    easy: "Easy", medium: "Medium", hard: "Hard", newG: "🔄 New", pause: "Pause", resume: "Resume", hintsL: (n) => `💡 ${n}`,
+    notes: "Notes", undo: "Undo", redo: "Redo", erase: "Erase", auto: "Auto notes", hint: "Hint",
+    noHints: "You've used all 3 hints", abandon: "If you start another game now, this one counts as a loss and your streak resets to 0. Continue?",
+    won: "Sudoku solved!", time: "Time", best: "Best time", avg: "Average time", hinted: "with hints",
+    played: "Played", winPct: "Win %", streak: "Streak", bestStreak: "Best streak", stats: "Statistics", settings: "Settings",
+    language: "Language", theme: "Dark mode", cb: "Colorblind colors", themeAuto: "Auto", on: "On", off: "Off", next: "Next",
+    gen: "Generating…", notesOn: "Notes mode on", notesOff: "Notes mode off", autoDone: "Notes filled in",
+    hNaked: (d) => `This cell can only be ${d}`, hHidden: (d, u) => `${d} can only go here in ${u}`, hReveal: (d) => `Try ${d} here`,
+    hWrong: (d) => `This cell has a mistake: it should be ${d}`, units: { row: "its row", col: "its column", box: "its box" },
+    helpT: "How to play",
+    h1: "Fill the grid so every row, column and 3×3 box contains the numbers 1 to 9 with no repeats.",
+    h2: "✏️ Notes: turn on notes mode and tap several numbers to pencil in candidates for a cell. When you place a number, it's automatically removed from the notes in its row, column and box.",
+    h3: "✨ Auto notes fills in every candidate for all empty cells at once. ↶ Undo also restores any notes that were removed.",
+    h4: "💡 You get 3 hints per game. Your streak counts consecutive wins per difficulty; losing or abandoning a started game resets it to 0.",
+    h5: "Keyboard: 1–9 place, Shift+1–9 note, N toggles mode, arrows move, Delete erases, Ctrl+Z undoes.",
+    cell: (r, c, v) => `Row ${r}, column ${c}${v ? ", " + v : ", empty"}`,
+  },
+};
+
+/* ---------- utilidades ---------- */
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+let UI = PAS.prefs().ui || ((navigator.language || "es").startsWith("en") ? "en" : "es");
+const t = () => T[UI];
+const fmt = (ms) => { const s = Math.floor(ms / 1000); return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; };
+const BIT = E.BIT, POP = E.POP;
+const isPeer = new Uint8Array(81 * 81);
+for (let i = 0; i < 81; i++) for (const p of E.PEERS[i]) isPeer[i * 81 + p] = 1;
+
+/* ---------- estado ---------- */
+let S = Object.assign({ diff: "easy" }, PAS.get("sd.settings", {}));
+if (!DIFFS.includes(S.diff)) S.diff = "easy";
+let G = null, cells = [], dirty = true;
+const saveSettings = () => PAS.set("sd.settings", S);
+
+/* ---------- estadísticas ---------- */
+const getStats = (d = S.diff) => Object.assign({ played: 0, wins: 0, streak: 0, best: 0, bestTime: 0, totalTime: 0 }, PAS.get("sd.stats." + d, {}));
+function recordResult(win, ms, hinted) {
+  const s = getStats(G.diff); s.played++;
+  if (win) { s.wins++; s.streak++; s.best = Math.max(s.best, s.streak); s.totalTime += ms; if (!hinted && (!s.bestTime || ms < s.bestTime)) s.bestTime = ms; }
+  else s.streak = 0;
+  PAS.set("sd.stats." + G.diff, s); renderStreak();
+}
+const renderStreak = () => { $("streak").textContent = "🔥 " + getStats().streak; };
+
+/* ---------- partida ---------- */
+const progress = () => { if (!G || G.over) return false; for (let i = 0; i < 81; i++) if (!G.given[i] && G.vals[i]) return true; return false; };
+function save() {
+  if (!G) return;
+  PAS.set("sd.game", { diff: G.diff, puzzle: G.puzzle, solution: G.solution, vals: Array.from(G.vals).join(""), notes: Array.from(G.notes), elapsed: Math.round(G.elapsed), hintsLeft: G.hintsLeft, hinted: G.hinted, over: G.over, won: G.won, noteMode: G.noteMode });
+}
+function makeGame(p, saved) {
+  const given = Array.from(p.puzzle, (c) => c !== "0");
+  G = {
+    diff: p.difficulty || p.diff, puzzle: p.puzzle, solution: p.solution, given,
+    vals: Int8Array.from((saved ? saved.vals : p.puzzle).split(""), Number), sol: Int8Array.from(p.solution.split(""), Number),
+    notes: saved ? Int16Array.from(saved.notes) : new Int16Array(81), undo: [], redo: [], sel: -1, hintCell: -1,
+    elapsed: saved ? saved.elapsed : 0, hintsLeft: saved ? saved.hintsLeft : HINTS, hinted: saved ? saved.hinted : false,
+    over: saved ? saved.over : false, won: saved ? saved.won : false, noteMode: saved ? !!saved.noteMode : false, paused: false, last: performance.now(),
+  };
+}
+async function newGame(diff, resume) {
+  if (diff && diff !== S.diff) { S.diff = diff; saveSettings(); }
+  $("load").hidden = false; $("load").textContent = t().gen;
+  await new Promise((r) => setTimeout(r, 30));            // deja pintar el aviso antes de generar
+  const saved = resume && PAS.get("sd.game", null);
+  if (saved && typeof saved.puzzle === "string" && saved.puzzle.length === 81 && saved.diff === S.diff) makeGame(saved, saved);
+  else makeGame(E.generate(S.diff), null);
+  buildPad(); renderAll(); $("load").hidden = true; setMsg(""); save();
+  if (G.over) showResult();
+}
+async function requestNew(diff) {
+  if (progress()) { if (!confirm(t().abandon)) return false; recordResult(false, G.elapsed, G.hinted); G.over = true; }
+  PAS.set("sd.game", null); await newGame(diff || S.diff, false); return true;
+}
+
+/* ---------- jugadas con historial (deshacer/rehacer incluye las notas borradas) ---------- */
+function commit(changes) {
+  if (!changes.length) return;
+  G.undo.push(changes); if (G.undo.length > 300) G.undo.shift(); G.redo = [];
+  G.hintCell = -1; setMsg(""); dirty = true; renderAll(); save(); checkWin();
+}
+function placeDigit(i, d) {
+  const ch = [[i, G.vals[i], G.notes[i], d, 0]];
+  for (const p of E.PEERS[i]) if (G.notes[p] & BIT[d]) ch.push([p, G.vals[p], G.notes[p], G.vals[p], G.notes[p] & ~BIT[d]]);   // borrado automático de notas
+  for (const c of ch) { G.vals[c[0]] = c[3]; G.notes[c[0]] = c[4]; }
+  commit(ch);
+}
+function inputDigit(d, asNote) {
+  if (!G || G.over || G.paused || G.sel < 0) return;
+  const i = G.sel; if (G.given[i]) return;
+  if (asNote === undefined ? G.noteMode : asNote) {
+    if (G.vals[i]) return;
+    const old = G.notes[i], nw = old ^ BIT[d];
+    G.notes[i] = nw; commit([[i, 0, old, 0, nw]]);
+  } else if (G.vals[i] === d) eraseCell();
+  else placeDigit(i, d);
+}
+function eraseCell() {
+  if (!G || G.over || G.paused || G.sel < 0) return; const i = G.sel;
+  if (G.given[i] || (!G.vals[i] && !G.notes[i])) return;
+  const c = [i, G.vals[i], G.notes[i], 0, 0]; G.vals[i] = 0; G.notes[i] = 0; commit([c]);
+}
+function step(from, to, idx) {          // aplica una jugada hacia atrás (idx 1,2) o hacia delante (idx 3,4)
+  const list = from.pop(); to.push(list);
+  for (const c of idx ? list.slice().reverse() : list) { G.vals[c[0]] = idx ? c[1] : c[3]; G.notes[c[0]] = idx ? c[2] : c[4]; }
+  G.hintCell = -1; dirty = true; renderAll(); save();
+}
+const undo = () => { if (G && !G.over && !G.paused && G.undo.length) step(G.undo, G.redo, true); };
+const redo = () => { if (G && !G.over && !G.paused && G.redo.length) step(G.redo, G.undo, false); };
+function autoNotes() {
+  if (!G || G.over || G.paused) return;
+  const cand = E.candidatesOf(G.vals), ch = [];
+  for (let i = 0; i < 81; i++) if (!G.vals[i] && G.notes[i] !== cand[i]) ch.push([i, 0, G.notes[i], 0, cand[i]]);
+  for (const c of ch) G.notes[c[0]] = c[4];
+  commit(ch); toast(t().autoDone);
+}
+function useHint() {
+  if (!G || G.over || G.paused) return;
+  if (G.hintsLeft <= 0) return toast(t().noHints);
+  const h = E.hint(G.vals, G.solution); if (!h) return;
+  G.hintsLeft--; G.hinted = true; G.sel = h.cell; G.hintCell = h.cell;
+  const wrong = G.vals[h.cell] && G.vals[h.cell] !== h.digit;
+  setMsg(wrong ? t().hWrong(h.digit) : h.kind === "naked" ? t().hNaked(h.digit) : h.kind === "hidden" ? t().hHidden(h.digit, t().units[h.unit]) : t().hReveal(h.digit));
+  dirty = true; renderAll(); save();
+}
+function checkWin() {
+  if (G.over) return;
+  for (let i = 0; i < 81; i++) if (!G.vals[i] || G.vals[i] !== G.sol[i]) return;
+  G.over = true; G.won = true; G.sel = -1; tickTime(); recordResult(true, G.elapsed, G.hinted); save();
+  $("board").classList.add("won"); renderAll(); setTimeout(showResult, 700);
+}
+
+/* ---------- cronómetro ---------- */
+function tickTime() { const n = performance.now(); if (!G.paused && !G.over && !document.hidden) G.elapsed += n - G.last; G.last = n; $("timer").textContent = fmt(G.elapsed); }
+function setPause(p) {
+  if (!G || G.over) return; tickTime(); G.paused = p; $("pause").hidden = !p; $("board").classList.toggle("paused", p); $("timer").textContent = (p ? "⏸ " : "") + fmt(G.elapsed); if (p) save();
+}
+setInterval(() => { if (G) { tickTime(); if (!G.over && Math.floor(G.elapsed / 1000) % 5 === 0) save(); } }, 500);
+document.addEventListener("visibilitychange", () => { if (G) { tickTime(); if (document.hidden) { if (!G.over) setPause(true); save(); } } });
+addEventListener("pagehide", () => { if (G) { tickTime(); save(); } });
+
+/* ---------- interfaz ---------- */
+function buildBoard() {
+  const b = $("board"); b.textContent = ""; cells = [];
+  for (let i = 0; i < 81; i++) {
+    const r = (i / 9) | 0, c = i % 9, d = el("div", "c" + (c % 3 === 2 && c < 8 ? " cr" : "") + (r % 3 === 2 && r < 8 ? " cb" : "") + (c === 8 ? " c8" : "") + (r === 8 ? " r8" : ""));
+    d.dataset.i = i; d.setAttribute("role", "gridcell");
+    const v = el("span", "v"), nt = el("div", "nt"); for (let k = 0; k < 9; k++) nt.appendChild(el("span"));
+    d.append(v, nt); b.appendChild(d); cells.push({ d, v, nt, ns: [...nt.children], key: "" });
+  }
+}
+function buildPad() {
+  const p = $("pad"); p.textContent = "";
+  for (let d = 1; d <= 9; d++) { const b = el("button", "n", String(d)); b.dataset.d = d; b.appendChild(el("small")); p.appendChild(b); }
+}
+function renderAll() {
+  if (!G) return;
+  const s = G.sel, sv = s >= 0 ? G.vals[s] : 0, err = new Uint8Array(81), count = new Uint8Array(10);
+  for (let i = 0; i < 81; i++) {
+    const v = G.vals[i]; if (!v) continue; count[v]++;
+    for (const p of E.PEERS[i]) if (G.vals[p] === v) { err[i] = 1; break; }
+  }
+  for (let i = 0; i < 81; i++) {
+    const c = cells[i], v = G.vals[i], n = G.notes[i];
+    let cls = "c" + c.d.className.slice(1).replace(/ (g|sel|peer|same|err|hint)\b/g, "");
+    if (G.given[i]) cls += " g"; if (i === s) cls += " sel"; else if (s >= 0 && isPeer[s * 81 + i]) cls += " peer";
+    if (sv && v === sv && i !== s) cls += " same"; if (err[i]) cls += " err"; if (i === G.hintCell) cls += " hint";
+    const key = cls + "|" + v + "|" + n + "|" + (v ? 0 : sv);
+    if (key === c.key) continue; c.key = key; c.d.className = cls;
+    c.v.textContent = v || "";
+    for (let k = 0; k < 9; k++) { const on = !v && (n & BIT[k + 1]); c.ns[k].textContent = on ? k + 1 : ""; c.ns[k].className = on && sv === k + 1 ? "hl" : ""; }
+    c.d.setAttribute("aria-label", t().cell((i / 9 | 0) + 1, i % 9 + 1, v));
+  }
+  $("pad").classList.toggle("notes", G.noteMode);
+  document.querySelectorAll("#pad .n").forEach((b) => { const d = +b.dataset.d, left = 9 - count[d]; b.classList.toggle("done", left <= 0 || G.over); b.lastChild.textContent = left > 0 ? left : ""; });
+  $("tNotes").setAttribute("aria-pressed", String(G.noteMode));
+  $("tUndo").disabled = !G.undo.length || G.over; $("tRedo").disabled = !G.redo.length || G.over;
+  $("tErase").disabled = G.over; $("tAuto").disabled = G.over; $("tHint").disabled = G.over || G.hintsLeft <= 0;
+  $("hints").textContent = t().hintsL(G.hintsLeft); $("timer").textContent = (G.paused ? "⏸ " : "") + fmt(G.elapsed);
+}
+function setMsg(m) { $("msg").textContent = m || ""; }
+function toast(m, ms = 1500) { const e = $("toast"); e.textContent = m; e.classList.add("on"); clearTimeout(toast.id); toast.id = setTimeout(() => e.classList.remove("on"), ms); }
+function renderStatic() {
+  document.documentElement.lang = UI;
+  const d = $("diff"); d.textContent = "";
+  DIFFS.forEach((k) => { const b = el("button", "", t()[k]); b.setAttribute("aria-pressed", String(k === S.diff)); b.onclick = () => { if (k !== S.diff || (G && G.over)) requestNew(k); }; d.appendChild(b); });
+  $("bNew").textContent = t().newG; $("bResume").textContent = t().resume;
+  $("tNotes").lastChild.textContent = t().notes; $("tUndo").lastChild.textContent = t().undo; $("tRedo").lastChild.textContent = t().redo;
+  $("tErase").lastChild.textContent = t().erase; $("tAuto").lastChild.textContent = t().auto; $("tHint").lastChild.textContent = t().hint;
+  $("timer").title = t().pause; renderStreak();
+  if (G) { cells.forEach((c) => (c.key = "")); renderAll(); }
+}
+
+/* ---------- diálogos ---------- */
+const openDlg = (d) => { if (!d.open) d.showModal(); };
+document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => b.closest("dialog").close()));
+document.querySelectorAll("dialog").forEach((d) => d.addEventListener("click", (e) => { if (e.target === d) d.close(); }));
+function seg(parent, title, items, current, onPick) {
+  const o = el("div", "opt"); o.appendChild(el("p", "", title)); const s = el("div", "seg");
+  items.forEach(([v, label]) => { const b = el("button", "", label); b.setAttribute("aria-pressed", String(v === current)); b.onclick = () => onPick(v); s.appendChild(b); });
+  o.appendChild(s); parent.appendChild(o);
+}
+function statsBlock(body, d) {
+  const s = getStats(d), g = el("div", "stats");
+  [[s.played, t().played], [s.played ? Math.round((s.wins / s.played) * 100) : 0, t().winPct], [s.streak, t().streak], [s.best, t().bestStreak]].forEach(([v, l]) => { const c = el("div"); c.append(el("b", "", v), el("span", "", l)); g.appendChild(c); });
+  body.appendChild(g);
+  const tm = el("div", "times");
+  [[s.bestTime ? fmt(s.bestTime) : "–", t().best], [s.wins ? fmt(s.totalTime / s.wins) : "–", t().avg]].forEach(([v, l]) => { const c = el("div"); c.append(el("b", "", v), el("span", "", l)); tm.appendChild(c); });
+  body.appendChild(tm);
+}
+function showStats(d = S.diff) {
+  const b = $("statsBody"); b.textContent = ""; b.appendChild(el("h2", "", t().stats));
+  seg(b, "", DIFFS.map((k) => [k, t()[k]]), d, (k) => showStats(k)); statsBlock(b, d); openDlg($("dStats"));
+}
+function showResult() {
+  const b = $("statsBody"); b.textContent = "";
+  const res = el("div", "res"); res.append(el("div", "w", t().won), el("p", "", `${t()[G.diff]} · ${fmt(G.elapsed)}${G.hinted ? " · " + t().hinted : ""}`)); b.appendChild(res);
+  statsBlock(b, G.diff);
+  const a = el("div", "acts"), nx = el("button", "btn main", t().next); nx.onclick = () => { $("dStats").close(); requestNew(S.diff); }; a.appendChild(nx); b.appendChild(a);
+  openDlg($("dStats"));
+}
+function showSettings() {
+  const b = $("setBody"); b.textContent = ""; b.appendChild(el("h2", "", t().settings));
+  const P = PAS.prefs();
+  seg(b, t().language, [["es", "Español"], ["en", "English"]], UI, (v) => { UI = v; PAS.setPrefs({ ui: v }); renderStatic(); showSettings(); });
+  seg(b, t().theme, [["auto", t().themeAuto], ["dark", t().on], ["light", t().off]], P.theme || "auto", (v) => { PAS.setPrefs({ theme: v }); showSettings(); });
+  seg(b, t().cb, [[true, t().on], [false, t().off]], !!P.cb, (v) => { PAS.setPrefs({ cb: v }); showSettings(); });
+  openDlg($("dSet"));
+}
+function showHelp() {
+  const b = $("helpBody"); b.textContent = ""; b.appendChild(el("h2", "", t().helpT));
+  [t().h1, t().h2, t().h3, t().h4, t().h5].forEach((x) => b.appendChild(el("p", "", x))); openDlg($("dHelp"));
+}
+
+/* ---------- eventos ---------- */
+function select(i) { if (!G || G.paused) return; G.sel = i; G.hintCell = G.hintCell === i ? i : -1; renderAll(); }
+$("board").addEventListener("pointerdown", (e) => { const c = e.target.closest(".c"); if (c) { e.preventDefault(); select(+c.dataset.i); } });
+$("pad").addEventListener("click", (e) => { const b = e.target.closest(".n"); if (b) inputDigit(+b.dataset.d); });
+$("tNotes").onclick = () => { if (!G || G.over) return; G.noteMode = !G.noteMode; renderAll(); save(); setMsg(G.noteMode ? t().notesOn : ""); };
+$("tUndo").onclick = undo; $("tRedo").onclick = redo; $("tErase").onclick = eraseCell; $("tAuto").onclick = autoNotes; $("tHint").onclick = useHint;
+$("timer").onclick = () => setPause(!G.paused); $("bResume").onclick = () => setPause(false);
+$("bNew").onclick = () => requestNew(S.diff);
+$("bHelp").onclick = showHelp; $("bStats").onclick = () => showStats(); $("bSet").onclick = showSettings;
+document.addEventListener("keydown", (e) => {
+  if (document.querySelector("dialog[open]") || !G) return;
+  const k = e.key;
+  if ((e.ctrlKey || e.metaKey) && !e.altKey) { if (k.toLowerCase() === "z") { e.preventDefault(); e.shiftKey ? redo() : undo(); } else if (k.toLowerCase() === "y") { e.preventDefault(); redo(); } return; }
+  if (e.altKey) return;
+  const m = /^Digit([1-9])$/.exec(e.code) || /^Numpad([1-9])$/.exec(e.code);
+  if (m) { e.preventDefault(); inputDigit(+m[1], e.shiftKey ? true : undefined); }
+  else if (k === "Backspace" || k === "Delete" || k === "0") { e.preventDefault(); eraseCell(); }
+  else if (k.toLowerCase() === "n") { $("tNotes").click(); }
+  else if (k.startsWith("Arrow")) {
+    e.preventDefault(); if (G.paused) return;
+    if (G.sel < 0) return select(40);
+    let r = (G.sel / 9) | 0, c = G.sel % 9;
+    if (k === "ArrowUp") r = Math.max(0, r - 1); else if (k === "ArrowDown") r = Math.min(8, r + 1); else if (k === "ArrowLeft") c = Math.max(0, c - 1); else c = Math.min(8, c + 1);
+    select(r * 9 + c);
+  }
+});
+
+/* ---------- arranque ---------- */
+buildBoard(); renderStatic(); newGame(S.diff, true);
+PAS.registerSW("../sw.js");
+</script>
+</body>
+</html>
