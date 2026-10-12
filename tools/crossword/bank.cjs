@@ -16,7 +16,7 @@ function entries(dir = path.join(__dirname, "clues")) {
     out.push(base);
     if (r.tag.includes("s")) {
       const p = pluralOf(n);
-      if (p && p.length <= 11) out.push({ w: p, shown: p, clue: r.clue.replace(/\.$/, "") + " (plural)", plural: true, of: n });
+      if (p && p.length <= 11) out.push({ w: p, shown: p, clue: r.clue.replace(/\.$/, "") + ", en plural", plural: true, of: n });
     }
   }
   const seen = new Set();

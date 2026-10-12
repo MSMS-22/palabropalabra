@@ -21,7 +21,7 @@ h1{font-size:clamp(18px,5vw,26px);margin:0;font-weight:800;letter-spacing:.02em}
 /* ---- lista ---- */
 #list{flex:1;min-height:0;overflow:auto;padding:10px 0 16px}
 .fil{margin:0 0 10px}.fil p{margin:0 0 4px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.fil .seg button{padding:7px 8px;font-size:14px}
+.fil .seg button{padding:7px 6px;font-size:13px;min-width:0}
 .cont{display:flex;gap:8px;margin:4px 0 12px;flex-wrap:wrap}
 .pz{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px}
 .pz button{aspect-ratio:1;border-radius:10px;border:2px solid var(--line);font-weight:700;font-size:15px;position:relative;background:var(--card)}
@@ -36,7 +36,7 @@ h1{font-size:clamp(18px,5vw,26px);margin:0;font-weight:800;letter-spacing:.02em}
 .info button{font-weight:700}
 #timer{font-variant-numeric:tabular-nums;min-width:64px;text-align:left}
 main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px 0}
-#wrap{position:relative;width:min(100%,calc(100dvh - 400px),560px);aspect-ratio:1}
+#wrap{position:relative;width:min(100%,calc(100dvh - 350px),560px);aspect-ratio:1}
 #board{container-type:inline-size;display:grid;width:100%;height:100%;border:2px solid var(--muted);background:var(--muted);gap:1px}
 #board.paused{filter:blur(14px)}
 .c{position:relative;display:grid;place-items:center;background:var(--bg);cursor:pointer;min-width:0}
@@ -56,7 +56,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;j
 #clueT b{color:var(--ok);margin-right:4px}
 #kb{display:flex;flex-direction:column;gap:5px;padding:6px 0 4px}
 .kr{display:flex;gap:4px;justify-content:center}
-.k{flex:1;max-width:40px;height:clamp(40px,6.5dvh,50px);border-radius:6px;background:var(--key);color:var(--key-fg);font-weight:700;font-size:16px;text-transform:uppercase;display:grid;place-items:center}
+.k{flex:1;max-width:40px;height:clamp(38px,6dvh,48px);border-radius:6px;background:var(--key);color:var(--key-fg);font-weight:700;font-size:16px;text-transform:uppercase;display:grid;place-items:center}
 .k.w{flex:1.5;max-width:60px}
 .k:active{filter:brightness(.9)}
 @media (hover:hover) and (pointer:fine){#kb{display:none}#wrap{width:min(100%,calc(100dvh - 300px),560px)}}
@@ -159,7 +159,7 @@ function buildSlots(p) {
 }
 const isGiven = (i) => S_mode() === "con" && P.h[i] === "1";
 const S_mode = () => ST.mode;
-const correct = (i) => ST.v[i] === P.g[i];
+const correct = (i) => ST.v[i] === P.g[i] || !!(P.x && P.x[i] && ST.v[i] !== "." && P.x[i].includes(ST.v[i]));   // x: letras alternativas válidas en casillas sin cruce
 const locked = (i) => isGiven(i) || ST.r[i] === "1";
 const slotDone = (s) => s.cells.every(correct);
 
@@ -268,13 +268,13 @@ function revealWord() {
 }
 function check() {
   if (!P || ST.done || paused) return;
-  wrong = new Set(); for (let i = 0; i < P.n * P.n; i++) if (P.g[i] !== "#" && ST.v[i] !== "." && ST.v[i] !== P.g[i]) wrong.add(i);
+  wrong = new Set(); for (let i = 0; i < P.n * P.n; i++) if (P.g[i] !== "#" && ST.v[i] !== "." && !correct(i)) wrong.add(i);
   renderAll(); toast(wrong.size ? `${wrong.size} ${wrong.size === 1 ? "letra incorrecta" : "letras incorrectas"}` : "Todo lo escrito es correcto");
 }
 
 /* ---------- final ---------- */
 function checkWin() {
-  for (let i = 0; i < P.n * P.n; i++) if (P.g[i] !== "#" && ST.v[i] !== P.g[i]) return;
+  for (let i = 0; i < P.n * P.n; i++) if (P.g[i] !== "#" && !correct(i)) return;
   tick(); ST.done = true; sel = -1; wrong = new Set();
   const s = getStats(ST.mode); s.done++; s.total[P.n] = (s.total[P.n] || 0) + ST.el;
   if (!ST.helped) { s.perfect++; s.streak++; s.best = Math.max(s.best, s.streak); if (!s.bestTime[P.n] || ST.el < s.bestTime[P.n]) s.bestTime[P.n] = ST.el; } else s.streak = 0;

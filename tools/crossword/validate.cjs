@@ -3,7 +3,8 @@
  * Uso: node tools/crossword/validate.cjs [crucigrama/data]   (salida != 0 si algo falla) */
 "use strict";
 const fs = require("fs"), path = require("path");
-const B = require("./bank.cjs"), { norm } = require("./check_bank.cjs");
+const B = require("./bank.cjs"), { norm } = require("./check_bank.cjs"), A = require("./alts.cjs");
+const BYLEN = A.indexBank();
 const dir = process.argv[2] || path.join(__dirname, "..", "..", "crucigrama", "data");
 const meta = JSON.parse(fs.readFileSync(path.join(dir, "index.json"), "utf8"));
 const bank = new Map(B.entries().map((e) => [e.w, e]));
@@ -53,6 +54,9 @@ for (const p of allPuzzles) {
     });
   }
   slotsTotal += slots.length; whiteTotal += whites;
+  // letras alternativas aceptadas: deben coincidir exactamente con las que dan las palabras del banco
+  { const want = A.computeAlts(p, BYLEN), have = p.x || {}, ks = new Set([...Object.keys(want), ...Object.keys(have)]);
+    for (const k of ks) { const a = [...(want[k] || "")].sort().join(""), b = [...(have[k] || "")].sort().join(""); if (a !== b) e(`letras alternativas incorrectas en la casilla ${k}: esperadas «${a}», guardadas «${b}»`); } }
   // letras sugeridas
   if (!/^[01]+$/.test(p.h) || p.h.length !== N * N) { e("letras sugeridas mal formadas"); continue; }
   let hints = 0;

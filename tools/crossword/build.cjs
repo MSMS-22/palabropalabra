@@ -5,7 +5,7 @@
 "use strict";
 const fs = require("fs"), path = require("path"), os = require("os");
 const { Worker, isMainThread, parentPort } = require("worker_threads");
-const G = require("./gen.js"), B = require("./bank.cjs");
+const G = require("./gen.js"), B = require("./bank.cjs"), A = require("./alts.cjs");
 
 const NODES = { 9: 5000, 11: 30000 };   // presupuesto de búsqueda por intento
 const HINT_RATIO = 0.28;
@@ -72,7 +72,8 @@ function main() {
   const finish = () => {
     workers.forEach((w) => w.terminate());
     const puzzles = []; let id = 0;
-    for (const [n] of SIZES) for (const p of bySize.get(n)) puzzles.push(Object.assign({ id: ++id }, p));
+    const byLen = A.indexBank();
+    for (const [n] of SIZES) for (const p of bySize.get(n)) { const q = Object.assign({ id: ++id }, p), x = A.computeAlts(q, byLen); if (Object.keys(x).length) q.x = x; puzzles.push(q); }
     fs.mkdirSync(OUT, { recursive: true }); for (const f of fs.readdirSync(OUT)) if (/^(pack-\d+|index)\.json$/.test(f)) fs.unlinkSync(path.join(OUT, f));
     const files = [];
     for (let i = 0; i < puzzles.length; i += PACK) { const name = `pack-${String(i / PACK + 1).padStart(2, "0")}.json`; fs.writeFileSync(path.join(OUT, name), JSON.stringify(puzzles.slice(i, i + PACK))); files.push(name); }
