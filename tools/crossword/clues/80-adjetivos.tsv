@@ -1,0 +1,222 @@
+grande	De tamaño mayor de lo normal	s
+pequeño	De tamaño menor de lo normal	s
+diminuto	Extremadamente pequeño	s
+alto	De mucha estatura	s
+bajo	De poca estatura	s
+largo	De gran longitud	s
+corto	De poca longitud	s
+ancho	De gran extensión de lado a lado	s
+estrecho	De poca anchura	s
+grueso	De mucho espesor	s
+delgado	Poco grueso, flaco	s
+gordo	Con muchas carnes	s
+flaco	Muy delgado	s
+fuerte	Que tiene mucha fuerza	s
+débil	Que tiene poca fuerza	s
+rápido	Que se mueve a gran velocidad	s
+lento	Que tarda mucho en hacer algo	s
+ligero	De poco peso	s
+pesado	De mucho peso	s
+duro	Que no se deja rayar ni doblar fácilmente	s
+blando	Que cede fácilmente al tacto	s
+suave	Agradable al tacto	s
+áspero	Rugoso al tocarlo	s
+liso	Sin arrugas ni asperezas	s
+frío	De baja temperatura	s
+caliente	De alta temperatura	s
+templado	Ni frío ni caliente	s
+húmedo	Ligeramente mojado	s
+seco	Sin humedad	s
+mojado	Empapado de agua	s
+limpio	Sin suciedad	s
+sucio	Con manchas o mugre	s
+nuevo	Recién hecho o estrenado	s
+viejo	De mucha edad	s
+antiguo	De hace mucho tiempo	s
+moderno	Actual, de estos tiempos	s
+bonito	Agradable a la vista	s
+hermoso	De gran belleza	s
+guapo	De rostro agradable	s
+horrible	Que causa horror o muy feo	s
+bueno	De calidad excelente o de carácter noble	s
+malo	Que no es bueno	s
+mejor	Superior a otra cosa buena	s
+peor	Más malo que otra cosa	s
+amable	Cortés y agradable en el trato	s
+simpático	Que cae bien por su carácter	s
+antipático	Que resulta desagradable por su trato	s
+cariñoso	Que muestra afecto	s
+cruel	Que disfruta con el dolor ajeno	s
+generoso	Que da sin esperar nada a cambio	s
+tacaño	Que le cuesta gastar dinero	s
+valiente	Que no teme al peligro	s
+cobarde	Que se asusta ante el peligro	s
+tímido	Que se muestra reservado ante los demás	s
+alegre	Lleno de felicidad	s
+triste	Apenado	s
+feliz	Que siente gran contento	s
+contento	Satisfecho y alegre	s
+enfadado	Molesto o airado	s
+nervioso	Intranquilo o inquieto	s
+tranquilo	Sin nervios ni ruido	s
+sereno	Sosegado y sin turbación	s
+cansado	Sin fuerzas tras el esfuerzo	s
+aburrido	Que causa tedio	s
+divertido	Que hace pasar un buen rato	s
+curioso	Que desea saber o averiguar	s
+listo	De inteligencia viva	s
+tonto	Poco inteligente	s
+sabio	Que posee muchos conocimientos	s
+loco	Que ha perdido la razón	s
+raro	Poco común o extraño	s
+extraño	Que resulta desconocido o poco habitual	s
+famoso	Muy conocido	s
+rico	Que posee mucho dinero	s
+pobre	Que tiene poco dinero	s
+caro	De precio elevado	s
+barato	De precio bajo	s
+gratis	Que no cuesta nada
+libre	Sin ataduras	s
+lleno	Sin espacio libre	s
+vacío	Sin contenido	s
+abierto	No cerrado	s
+cerrado	Sin posibilidad de paso	s
+cercano	Que está a poca distancia	s
+lejano	Que está a mucha distancia	s
+próximo	Que viene a continuación	s
+último	Que va al final	s
+primero	Que va delante de todos	s
+único	Solo, sin otro igual	s
+mismo	Idéntico, no otro	s
+igual	Sin diferencia alguna	s
+distinto	Que no es lo mismo	s
+diferente	Que no se parece a otro	s
+propio	Que pertenece a uno mismo	s
+ajeno	Que pertenece a otro	s
+privado	Reservado a pocos	s
+secreto	Oculto y que se mantiene en reserva	s
+cierto	Verdadero	s
+falso	No verdadero	s
+posible	Que puede ocurrir	s
+imposible	Que no puede ocurrir	s
+fácil	Que no cuesta esfuerzo	s
+difícil	Que cuesta mucho esfuerzo	s
+sencillo	Sin complicaciones	s
+complejo	Formado por muchas partes	s
+útil	Que sirve para algo	s
+inútil	Que no sirve para nada	s
+importante	De gran valor o interés	s
+necesario	Que hace falta	s
+peligroso	Que puede causar daño	s
+seguro	Libre de peligro	s
+sano	Con buena salud	s
+enfermo	Que tiene una dolencia	s
+vivo	Que tiene vida	s
+muerto	Que ya no vive	s
+dulce	De sabor parecido al azúcar	s
+salado	Con mucha sal	s
+amargo	De sabor áspero como el café sin azúcar	s
+ácido	De sabor agrio como el limón	s
+picante	Que escuece en la lengua	s
+sabroso	De buen sabor	s
+oscuro	Con poca luz	s
+claro	Con mucha luz o fácil de entender	s
+brillante	Que despide luz o destellos	s
+mate	Sin brillo
+silencioso	Que no hace ruido	s
+ruidoso	Que produce mucho estruendo	s
+redondo	De forma circular	s
+plano	Sin relieves	s
+curvo	Que se aparta de la línea recta	s
+recto	Sin curvas	s
+hondo	Que tiene mucho fondo	s
+profundo	Que llega muy adentro	s
+superior	Situado más arriba	s
+inferior	Situado más abajo	s
+exterior	Que está por la parte de fuera	s
+interior	Que está por dentro	s
+central	Que está en medio	s
+lateral	Que está a un lado	s
+final	Que cierra algo	s
+inicial	Que está al principio	s
+anterior	Que ocurrió antes	s
+posterior	Que viene después	s
+actual	Del presente	s
+futuro	Que está por venir	s
+pasado	Que ya ocurrió	s
+diario	Que sucede cada día	s
+semanal	Que ocurre cada siete días	s
+mensual	Que sucede cada mes	s
+anual	Que ocurre cada doce meses	s
+nocturno	Propio de la noche	s
+diurno	Propio del día	s
+cotidiano	De todos los días	s
+habitual	Que se hace por costumbre	s
+frecuente	Que sucede a menudo	s
+total	Completo, que lo abarca todo	s
+parcial	Que es solo una parte	s
+entero	Sin que falte nada	s
+completo	Con todas sus partes	s
+mitad	Una de las dos partes iguales de un todo	s
+doble	El que equivale a dos veces algo	s
+triple	El que equivale a tres veces algo	s
+numeroso	Formado por muchos	s
+escaso	Poco abundante	s
+suficiente	Bastante para lo que se necesita	s
+abundante	En gran cantidad	s
+mucho	En gran cantidad
+poco	En cantidad escasa
+todo	La totalidad	s
+nada	Ninguna cosa
+algo	Alguna cosa
+cualquier	Uno indeterminado
+tanto	Tan gran cantidad	s
+ambos	Los dos
+varios	Más de uno
+verdadero	Que es real y cierto	s
+real	Que existe de verdad	s
+ideal	Perfecto, tal como se desea	s
+perfecto	Sin defecto alguno	s
+correcto	Sin errores	s
+equivocado	Que ha cometido un error	s
+natural	Producido por el entorno sin intervención humana	s
+artificial	Hecho por el hombre	s
+salvaje	Que vive en libertad en la naturaleza	s
+doméstico	Del hogar o que vive con las personas	s
+urbano	De la ciudad	s
+rural	Del campo	s
+local	De un lugar determinado	s
+nacional	Perteneciente a todo un país	s
+mundial	Del mundo entero	s
+popular	Que gusta a mucha gente	s
+oficial	Que tiene carácter de autoridad	s
+legal	Conforme a la ley	s
+justo	Que obra con equidad	s
+injusto	Que carece de justicia	s
+honesto	Que actúa con rectitud	s
+sincero	Que dice la verdad	s
+mentiroso	Que miente	s
+educado	Que tiene buenos modales	s
+grosero	Que carece de modales	s
+puntual	Que llega a la hora	s
+trabajador	Que se esfuerza en su labor	s
+cuidadoso	Que pone atención en lo que hace	s
+descuidado	Que no pone atención	s
+ordenado	Con todo en su sitio	s
+desordenado	Con todo revuelto	s
+elegante	Distinguido y de buen gusto	s
+cómodo	Que ofrece confort	s
+incómodo	Que causa molestia	s
+cálido	Que da calor agradable	s
+fresco	Ligeramente frío	s
+ardiente	Que quema	s
+luminoso	Que despide mucha luz	s
+espeso	Denso y poco fluido	s
+fino	Delgado y delicado	s
+frágil	Que se rompe con facilidad	s
+resistente	Que aguanta mucho	s
+firme	Estable y sólido	s
+flexible	Que se dobla fácilmente	s
+rígido	Que no se dobla	s
+sólido	Firme, que no es líquido ni gaseoso	s
+líquido	Que fluye y toma la forma del recipiente	s

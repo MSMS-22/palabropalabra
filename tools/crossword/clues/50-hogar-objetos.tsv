@@ -1,0 +1,143 @@
+casa	Edificio donde vive una familia	s
+hogar	Lugar donde se vive en familia	s
+piso	Vivienda en un edificio de varias plantas	s
+cuarto	Habitación de una casa	s
+sala	Habitación grande para estar y recibir visitas	s
+salón	Habitación principal para recibir a las visitas	s
+cocina	Habitación donde se prepara la comida	s
+baño	Habitación con ducha y lavabo	s
+dormitorio	Habitación de la casa con la cama	s
+pasillo	Zona estrecha que comunica las habitaciones	s
+puerta	Hoja que cierra la entrada	s
+ventana	Abertura en la pared para que entre la luz	s
+pared	Muro que divide las habitaciones	s
+techo	Superficie superior de una habitación	s
+suelo	Superficie sobre la que se anda	s
+escalera	Peldaños para subir de un piso a otro	s
+balcón	Terraza que sale de la fachada	s
+terraza	Espacio descubierto en un piso alto	s
+jardín	Terreno con flores y plantas junto a una casa	s
+garaje	Lugar donde se guarda el coche	s
+sótano	Planta bajo el nivel del suelo	s
+tejado	Cubierta exterior de un edificio	s
+chimenea	Conducto por donde sale el humo	s
+cama	Mueble para dormir	s
+sofá	Asiento mullido para varias personas	s
+silla	Asiento con respaldo para una persona	s
+mesa	Mueble con patas sobre el que se come	s
+mueble	Objeto que amuebla la casa	s
+armario	Mueble para guardar la ropa	s
+cajón	Compartimento deslizante de un mueble	s
+estante	Tabla en la que se colocan libros u objetos	s
+estantería	Mueble con baldas para libros	s
+cortina	Tela que cubre una ventana	s
+alfombra	Tejido que cubre el suelo	s
+cojín	Almohadón para apoyar la espalda	s
+almohada	Cojín que se pone bajo la cabeza	s
+sábana	Tela que cubre el colchón	s
+manta	Prenda gruesa para abrigarse en la cama	s
+colchón	Base blanda de la cama	s
+espejo	Cristal que refleja la imagen	s
+cuadro	Pintura enmarcada que se cuelga	s
+lámpara	Aparato que da luz	s
+bombilla	Globo de cristal que ilumina	s
+vela	Cilindro de cera con mecha	s
+reloj	Aparato que marca la hora	s
+radio	Aparato que emite voces y música	s
+televisor	Aparato que muestra imágenes en una pantalla	s
+teléfono	Aparato para hablar con alguien lejano	s
+ordenador	Máquina con pantalla y teclado	s
+teclado	Conjunto de letras y números que se pulsan para escribir	s
+pantalla	Superficie donde se proyectan las imágenes	s
+cable	Hilo que conduce la electricidad	s
+enchufe	Toma para conectar aparatos a la corriente	s
+pila	Fuente portátil de energía eléctrica	s
+interruptor	Pieza que enciende o apaga la luz	s
+nevera	Electrodoméstico que mantiene fríos los alimentos	s
+horno	Aparato para cocer al calor	s
+fogón	Parte de la cocina donde se enciende el fuego	s
+fregadero	Pila de la cocina para lavar los platos	s
+lavadora	Máquina que limpia la ropa	s
+secadora	Máquina que quita la humedad de la ropa	s
+tostadora	Aparato que dora el pan	s
+batidora	Aparato que mezcla con cuchillas	s
+cafetera	Aparato donde se prepara una infusión oscura	s
+tetera	Recipiente para servir el té	s
+olla	Recipiente de metal con asas para cocer	s
+sartén	Utensilio plano con mango para freír	s
+cazo	Recipiente con mango para calentar líquidos	s
+cuchara	Cubierto para tomar la sopa	s
+tenedor	Cubierto con púas	s
+cuchillo	Cubierto con filo para cortar	s
+plato	Recipiente plano para servir la comida	s
+vaso	Recipiente de cristal para beber	s
+taza	Recipiente con asa para el café	s
+copa	Vaso con pie	s
+jarra	Recipiente con asa y pico para servir agua	s
+botella	Envase de cuello estrecho	s
+lata	Envase de metal	s
+frasco	Recipiente pequeño de cristal con tapa	s
+caja	Recipiente de cartón o madera con tapa	s
+bolsa	Saco de plástico o papel	s
+cesta	Recipiente de mimbre con asa	s
+cubo	Recipiente para el agua con asa	s
+escoba	Utensilio con cerdas para barrer	s
+fregona	Utensilio con mango y trapos para el suelo	s
+trapo	Paño viejo para limpiar	s
+esponja	Material poroso que absorbe agua	s
+jabón	Producto que hace espuma para lavarse	s
+toalla	Tela absorbente para secarse	s
+cepillo	Utensilio de cerdas para el pelo o los dientes	s
+peine	Utensilio con púas para arreglar el cabello	s
+champú	Jabón líquido para el cabello	s
+ducha	Chorro de agua para asearse	s
+bañera	Pila grande para bañarse	s
+lavabo	Pila del baño para lavarse las manos	s
+grifo	Llave por la que sale el agua	s
+inodoro	Aparato sanitario del cuarto de baño	s
+papel	Hoja fina de pasta de celulosa para escribir	s
+libro	Conjunto de hojas impresas y encuadernadas	s
+cuaderno	Conjunto de hojas para escribir	s
+carpeta	Cubierta para guardar documentos	s
+lápiz	Barra de grafito para escribir y dibujar	s
+bolígrafo	Instrumento de escribir con tinta	s
+pluma	Instrumento antiguo para escribir con tinta	s
+goma	Material elástico que borra lo escrito	s
+regla	Instrumento para trazar líneas rectas	s
+tijeras	Instrumento de dos hojas para cortar papel
+pegamento	Sustancia que une dos superficies	s
+mochila	Bolsa que se lleva a la espalda	s
+maleta	Equipaje rígido con asa para viajar	s
+paraguas	Utensilio plegable contra la lluvia
+sombrilla	Parasol ligero	s
+llave	Objeto de metal para abrir una cerradura	s
+cerradura	Mecanismo que se abre con llave	s
+candado	Cerradura portátil con arco	s
+cadena	Serie de eslabones unidos	s
+cuerda	Cordel grueso hecho con hilos trenzados	s
+hilo	Fibra larga para coser	s
+aguja	Varilla fina con ojo para coser	s
+botón	Pieza que cierra una camisa	s
+cremallera	Cierre de dientes metálicos	s
+martillo	Herramienta para clavar	s
+clavo	Pieza metálica que se golpea con el martillo	s
+tornillo	Pieza metálica con rosca	s
+sierra	Herramienta dentada para cortar madera	s
+taladro	Herramienta que perfora paredes	s
+pala	Herramienta para cavar o recoger tierra	s
+rastrillo	Herramienta de púas para recoger hojas	s
+manguera	Tubo flexible para regar	s
+linterna	Aparato portátil que da luz	s
+brújula	Instrumento con aguja que señala el norte	s
+mapa	Dibujo de un territorio	s
+juguete	Objeto con el que juegan los niños	s
+muñeco	Figura humana de trapo o plástico	s
+pelota	Esfera con la que se juega	s
+balón	Pelota grande de fútbol	s
+globo	Bolsa de goma que se infla	s
+puzle	Rompecabezas de piezas	s
+peluche	Animal de felpa para abrazar	s
+canica	Bolita de cristal para jugar	s
+trompo	Juguete que gira sobre su punta	s
+bicicleta	Vehículo de dos ruedas con pedales	s
+triciclo	Vehículo infantil de tres ruedas	s
