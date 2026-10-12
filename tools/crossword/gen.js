@@ -144,7 +144,10 @@ function fill(index, g, N, rand, opt = {}) {
     // orden: aleatorio, preferiendo palabras poco usadas en otros crucigramas
     const arr = pc.slice();
     for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
-    if (usage) arr.sort((a, b) => (usage.get(entries[a].w) || 0) - (usage.get(entries[b].w) || 0) + (rand() - 0.5) * 1.5);
+    if (usage) {                         // sorteo ponderado: las palabras menos usadas en otros crucigramas salen antes (sin vetar ninguna)
+      const key = new Map(arr.map((id) => [id, rand() * Math.pow(1 + (usage.get(entries[id].w) || 0), 2)]));
+      arr.sort((a, b) => key.get(a) - key.get(b));
+    }
     const s = slots[pick];
     for (const id of arr.slice(0, 40)) {
       const w = entries[id].w, prev = s.cells.map((c) => grid[c]);

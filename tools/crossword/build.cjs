@@ -7,10 +7,11 @@ const fs = require("fs"), path = require("path"), os = require("os");
 const { Worker, isMainThread, parentPort } = require("worker_threads");
 const G = require("./gen.js"), B = require("./bank.cjs"), A = require("./alts.cjs");
 
+const CAPSCALE = (() => { const i = process.argv.indexOf("--capscale"); return i > 0 ? +process.argv[i + 1] : 1; })();
 const NODES = { 9: 5000, 11: 30000 };   // presupuesto de búsqueda por intento
 const HINT_RATIO = 0.28;
-// tope de usos de una misma palabra en todo el conjunto (según su longitud): garantiza variedad entre los 400
-const CAP = (len) => (len === 3 ? 34 : len === 4 ? 16 : len === 5 ? 10 : len === 6 ? 8 : 6);
+// tope duro de usos de una misma palabra en todo el conjunto (según su longitud); la variedad la fomenta el sorteo ponderado de gen.js
+const CAP = (e) => (e.w.length === 3 ? 60 : e.w.length === 4 ? (e.plural ? 14 : 30) : e.w.length === 5 ? (e.plural ? 12 : 24) : 14);   // los plurales cortos (osos, alas...) se limitan más
 
 /* ---------- numeración y pistas ---------- */
 function assemble(N, tpl, res, entries) {
@@ -51,7 +52,7 @@ function workerMain() {
       attempts++;
       const tpl = G.makeTemplate(job.n, rand); if (!tpl) continue;
       const mult = 1 + Math.floor(attempts / 100) * 0.5;      // si cuesta encontrar uno, se relajan los topes poco a poco
-      const res = G.fill(index, tpl, job.n, rand, { maxNodes: NODES[job.n] || 20000, usage, allowed: (e) => (usage.get(e.w) || 0) < CAP(e.w.length) * mult });
+      const res = G.fill(index, tpl, job.n, rand, { maxNodes: NODES[job.n] || 20000, usage, allowed: (e) => (usage.get(e.w) || 0) < Math.ceil(CAP(e) * CAPSCALE * mult) });
       if (res.fail) continue;
       const given = chooseGivens(job.n, tpl, res.slots, rand); if (!given) continue;
       const p = assemble(job.n, tpl, res, entries);
