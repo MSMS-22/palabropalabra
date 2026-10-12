@@ -9,6 +9,8 @@ const G = require("./gen.js"), B = require("./bank.cjs"), A = require("./alts.cj
 
 const NODES = { 9: 5000, 11: 30000 };   // presupuesto de búsqueda por intento
 const HINT_RATIO = 0.28;
+// tope de usos de una misma palabra en todo el conjunto (según su longitud): garantiza variedad entre los 400
+const CAP = (len) => (len <= 4 ? 14 : len === 5 ? 10 : len === 6 ? 8 : 6);
 
 /* ---------- numeración y pistas ---------- */
 function assemble(N, tpl, res, entries) {
@@ -48,7 +50,8 @@ function workerMain() {
     for (;;) {
       attempts++;
       const tpl = G.makeTemplate(job.n, rand); if (!tpl) continue;
-      const res = G.fill(index, tpl, job.n, rand, { maxNodes: NODES[job.n] || 20000, usage });
+      const mult = 1 + Math.floor(attempts / 150) * 0.5;      // si cuesta encontrar uno, se relajan los topes poco a poco
+      const res = G.fill(index, tpl, job.n, rand, { maxNodes: NODES[job.n] || 20000, usage, allowed: (e) => (usage.get(e.w) || 0) < CAP(e.w.length) * mult });
       if (res.fail) continue;
       const given = chooseGivens(job.n, tpl, res.slots, rand); if (!given) continue;
       const p = assemble(job.n, tpl, res, entries);
@@ -89,9 +92,9 @@ function main() {
     w.on("message", (m) => {
       if (m.ready) return dispatch(w);
       const cur = curSize();
-      if (cur) {
+      attempts += m.attempts;
+      if (cur && m.puzzle.n === cur[0]) {          // descarta resultados de encargos anteriores de otro tamaño
         const [n, count] = cur, list = bySize.get(n), key = m.puzzle.g;
-        attempts += m.attempts;
         if (list.length < count && !seen.has(key)) {
           seen.add(key); list.push(m.puzzle); for (const x of m.words) usage.set(x, (usage.get(x) || 0) + 1);
           if (list.length % 10 === 0 || list.length === count) console.log(`  ${n}×${n}: ${list.length}/${count} (${((Date.now() - t0) / 1000) | 0}s)`);
