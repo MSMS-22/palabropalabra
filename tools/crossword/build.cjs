@@ -10,7 +10,7 @@ const G = require("./gen.js"), B = require("./bank.cjs"), A = require("./alts.cj
 const NODES = { 9: 5000, 11: 30000 };   // presupuesto de búsqueda por intento
 const HINT_RATIO = 0.28;
 // tope de usos de una misma palabra en todo el conjunto (según su longitud): garantiza variedad entre los 400
-const CAP = (len) => (len <= 4 ? 14 : len === 5 ? 10 : len === 6 ? 8 : 6);
+const CAP = (len) => (len === 3 ? 34 : len === 4 ? 16 : len === 5 ? 10 : len === 6 ? 8 : 6);
 
 /* ---------- numeración y pistas ---------- */
 function assemble(N, tpl, res, entries) {
@@ -50,7 +50,7 @@ function workerMain() {
     for (;;) {
       attempts++;
       const tpl = G.makeTemplate(job.n, rand); if (!tpl) continue;
-      const mult = 1 + Math.floor(attempts / 150) * 0.5;      // si cuesta encontrar uno, se relajan los topes poco a poco
+      const mult = 1 + Math.floor(attempts / 100) * 0.5;      // si cuesta encontrar uno, se relajan los topes poco a poco
       const res = G.fill(index, tpl, job.n, rand, { maxNodes: NODES[job.n] || 20000, usage, allowed: (e) => (usage.get(e.w) || 0) < CAP(e.w.length) * mult });
       if (res.fail) continue;
       const given = chooseGivens(job.n, tpl, res.slots, rand); if (!given) continue;
