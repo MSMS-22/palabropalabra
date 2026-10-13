@@ -1,7 +1,7 @@
 // Caché sin conexión para todos los pasatiempos: se sirve al instante desde caché
 // y se actualiza en segundo plano (stale-while-revalidate).
-const CACHE = "pasatiempos-v2";
-const SHELL = ["./", "index.html", "shared.css", "shared.js", "palabra/", "sudoku/"];
+const CACHE = "pasatiempos-v4";
+const SHELL = ["./", "index.html", "shared.css", "shared.js", "palabra/", "sudoku/", "crucigrama/", "2048/"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => Promise.allSettled(SHELL.map((u) => c.add(u)))).then(() => self.skipWaiting()));
 });

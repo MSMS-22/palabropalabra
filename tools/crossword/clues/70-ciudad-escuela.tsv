@@ -1,0 +1,159 @@
+ciudad	Población grande con muchos edificios	s
+pueblo	Población pequeña	s
+aldea	Pueblo muy pequeño	s
+barrio	Cada zona en que se divide una ciudad	s
+calle	Vía urbana con casas a los lados	s
+avenida	Calle ancha con árboles	s
+plaza	Espacio abierto en una población	s
+parque	Terreno con árboles y bancos para pasear	s
+puente	Construcción que cruza un río	s
+túnel	Paso subterráneo	s
+carretera	Camino ancho para vehículos	s
+autopista	Carretera de varios carriles sin cruces	s
+camino	Senda que lleva de un lugar a otro	s
+esquina	Lugar donde se cruzan dos calles	s
+acera	Parte de la calle por donde andan los peatones	s
+semáforo	Aparato de luces que regula el tráfico	s
+farola	Poste con luz en la calle	s
+banco	Asiento de varias plazas en el parque	s
+fuente	Surtidor de agua en una plaza	s
+estatua	Escultura que representa a una persona	s
+edificio	Construcción de varios pisos	s
+rascacielos	Edificio altísimo
+torre	Construcción alta y estrecha	s
+castillo	Fortaleza medieval con torres	s
+palacio	Residencia grande de un monarca	s
+catedral	Iglesia principal de una diócesis	s
+iglesia	Templo cristiano	s
+mezquita	Templo musulmán	s
+museo	Lugar donde se exhiben obras de arte	s
+teatro	Edificio donde se representan obras	s
+cine	Sala donde se proyectan películas	s
+biblioteca	Lugar donde se prestan libros	s
+escuela	Centro donde estudian los niños	s
+instituto	Centro de enseñanza secundaria	s
+universidad	Centro de estudios superiores	s
+aula	Sala donde se dan las clases	s
+pizarra	Superficie negra donde se escribe con tiza	s
+tiza	Barra blanca para escribir en la pizarra	s
+pupitre	Mesa individual de un colegio	s
+recreo	Descanso entre clases	s
+examen	Prueba para comprobar lo aprendido	s
+tarea	Trabajo que se hace en casa	s
+deberes	Ejercicios que se hacen en casa
+nota	Calificación de un ejercicio	s
+asignatura	Materia que se estudia en el colegio	s
+historia	Estudio del pasado	s
+geografía	Ciencia que describe la Tierra	s
+matemáticas	Ciencia de los números
+biología	Ciencia que estudia la vida
+física	Ciencia que estudia la materia y la energía
+química	Ciencia que estudia las sustancias
+ciencia	Conjunto de conocimientos obtenidos con método	s
+arte	Actividad creativa que busca la belleza	s
+música	Arte de combinar sonidos	s
+dibujo	Arte de representar figuras con líneas	s
+idioma	Lengua de un pueblo	s
+palabra	Conjunto de letras con significado	s
+frase	Conjunto de palabras con sentido completo	s
+letra	Signo del alfabeto	s
+sílaba	Grupo de sonidos que se pronuncian de una vez	s
+párrafo	Parte de un texto entre dos puntos y aparte	s
+verso	Línea de un poema	s
+cuento	Narración breve	s
+novela	Relato extenso de ficción	s
+poema	Obra escrita en verso	s
+canción	Pieza musical con letra	s
+revista	Publicación periódica con fotografías	s
+periódico	Publicación diaria de noticias	s
+noticia	Información de un hecho reciente	s
+diccionario	Libro con las palabras y sus significados	s
+atlas	Libro de mapas
+número	Signo que expresa una cantidad	s
+cifra	Cada uno de los dígitos de un número	s
+suma	Operación de juntar cantidades	s
+resta	Operación de quitar cantidades	s
+cuenta	Operación aritmética	s
+fracción	Número que expresa una parte de un todo	s
+triángulo	Figura de tres lados	s
+cuadrado	Figura de cuatro lados iguales	s
+círculo	Figura plana redonda	s
+rectángulo	Figura de cuatro ángulos rectos	s
+ángulo	Figura formada por dos líneas que se cortan	s
+línea	Trazo continuo	s
+punto	Marca mínima que se pone al final de una oración	s
+esfera	Cuerpo redondo como una pelota	s
+cono	Cuerpo con base circular y punta	s
+área	Superficie de una figura	s
+peso	Fuerza con que la Tierra atrae a un cuerpo	s
+metro	Unidad básica de longitud	s
+kilo	Mil gramos	s
+litro	Unidad de capacidad	s
+gramo	Milésima parte de un kilo	s
+grado	Unidad de temperatura o de ángulo	s
+hora	Sesenta minutos	s
+minuto	Sesenta segundos	s
+segundo	Sesentava parte de un minuto	s
+semana	Siete días	s
+siglo	Cien años	s
+década	Diez años	s
+experimento	Prueba para comprobar una teoría	s
+laboratorio	Lugar donde se hacen experimentos	s
+microscopio	Aparato que agranda lo muy pequeño	s
+telescopio	Aparato que acerca los astros	s
+átomo	Partícula mínima de un elemento	s
+molécula	Unión de dos o más átomos	s
+célula	Unidad básica de los seres vivos	s
+energía	Capacidad de realizar un trabajo	s
+fuerza	Capacidad de empujar o levantar peso	s
+gravedad	Fuerza que atrae los cuerpos hacia la Tierra	s
+imán	Objeto que atrae el hierro	s
+motor	Máquina que produce movimiento	s
+máquina	Aparato que realiza un trabajo	s
+robot	Máquina que imita movimientos humanos	s
+cohete	Nave que se lanza al espacio	s
+satélite	Cuerpo que gira alrededor de un planeta	s
+internet	Red mundial de comunicación
+página	Cada cara de una hoja	s
+correo	Servicio que reparte cartas	s
+mensaje	Texto que se envía a alguien	s
+archivo	Conjunto de datos guardados en el ordenador	s
+programa	Conjunto de instrucciones de un ordenador	s
+aplicación	Programa para el móvil	s
+contraseña	Clave secreta de acceso	s
+cámara	Aparato para sacar fotos	s
+vídeo	Grabación de imágenes en movimiento	s
+foto	Imagen obtenida con una cámara	s
+sonido	Lo que se percibe con el oído	s
+imagen	Representación visual de algo	s
+tren	Vehículo que circula por raíles	s
+autobús	Vehículo para transportar pasajeros por la ciudad	s
+coche	Automóvil	s
+camión	Vehículo grande para mercancías	s
+furgoneta	Vehículo pequeño de carga	s
+moto	Vehículo de dos ruedas a gasolina	s
+avión	Aeronave de alas fijas	s
+helicóptero	Aeronave que vuela con aspas giratorias	s
+barco	Nave que navega por el agua	s
+velero	Barco movido por el viento	s
+submarino	Barco que navega bajo el agua	s
+ancla	Pieza pesada que sujeta el barco	s
+puerto	Lugar donde atracan los barcos	s
+aeropuerto	Lugar donde despegan los aviones	s
+andén	Plataforma junto a la vía del tren	s
+billete	Papel que permite viajar	s
+equipaje	Conjunto de maletas de un viajero	s
+pasaporte	Documento para viajar al extranjero	s
+viaje	Desplazamiento a un lugar lejano	s
+turista	Persona que viaja por placer	s
+hotel	Establecimiento donde se alojan los viajeros	s
+tienda	Local donde se vende	s
+mercado	Lugar con puestos de venta	s
+panadería	Tienda donde se vende pan	s
+farmacia	Tienda donde se compran medicinas	s
+librería	Tienda donde se venden libros	s
+joyería	Tienda de joyas	s
+dinero	Monedas y billetes	s
+moneda	Pieza de metal que sirve para pagar	s
+precio	Valor en dinero de una cosa	s
+oferta	Rebaja de un producto	s

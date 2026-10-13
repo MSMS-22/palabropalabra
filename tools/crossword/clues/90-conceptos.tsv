@@ -1,0 +1,196 @@
+amor	Sentimiento intenso de afecto hacia alguien	s
+cariño	Afecto que se siente por alguien	s
+amistad	Relación de afecto entre amigos	s
+alegría	Sentimiento de gran contento	s
+tristeza	Sentimiento de pena	s
+miedo	Sensación de temor ante un peligro	s
+rabia	Enojo muy violento	s
+celos	Temor a perder el cariño de alguien
+envidia	Pesar por el bien ajeno	s
+orgullo	Satisfacción por los propios logros	s
+vergüenza	Sensación de apuro ante los demás	s
+sorpresa	Impresión causada por algo inesperado	s
+esperanza	Confianza en que algo bueno ocurrirá	s
+confianza	Seguridad en alguien o en algo	s
+duda	Falta de certeza	s
+verdad	Conformidad entre lo que se dice y la realidad	s
+mentira	Cosa dicha contra la verdad	s
+idea	Pensamiento o ocurrencia	s
+deseo	Anhelo de conseguir algo	s
+ilusión	Esperanza que alegra el ánimo	s
+recuerdo	Imagen del pasado que se guarda en la memoria	s
+memoria	Capacidad para recordar	s
+mente	Facultad de pensar	s
+alma	Parte espiritual del ser humano	s
+espíritu	Parte inmaterial de la persona	s
+vida	Estado de los seres que nacen y crecen	s
+muerte	Fin de la vida	s
+suerte	Casualidad favorable o adversa	s
+destino	Fuerza que se cree que guía los sucesos	s
+azar	Casualidad
+riesgo	Posibilidad de que ocurra un daño	s
+peligro	Situación en la que puede ocurrir un mal	s
+problema	Cuestión que hay que resolver	s
+solución	Respuesta que resuelve un problema	s
+error	Idea o acción que no es correcta	s
+fallo	Avería o defecto que impide que algo funcione	s
+éxito	Resultado muy favorable	s
+fracaso	Resultado adverso de un intento	s
+victoria	Triunfo sobre un adversario	s
+derrota	Pérdida en una batalla o competición	s
+premio	Recompensa por un mérito	s
+castigo	Pena impuesta por una falta	s
+regalo	Cosa que se da sin pedir nada	s
+favor	Ayuda que se presta a alguien	s
+ayuda	Apoyo que se presta a otro	s
+trabajo	Ocupación por la que se recibe un sueldo	s
+empleo	Puesto de trabajo	s
+sueldo	Dinero que se cobra por trabajar	s
+negocio	Actividad comercial para obtener ganancias	s
+empresa	Organización dedicada a la producción o los servicios	s
+oficina	Lugar donde se hace trabajo administrativo	s
+fábrica	Establecimiento industrial que produce bienes	s
+industria	Actividad que transforma materias primas	s
+comercio	Compra y venta de productos	s
+mercancía	Producto que se compra o se vende	s
+impuesto	Tributo que se paga al Estado	s
+deuda	Cantidad de dinero que se debe	s
+riqueza	Abundancia de bienes	s
+pobreza	Escasez de lo necesario para vivir
+gobierno	Conjunto de personas que dirigen un país	s
+estado	Conjunto de instituciones de un país	s
+país	Territorio con gobierno propio	s
+nación	Conjunto de personas de un mismo país	s
+patria	Tierra natal de una persona	s
+ciudadano	Habitante de un país con derechos y obligaciones	s
+política	Actividad de gobernar un Estado	s
+elección	Votación para escoger a un cargo	s
+voto	Opinión que se da en una elección	s
+derecho	Facultad de hacer algo conforme a la norma	s
+deber	Obligación moral o legal que hay que cumplir	s
+libertad	Capacidad de actuar sin imposiciones	s
+igualdad	Trato sin diferencias	s
+justicia	Principio de dar a cada uno lo suyo	s
+orden	Colocación correcta de las cosas	s
+guerra	Lucha armada entre países	s
+batalla	Combate entre ejércitos	s
+ejército	Fuerza militar de un país	s
+arma	Instrumento para atacar o defenderse	s
+espada	Arma blanca de hoja larga	s
+escudo	Arma defensiva que se lleva en el brazo	s
+flecha	Proyectil que se dispara con un arco	s
+lanza	Arma con asta larga y punta afilada	s
+bomba	Artefacto explosivo	s
+crimen	Delito grave	s
+delito	Acción castigada por la ley	s
+robo	Hurto de algo ajeno	s
+cárcel	Lugar donde se encierra a los condenados	s
+prisión	Lugar de reclusión de los condenados	s
+juicio	Proceso en que un juez dicta sentencia	s
+sentencia	Decisión final de un juez	s
+testigo	Persona que presencia un hecho	s
+cultura	Conjunto de saberes y costumbres de un pueblo	s
+tradición	Costumbre que pasa de generación en generación	s
+costumbre	Hábito adquirido por repetición	s
+fiesta	Reunión para celebrar algo	s
+cumpleaños	Aniversario del nacimiento de alguien
+boda	Ceremonia en la que dos personas se casan	s
+funeral	Ceremonia en honor de un fallecido	s
+bautizo	Ceremonia religiosa para un recién nacido	s
+navidad	Fiesta cristiana del nacimiento de Jesús	s
+carnaval	Fiesta con disfraces antes de la Cuaresma	s
+desfile	Marcha de personas en un acto público	s
+procesión	Desfile religioso por las calles	s
+concierto	Espectáculo musical en directo	s
+festival	Gran fiesta con actuaciones	s
+feria	Mercado con atracciones y puestos	s
+circo	Espectáculo con payasos y acróbatas	s
+espectáculo	Función pública que divierte	s
+película	Obra que se proyecta en el cine	s
+serie	Programa que se emite por episodios	s
+canal	Emisora de televisión	s
+anuncio	Mensaje que promociona un producto	s
+leyenda	Relato tradicional de hechos fantásticos	s
+mito	Relato fantástico de los dioses antiguos	s
+fábula	Relato breve con animales y moraleja	s
+chiste	Dicho gracioso que provoca risa	s
+broma	Burla que se hace sin mala intención	s
+juego	Actividad con reglas para divertirse	s
+deporte	Ejercicio físico con reglas	s
+partido	Competición entre dos equipos	s
+equipo	Grupo de personas que juegan juntas	s
+jugador	Persona que participa en un juego	s
+entrenador	Persona que prepara a los deportistas	s
+árbitro	Persona que hace cumplir las reglas del juego	s
+campeón	Ganador de una liga o torneo	s
+medalla	Distinción que se entrega a los ganadores	s
+carrera	Prueba de velocidad	s
+meta	Línea de llegada de una carrera	s
+portería	Espacio entre los postes del fútbol	s
+fútbol	Deporte en el que se golpea un balón con el pie
+baloncesto	Deporte en el que se encesta una pelota
+tenis	Deporte de raqueta y red
+natación	Deporte que se practica en la piscina
+ciclismo	Deporte que se practica sobre una bicicleta
+atletismo	Conjunto de deportes de carrera, salto y lanzamiento
+boxeo	Deporte de combate con guantes
+ajedrez	Juego de tablero con piezas de rey y reina
+dama	Pieza del ajedrez o mujer distinguida	s
+peón	Pieza más humilde del ajedrez	s
+alfil	Pieza del ajedrez que se mueve en diagonal	s
+naipe	Carta de la baraja	s
+baraja	Conjunto de cartas para jugar	s
+ficha	Pieza pequeña que se usa en juegos de mesa	s
+guitarra	Instrumento de seis cuerdas	s
+piano	Instrumento de teclas blancas y negras	s
+violín	Instrumento de cuerda que se toca con arco	s
+flauta	Instrumento de viento con agujeros	s
+trompeta	Instrumento de viento metálico	s
+tambor	Instrumento de percusión que se golpea con palillos	s
+batería	Conjunto de tambores y platillos	s
+arpa	Instrumento de cuerdas verticales	s
+órgano	Instrumento de tubos que suena en las iglesias	s
+melodía	Sucesión de sonidos agradables	s
+ritmo	Orden en el compás de la música	s
+coro	Grupo que canta a la vez	s
+orquesta	Conjunto numeroso de músicos	s
+baile	Movimiento del cuerpo al compás de la música	s
+escena	Parte de una obra de teatro	s
+guion	Texto de una película	s
+pintura	Arte de pintar	s
+escultura	Obra de arte tallada o modelada	s
+retrato	Pintura que representa a una persona	s
+paisaje	Pintura que representa un territorio	s
+color	Sensación que produce la luz en los ojos	s
+sombra	Zona oscura que proyecta un cuerpo	s
+forma	Figura exterior de un objeto	s
+tamaño	Dimensiones de un objeto	s
+altura	Distancia vertical desde el suelo	s
+longitud	Distancia de un extremo a otro	s
+anchura	Distancia de un lado al otro	s
+distancia	Espacio entre dos lugares	s
+velocidad	Rapidez con que se mueve algo	s
+dirección	Rumbo que se sigue	s
+rumbo	Dirección que se sigue	s
+centro	Punto medio de algo	s
+borde	Extremo de una superficie	s
+fondo	Parte más honda de algo	s
+superficie	Parte exterior de un cuerpo	s
+lado	Parte derecha o izquierda de algo	s
+cantidad	Número de unidades de algo	s
+parte	Porción de un todo	s
+grupo	Conjunto de personas o cosas	s
+conjunto	Reunión de varios elementos	s
+fila	Hilera de personas o cosas	s
+cola	Fila de personas que esperan	s
+lista	Relación de nombres o cosas	s
+tabla	Cuadro con filas y columnas	s
+modelo	Ejemplo que se imita	s
+ejemplo	Caso que sirve para ilustrar algo	s
+razón	Argumento que justifica algo	s
+causa	Origen de un efecto	s
+efecto	Resultado de una causa	s
+motivo	Razón para hacer algo	s
+sentido	Significado de algo	s
+valor	Cualidad que hace algo estimable	s
+calidad	Conjunto de cualidades de algo	s

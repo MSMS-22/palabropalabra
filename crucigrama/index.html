@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#121213">
+<meta name="description" content="400 crucigramas en español con pistas. Modo sin letras sugeridas o con letras sugeridas, y ayudas limitadas por crucigrama.">
+<title>Crucigramas · Pasatiempos</title>
+<script src="../shared.js"></script>
+<link rel="stylesheet" href="../shared.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23b59f3b'/%3E%3Cpath d='M4 4h8v8H4zM12 12h8v8h-8zM20 20h8v8h-8z' fill='white'/%3E%3C/svg%3E">
+<style>
+body{background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;
+max-width:620px;margin:0 auto;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);overflow:hidden;touch-action:manipulation;user-select:none}
+header{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 0;border-bottom:1px solid var(--line)}
+header .ib{width:36px;height:36px;font-size:18px}
+h1{font-size:clamp(18px,5vw,26px);margin:0;font-weight:800;letter-spacing:.02em}
+.hbar{display:flex;gap:2px;align-items:center;min-width:76px}.hbar:last-child{justify-content:flex-end}
+.streak{font-weight:700;font-size:15px;padding:0 4px;white-space:nowrap}
+[hidden]{display:none!important}
+/* ---- lista ---- */
+#list{flex:1;min-height:0;overflow:auto;padding:10px 0 16px}
+.fil{margin:0 0 10px}.fil p{margin:0 0 4px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fil .seg button{padding:7px 6px;font-size:13px;min-width:0}
+.cont{display:flex;gap:8px;margin:4px 0 12px;flex-wrap:wrap}
+.pz{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px}
+.pz button{aspect-ratio:1;border-radius:10px;border:2px solid var(--line);font-weight:700;font-size:15px;position:relative;background:var(--card)}
+.pz button.p{background:var(--sel);border-color:transparent}
+.pz button.d{background:var(--ok);border-color:transparent;color:#fff}
+.pz button.d.s::after{content:"★";position:absolute;right:4px;top:0;font-size:11px;color:#ffd54f}
+.pz button small{display:block;font-size:9px;font-weight:600;opacity:.7;line-height:1}
+.sum{font-size:13px;color:var(--muted);margin:2px 0 8px}
+/* ---- juego ---- */
+#game{flex:1;min-height:0;display:flex;flex-direction:column}
+.info{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--muted);padding:6px 2px 2px}
+.info button{font-weight:700}
+#timer{font-variant-numeric:tabular-nums;min-width:64px;text-align:left}
+main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px 0}
+#wrap{position:relative;width:min(100%,calc(100dvh - 350px),560px);aspect-ratio:1}
+#board{container-type:inline-size;display:grid;width:100%;height:100%;border:2px solid var(--muted);background:var(--muted);gap:1px}
+#board.paused{filter:blur(14px)}
+.c{position:relative;display:grid;place-items:center;background:var(--bg);cursor:pointer;min-width:0}
+.c.b{background:var(--fg)}
+.c .n{position:absolute;left:2px;top:1px;font-size:calc(100cqw / var(--n) * .3);line-height:1;font-weight:700;color:var(--muted)}
+.c .v{font-size:calc(100cqw / var(--n) * .58);font-weight:600;text-transform:uppercase;line-height:1;color:var(--mine)}
+.c.w{background:var(--peer)}.c.sel{background:var(--sel)}
+.c.g .v{color:var(--given);font-weight:800}
+.c.r .v{color:var(--ok)}
+.c.x{background:var(--errbg)}.c.x .v{color:var(--err)}
+.c.hint{outline:3px solid var(--ok);outline-offset:-3px;z-index:1}
+#pause{position:absolute;inset:0;display:grid;place-items:center;z-index:3}
+#clue{width:100%;display:flex;align-items:center;gap:6px;background:var(--peer);border-radius:10px;padding:4px 6px;min-height:52px}
+#clue button{width:34px;height:34px;border-radius:8px;font-size:18px;flex:none}
+#clue button:hover{background:var(--line)}
+#clueT{flex:1;font-size:14px;font-weight:600;line-height:1.25;text-align:center}
+#clueT b{color:var(--ok);margin-right:4px}
+#kb{display:flex;flex-direction:column;gap:5px;padding:6px 0 4px}
+.kr{display:flex;gap:4px;justify-content:center}
+.k{flex:1;max-width:40px;height:clamp(38px,6dvh,48px);border-radius:6px;background:var(--key);color:var(--key-fg);font-weight:700;font-size:16px;text-transform:uppercase;display:grid;place-items:center}
+.k.w{flex:1.5;max-width:60px}
+.k:active{filter:brightness(.9)}
+@media (hover:hover) and (pointer:fine){#kb{display:none}#wrap{width:min(100%,calc(100dvh - 300px),560px)}}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:2px 0 8px}
+.tl{display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 0;border-radius:8px;font-size:11px;font-weight:600;color:var(--muted);line-height:1.2}
+.tl b{font-size:19px;color:var(--fg);font-weight:400}
+.tl:hover{background:var(--line)}.tl:disabled{opacity:.35;cursor:default}
+.tl i{font-style:normal;color:var(--fg);font-weight:700}
+.help p{margin:8px 0;font-size:14px}
+.cl{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:60dvh;overflow:auto;font-size:13px}
+.cl h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.cl button{display:block;width:100%;text-align:left;padding:5px 6px;border-radius:6px;line-height:1.25}
+.cl button:hover,.cl button.on{background:var(--sel)}
+.cl button.ok{opacity:.45;text-decoration:line-through}
+.cl b{color:var(--ok)}
+#load{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;font-weight:700;color:var(--muted)}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 14px;text-align:center}
+.times b{display:block;font-size:22px}.times span{font-size:11px;color:var(--muted)}
+@keyframes win{40%{transform:scale(1.03)}}
+#board.won{animation:win .6s}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar"><a class="ib" href="../" aria-label="Pasatiempos" title="Pasatiempos">🏠</a><button class="ib" id="bHelp" aria-label="Ayuda">?</button></div>
+  <h1>Crucigramas</h1>
+  <div class="hbar"><span class="streak" id="streak" title="Racha"></span><button class="ib" id="bStats" aria-label="Estadísticas">📊</button><button class="ib" id="bSet" aria-label="Ajustes">⚙️</button></div>
+</header>
+
+<section id="list">
+  <div class="fil"><p>Modo</p><div class="seg" id="fMode"></div></div>
+  <div class="cont" id="cont"></div>
+  <div class="fil"><p>Tamaño</p><div class="seg" id="fSize"></div></div>
+  <div class="fil"><p>Estado</p><div class="seg" id="fState"></div></div>
+  <div class="sum" id="sum"></div>
+  <div class="pz" id="pz"></div>
+</section>
+
+<section id="game" hidden>
+  <div class="info"><button id="bBack">← Lista</button><button id="timer" aria-label="Pausa">00:00</button><span id="modeL"></span></div>
+  <main>
+    <div id="wrap"><div id="board" role="grid"></div><div id="pause" hidden><button class="btn main" id="bResume">Continuar</button></div></div>
+    <div id="clue"><button id="cPrev" aria-label="Pista anterior">‹</button><div id="clueT"></div><button id="cNext" aria-label="Pista siguiente">›</button></div>
+  </main>
+  <div id="kb"></div>
+  <div class="tools">
+    <button class="tl" id="tCheck"><b>✔️</b><span>Revisar</span></button>
+    <button class="tl" id="tLetter"><b>🔤</b><span>Letra <i id="nL"></i></span></button>
+    <button class="tl" id="tWord"><b>📖</b><span>Palabra <i id="nW"></i></span></button>
+    <button class="tl" id="tClues"><b>📋</b><span>Pistas</span></button>
+  </div>
+</section>
+
+<div id="toast" role="status"></div>
+<div id="load">Cargando…</div>
+<dialog id="dHelp"><button class="ib x" data-close aria-label="Cerrar">✕</button><div class="help" id="helpBody"></div></dialog>
+<dialog id="dStats"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="statsBody"></div></dialog>
+<dialog id="dSet"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="setBody"></div></dialog>
+<dialog id="dClues"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="cluesBody"></div></dialog>
+
+<script>
+"use strict";
+const MODES = { sin: "Sin letras sugeridas", con: "Con letras sugeridas" };
+const MAX_LETTERS = 3, MAX_WORDS = 1;
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const fmt = (ms) => { const s = Math.floor(ms / 1000); return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; };
+const norm = (w) => w.toLowerCase().replace(/ñ/g, "\u0001").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\u0001/g, "ñ");
+
+/* ---------- ajustes, estado y estadísticas ---------- */
+let S = Object.assign({ mode: "sin", size: 0, state: "all" }, PAS.get("cw.settings", {}));
+if (!MODES[S.mode]) S.mode = "sin";
+const saveSettings = () => PAS.set("cw.settings", S);
+const pkey = (id, mode = S.mode) => `cw.p.${mode}.${id}`;
+const getStats = (mode = S.mode) => Object.assign({ done: 0, perfect: 0, streak: 0, best: 0, bestTime: {}, total: {} }, PAS.get("cw.stats." + mode, {}));
+const renderStreak = () => { $("streak").textContent = "🔥 " + getStats().streak; };
+
+/* ---------- datos ---------- */
+let META = null; const PACKS = new Map();
+async function loadMeta() { if (!META) META = await (await fetch("data/index.json")).json(); return META; }
+async function getPuzzle(id) {
+  const meta = await loadMeta(), pi = Math.floor((id - 1) / meta.pack), file = meta.files[pi];
+  if (!PACKS.has(file)) { const p = fetch("data/" + file).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }); PACKS.set(file, p); p.catch(() => PACKS.delete(file)); }
+  return (await PACKS.get(file)).find((q) => q.id === id);
+}
+const sizeOf = (id) => META.sizes.find((s) => id >= s.from && id <= s.to).n;
+
+/* ---------- partida ---------- */
+let P = null, ST = null, SLOTS = [], CELL = [], sel = -1, dir = "A", wrong = new Set(), hintCell = -1, last = 0, paused = false;
+function buildSlots(p) {
+  const N = p.n, g = p.g, out = [], black = (c) => g[c] === "#";
+  const add = (cells, d) => { if (cells.length >= 3) out.push({ dir: d, cells }); };
+  for (let r = 0; r < N; r++) { let cur = []; for (let c = 0; c <= N; c++) { if (c < N && !black(r * N + c)) cur.push(r * N + c); else { add(cur, "A"); cur = []; } } }
+  for (let c = 0; c < N; c++) { let cur = []; for (let r = 0; r <= N; r++) { if (r < N && !black(r * N + c)) cur.push(r * N + c); else { add(cur, "D"); cur = []; } } }
+  const starts = [...new Set(out.map((s) => s.cells[0]))].sort((a, b) => a - b), num = new Map(starts.map((c, i) => [c, i + 1]));
+  for (const d of ["A", "D"]) out.filter((s) => s.dir === d).sort((a, b) => num.get(a.cells[0]) - num.get(b.cells[0])).forEach((s, i) => { const k = (d === "A" ? p.a : p.d)[i]; s.num = k[0]; s.clue = k[2]; });
+  CELL = Array.from({ length: N * N }, () => ({ A: -1, D: -1 }));
+  out.forEach((s, i) => s.cells.forEach((c) => (CELL[c][s.dir] = i)));
+  return out;
+}
+const isGiven = (i) => S_mode() === "con" && P.h[i] === "1";
+const S_mode = () => ST.mode;
+const correct = (i) => ST.v[i] === P.g[i] || !!(P.x && P.x[i] && ST.v[i] !== "." && P.x[i].includes(ST.v[i]));   // x: letras alternativas válidas en casillas sin cruce
+const locked = (i) => isGiven(i) || ST.r[i] === "1";
+const slotDone = (s) => s.cells.every(correct);
+
+function newState(p, mode) {
+  const v = Array.from(p.g, (ch, i) => (ch === "#" ? "#" : mode === "con" && p.h[i] === "1" ? ch : "."));
+  return { mode, v: v.join(""), r: "0".repeat(p.n * p.n), lu: 0, wu: 0, el: 0, done: false, helped: false };
+}
+function save() { if (P) PAS.set(pkey(P.id, ST.mode), { v: ST.v, r: ST.r, lu: ST.lu, wu: ST.wu, el: Math.round(ST.el), done: ST.done, helped: ST.helped }); if (P && !ST.done) PAS.set("cw.last", { id: P.id, mode: ST.mode }); }
+async function openPuzzle(id, mode) {
+  $("load").hidden = false;
+  try { await loadMeta(); P = await getPuzzle(id); } catch { toast("No se pudo cargar el crucigrama"); $("load").hidden = true; return; }
+  const saved = PAS.get(pkey(id, mode), null), base = newState(P, mode);
+  ST = saved && saved.v && saved.v.length === base.v.length ? Object.assign(base, saved, { mode }) : base;
+  SLOTS = buildSlots(P); wrong = new Set(); hintCell = -1; paused = false; last = performance.now();
+  const first = SLOTS.findIndex((s) => s.dir === "A" && !slotDone(s)); const s0 = SLOTS[first < 0 ? 0 : first];
+  dir = s0.dir; sel = s0.cells.find((c) => !correct(c)) ?? s0.cells[0];
+  $("list").hidden = true; $("game").hidden = false; $("load").hidden = true;
+  $("modeL").textContent = MODES[mode]; buildBoard(); renderAll(); save();
+  if (ST.done) setTimeout(showResult, 200);
+}
+
+/* ---------- tablero ---------- */
+let cells = [];
+function buildBoard() {
+  const b = $("board"); b.textContent = ""; b.style.setProperty("--n", P.n); b.style.gridTemplateColumns = `repeat(${P.n},1fr)`; b.classList.remove("won", "paused"); $("pause").hidden = true; cells = [];
+  const nums = new Map(); SLOTS.forEach((s) => nums.set(s.cells[0], s.num));
+  for (let i = 0; i < P.n * P.n; i++) {
+    const d = el("div", P.g[i] === "#" ? "c b" : "c"); d.dataset.i = i;
+    const n = el("span", "n", nums.get(i) || ""), v = el("span", "v");
+    if (P.g[i] !== "#") { d.setAttribute("role", "gridcell"); d.append(n, v); }
+    b.appendChild(d); cells.push({ d, v, key: "" });
+  }
+}
+const curSlot = () => { const si = sel >= 0 ? CELL[sel][dir] : -1; return si >= 0 ? SLOTS[si] : null; };
+function renderAll() {
+  const s = curSlot(), inW = new Set(s ? s.cells : []);
+  for (let i = 0; i < P.n * P.n; i++) {
+    if (P.g[i] === "#") continue;
+    const c = cells[i], v = ST.v[i] === "." ? "" : ST.v[i];
+    let cls = "c" + (isGiven(i) ? " g" : "") + (ST.r[i] === "1" ? " r" : "");
+    if (i === sel) cls += " sel"; else if (inW.has(i)) cls += " w";
+    if (wrong.has(i)) cls += " x"; if (i === hintCell) cls += " hint";
+    const key = cls + "|" + v; if (key === c.key) continue; c.key = key; c.d.className = cls; c.v.textContent = v;
+  }
+  const L = $("clueT"); L.textContent = "";
+  if (s) { L.append(el("b", "", `${s.num}${s.dir === "A" ? "H" : "V"}`), document.createTextNode(`${s.clue} (${s.cells.length})`)); }
+  const lr = MAX_LETTERS - ST.lu, wr = MAX_WORDS - ST.wu;
+  $("nL").textContent = `${lr}/${MAX_LETTERS}`; $("nW").textContent = `${wr}/${MAX_WORDS}`;
+  $("tLetter").disabled = lr <= 0 || ST.done; $("tWord").disabled = wr <= 0 || ST.done; $("tCheck").disabled = ST.done;
+  $("timer").textContent = (paused ? "⏸ " : "") + fmt(ST.el);
+}
+
+/* ---------- selección y escritura ---------- */
+function select(i) {
+  if (paused || P.g[i] === "#") return;
+  if (i === sel) { const o = dir === "A" ? "D" : "A"; if (CELL[i][o] >= 0) dir = o; }
+  else { sel = i; if (CELL[i][dir] < 0) dir = dir === "A" ? "D" : "A"; }
+  hintCell = -1; renderAll();
+}
+function stepIn(slot, from, delta) {            // siguiente casilla del tramo
+  const k = slot.cells.indexOf(from) + delta; return k >= 0 && k < slot.cells.length ? slot.cells[k] : -1;
+}
+function type(ch) {
+  if (!P || ST.done || paused || sel < 0 || locked(sel)) return;
+  ST.v = ST.v.slice(0, sel) + ch + ST.v.slice(sel + 1); wrong.delete(sel);
+  const s = curSlot(); let next = -1;
+  if (s) { const k = s.cells.indexOf(sel); next = s.cells.slice(k + 1).find((c) => !locked(c) && ST.v[c] === ".") ?? s.cells.slice(k + 1).find((c) => !locked(c)) ?? -1; }
+  if (next >= 0) sel = next;
+  hintCell = -1; renderAll(); save(); checkWin();
+}
+function backspace() {
+  if (!P || ST.done || paused || sel < 0) return;
+  if (!locked(sel) && ST.v[sel] !== ".") { ST.v = ST.v.slice(0, sel) + "." + ST.v.slice(sel + 1); wrong.delete(sel); }
+  else { const s = curSlot(); if (s) { const p = stepIn(s, sel, -1); if (p >= 0) { sel = p; if (!locked(p)) { ST.v = ST.v.slice(0, p) + "." + ST.v.slice(p + 1); wrong.delete(p); } } } }
+  hintCell = -1; renderAll(); save();
+}
+function move(dr, dc) {
+  if (paused || sel < 0) return; let r = (sel / P.n) | 0, c = sel % P.n;
+  for (let k = 0; k < P.n; k++) { r += dr; c += dc; if (r < 0 || c < 0 || r >= P.n || c >= P.n) return; if (P.g[r * P.n + c] !== "#") { sel = r * P.n + c; if (CELL[sel][dir] < 0) dir = dir === "A" ? "D" : "A"; hintCell = -1; renderAll(); return; } }
+}
+function gotoSlot(delta) {
+  if (!P || sel < 0 || paused) return;
+  const order = SLOTS.map((s, i) => i), cur = CELL[sel][dir], pos = order.indexOf(cur), n = order.length;
+  let target = -1;
+  for (let k = 1; k <= n; k++) { const i = order[(pos + delta * k + n * 2) % n]; if (!slotDone(SLOTS[i])) { target = i; break; } }
+  if (target < 0) target = order[(pos + delta + n) % n];
+  const s = SLOTS[target]; dir = s.dir; sel = s.cells.find((c) => !correct(c)) ?? s.cells[0]; hintCell = -1; renderAll();
+}
+function jumpTo(slotIdx) { const s = SLOTS[slotIdx]; dir = s.dir; sel = s.cells.find((c) => !correct(c)) ?? s.cells[0]; hintCell = -1; $("dClues").close(); renderAll(); }
+
+/* ---------- ayudas (límite por crucigrama) ---------- */
+function revealLetter() {
+  if (!P || ST.done || paused) return;
+  if (ST.lu >= MAX_LETTERS) return toast("Ya usaste las 3 letras de ayuda");
+  if (sel < 0 || locked(sel) || correct(sel)) return toast(sel >= 0 && correct(sel) ? "Esa casilla ya está bien" : "Elige una casilla vacía o incorrecta");
+  ST.v = ST.v.slice(0, sel) + P.g[sel] + ST.v.slice(sel + 1); ST.r = ST.r.slice(0, sel) + "1" + ST.r.slice(sel + 1);
+  ST.lu++; ST.helped = true; wrong.delete(sel); hintCell = sel; renderAll(); save(); checkWin();
+}
+function revealWord() {
+  if (!P || ST.done || paused) return;
+  if (ST.wu >= MAX_WORDS) return toast("Ya usaste tu palabra de ayuda");
+  const s = curSlot(); if (!s) return;
+  const todo = s.cells.filter((c) => !correct(c)); if (!todo.length) return toast("Esa palabra ya está resuelta");
+  for (const c of todo) { ST.v = ST.v.slice(0, c) + P.g[c] + ST.v.slice(c + 1); if (!isGiven(c)) ST.r = ST.r.slice(0, c) + "1" + ST.r.slice(c + 1); wrong.delete(c); }
+  ST.wu++; ST.helped = true; renderAll(); save(); checkWin();
+}
+function check() {
+  if (!P || ST.done || paused) return;
+  wrong = new Set(); for (let i = 0; i < P.n * P.n; i++) if (P.g[i] !== "#" && ST.v[i] !== "." && !correct(i)) wrong.add(i);
+  renderAll(); toast(wrong.size ? `${wrong.size} ${wrong.size === 1 ? "letra incorrecta" : "letras incorrectas"}` : "Todo lo escrito es correcto");
+}
+
+/* ---------- final ---------- */
+function checkWin() {
+  for (let i = 0; i < P.n * P.n; i++) if (P.g[i] !== "#" && !correct(i)) return;
+  tick(); ST.done = true; sel = -1; wrong = new Set();
+  const s = getStats(ST.mode); s.done++; s.total[P.n] = (s.total[P.n] || 0) + ST.el;
+  if (!ST.helped) { s.perfect++; s.streak++; s.best = Math.max(s.best, s.streak); if (!s.bestTime[P.n] || ST.el < s.bestTime[P.n]) s.bestTime[P.n] = ST.el; } else s.streak = 0;
+  PAS.set("cw.stats." + ST.mode, s); PAS.set("cw.last", null); save(); renderStreak(); renderAll();
+  $("board").classList.add("won"); setTimeout(showResult, 700);
+}
+function nextId() {
+  const ok = (id) => !(PAS.get(pkey(id, ST.mode), null) || {}).done, ids = []; for (const s of META.sizes) for (let i = s.from; i <= s.to; i++) ids.push(i);
+  const pool = ids.filter((id) => id !== P.id && ok(id) && sizeOf(id) === P.n); const any = pool.length ? pool : ids.filter((id) => id !== P.id && ok(id));
+  return any.length ? any[Math.floor(Math.random() * any.length)] : null;
+}
+function showResult() {
+  if (!P || !ST || !ST.done) return;          // el aviso puede dispararse tras salir del crucigrama
+  const b = $("statsBody"); b.textContent = "";
+  const res = el("div", "res"); res.append(el("div", "w", "¡Crucigrama resuelto!"), el("p", "", `Nº ${P.id} · ${P.n}×${P.n} · ${fmt(ST.el)}${ST.helped ? " · con ayuda" : " · ⭐ sin ayuda"}`)); b.appendChild(res);
+  statsBlock(b, ST.mode);
+  const a = el("div", "acts"), nx = el("button", "btn main", "Siguiente"), ls = el("button", "btn", "Lista");
+  const n = nextId(); if (n) nx.onclick = () => { $("dStats").close(); openPuzzle(n, ST.mode); }; else nx.disabled = true;
+  ls.onclick = () => { $("dStats").close(); showList(); }; a.append(nx, ls); b.appendChild(a); openDlg($("dStats"));
+}
+
+/* ---------- cronómetro ---------- */
+function tick() { const n = performance.now(); if (P && ST && !paused && !ST.done && !document.hidden && !$("game").hidden) ST.el += n - last; last = n; if (ST && !$("game").hidden) $("timer").textContent = (paused ? "⏸ " : "") + fmt(ST.el); }
+function setPause(p) { if (!P || ST.done) return; tick(); paused = p; $("pause").hidden = !p; $("board").classList.toggle("paused", p); $("timer").textContent = (p ? "⏸ " : "") + fmt(ST.el); if (p) save(); }
+setInterval(() => { if (P && ST && !$("game").hidden) { tick(); if (!ST.done && Math.floor(ST.el / 1000) % 5 === 0) save(); } }, 500);
+document.addEventListener("visibilitychange", () => { if (P && ST && !$("game").hidden) { tick(); if (document.hidden && !ST.done) { setPause(true); save(); } } });
+addEventListener("pagehide", () => { if (P && ST) { tick(); save(); } });
+
+/* ---------- lista de crucigramas ---------- */
+const stateOf = (id) => { const s = PAS.get(pkey(id), null); return !s ? "n" : s.done ? (s.helped ? "d" : "ds") : "p"; };
+function seg(parent, items, current, onPick) { parent.textContent = ""; items.forEach(([v, label]) => { const b = el("button", "", label); b.setAttribute("aria-pressed", String(v === current)); b.onclick = () => onPick(v); parent.appendChild(b); }); }
+async function showList() {
+  await loadMeta(); if (P && ST && !ST.done) save(); P = null; ST = null;
+  $("game").hidden = true; $("list").hidden = false; $("load").hidden = true;
+  seg($("fMode"), Object.entries(MODES), S.mode, (v) => { S.mode = v; saveSettings(); showList(); });
+  seg($("fSize"), [[0, "Todos"], ...META.sizes.map((s) => [s.n, `${s.n}×${s.n}`])], S.size, (v) => { S.size = v; saveSettings(); showList(); });
+  seg($("fState"), [["all", "Todos"], ["n", "Nuevos"], ["p", "En curso"], ["d", "Completados"]], S.state, (v) => { S.state = v; saveSettings(); showList(); });
+  const ids = []; for (const s of META.sizes) if (!S.size || S.size === s.n) for (let i = s.from; i <= s.to; i++) ids.push(i);
+  const all = ids.map((id) => [id, stateOf(id)]), done = all.filter(([, st]) => st[0] === "d").length;
+  $("sum").textContent = `${done} de ${all.length} completados en este modo`;
+  const pz = $("pz"); pz.textContent = "";
+  for (const [id, st] of all) {
+    if (S.state === "n" && st !== "n") continue; if (S.state === "p" && st !== "p") continue; if (S.state === "d" && st[0] !== "d") continue;
+    const b = el("button", st === "n" ? "" : st === "p" ? "p" : st === "ds" ? "d s" : "d", String(id)); b.dataset.id = id; b.appendChild(el("small", "", `${sizeOf(id)}×${sizeOf(id)}`)); pz.appendChild(b);
+  }
+  const c = $("cont"); c.textContent = "";
+  const lp = PAS.get("cw.last", null);
+  if (lp && lp.id && stateOf(lp.id) === "p") { const b = el("button", "btn main", `Continuar nº ${lp.id}`); b.onclick = () => { S.mode = lp.mode; saveSettings(); openPuzzle(lp.id, lp.mode); }; c.appendChild(b); }
+  const rnd = el("button", "btn", "🎲 Aleatorio"); rnd.onclick = () => { const pool = all.filter(([, st]) => st === "n" || st === "p"); const pick = (pool.length ? pool : all)[Math.floor(Math.random() * (pool.length ? pool.length : all.length))]; openPuzzle(pick[0], S.mode); };
+  c.appendChild(rnd); renderStreak();
+}
+$("pz").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) openPuzzle(+b.dataset.id, S.mode); });
+
+/* ---------- diálogos ---------- */
+const openDlg = (d) => { if (!d.open) d.showModal(); };
+document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => b.closest("dialog").close()));
+document.querySelectorAll("dialog").forEach((d) => d.addEventListener("click", (e) => { if (e.target === d) d.close(); }));
+function toast(m, ms = 1600) { const e = $("toast"); e.textContent = m; e.classList.add("on"); clearTimeout(toast.id); toast.id = setTimeout(() => e.classList.remove("on"), ms); }
+function statsBlock(body, mode) {
+  const s = getStats(mode), g = el("div", "stats");
+  [[s.done, "Completados"], [s.perfect, "Sin ayuda"], [s.streak, "Racha"], [s.best, "Mejor racha"]].forEach(([v, l]) => { const c = el("div"); c.append(el("b", "", v), el("span", "", l)); g.appendChild(c); });
+  body.appendChild(g);
+  const tm = el("div", "times");
+  for (const n of META ? META.sizes.map((x) => x.n) : [9, 11]) { const c = el("div"); c.append(el("b", "", s.bestTime[n] ? fmt(s.bestTime[n]) : "–"), el("span", "", `Mejor tiempo ${n}×${n}`)); tm.appendChild(c); }
+  body.appendChild(tm);
+}
+function showStats(mode = S.mode) {
+  const b = $("statsBody"); b.textContent = ""; b.appendChild(el("h2", "", "Estadísticas"));
+  const sg = el("div", "seg"); b.appendChild(sg); seg(sg, Object.entries(MODES), mode, (v) => showStats(v)); sg.style.marginBottom = "12px";
+  statsBlock(b, mode); openDlg($("dStats"));
+}
+function showSettings() {
+  const b = $("setBody"); b.textContent = ""; b.appendChild(el("h2", "", "Ajustes")); const P0 = PAS.prefs();
+  const opt = (title, items, cur, fn) => { const o = el("div", "opt"); o.appendChild(el("p", "", title)); const s = el("div", "seg"); seg(s, items, cur, fn); o.appendChild(s); b.appendChild(o); };
+  opt("Modo oscuro", [["auto", "Auto"], ["dark", "Sí"], ["light", "No"]], P0.theme || "auto", (v) => { PAS.setPrefs({ theme: v }); showSettings(); });
+  opt("Colores para daltónicos", [[true, "Sí"], [false, "No"]], !!P0.cb, (v) => { PAS.setPrefs({ cb: v }); showSettings(); });
+  openDlg($("dSet"));
+}
+function showHelp() {
+  const b = $("helpBody"); b.textContent = ""; b.appendChild(el("h2", "", "Cómo jugar"));
+  ["Resuelve las palabras con ayuda de las pistas. H = horizontal (→), V = vertical (↓). Toca una casilla para elegirla y toca otra vez para cambiar de dirección.",
+   "Sin letras sugeridas: la cuadrícula empieza vacía. Con letras sugeridas: algunas letras ya están puestas (al menos una en cada palabra).",
+   "Ayudas por crucigrama: hasta 3 letras sueltas (🔤) y 1 palabra entera (📖). «Revisar» marca las letras incorrectas y es ilimitado.",
+   "La racha cuenta los crucigramas completados seguidos sin usar letras ni palabras de ayuda (por modo). Si usas una ayuda, la racha vuelve a 0.",
+   "Teclado: letras para escribir, flechas para moverte, Espacio cambia de dirección, Tab o Intro pasa a la siguiente palabra, Retroceso borra."]
+    .forEach((x) => b.appendChild(el("p", "", x)));
+  openDlg($("dHelp"));
+}
+function showClues() {
+  if (!P) return; const b = $("cluesBody"); b.textContent = ""; b.appendChild(el("h2", "", "Pistas")); const g = el("div", "cl");
+  for (const d of ["A", "D"]) { const col = el("div"); col.appendChild(el("h3", "", d === "A" ? "Horizontales" : "Verticales")); SLOTS.forEach((s, i) => { if (s.dir !== d) return; const bt = el("button", slotDone(s) ? "ok" : ""); bt.append(el("b", "", s.num + ". "), document.createTextNode(`${s.clue} (${s.cells.length})`)); bt.onclick = () => jumpTo(i); col.appendChild(bt); }); g.appendChild(col); }
+  b.appendChild(g); openDlg($("dClues"));
+}
+
+/* ---------- eventos ---------- */
+$("board").addEventListener("pointerdown", (e) => { const c = e.target.closest(".c"); if (c && !c.classList.contains("b")) { e.preventDefault(); select(+c.dataset.i); } });
+(function () { const kb = $("kb"); for (const row of ["qwertyuiop", "asdfghjklñ", "zxcvbnm"]) { const r = el("div", "kr"); for (const l of row) { const k = el("button", "k", l); k.dataset.k = l; r.appendChild(k); } if (row[0] === "z") { const b = el("button", "k w", "⌫"); b.dataset.k = "Backspace"; b.setAttribute("aria-label", "Borrar"); r.appendChild(b); } kb.appendChild(r); } })();
+$("kb").addEventListener("click", (e) => { const k = e.target.closest("[data-k]"); if (!k) return; k.dataset.k === "Backspace" ? backspace() : type(k.dataset.k); });
+$("tCheck").onclick = check; $("tLetter").onclick = revealLetter; $("tWord").onclick = revealWord; $("tClues").onclick = showClues;
+$("cPrev").onclick = () => gotoSlot(-1); $("cNext").onclick = () => gotoSlot(1);
+$("timer").onclick = () => setPause(!paused); $("bResume").onclick = () => setPause(false);
+$("bBack").onclick = showList; $("bHelp").onclick = showHelp; $("bStats").onclick = async () => { await loadMeta(); showStats(); }; $("bSet").onclick = showSettings;
+document.addEventListener("keydown", (e) => {
+  if (document.querySelector("dialog[open]") || !P || $("game").hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key;
+  if (k === "Backspace") { e.preventDefault(); backspace(); }
+  else if (k === "Tab" || k === "Enter") { e.preventDefault(); gotoSlot(e.shiftKey ? -1 : 1); }
+  else if (k === " ") { e.preventDefault(); select(sel); }
+  else if (k === "ArrowUp") { e.preventDefault(); dir = "D"; move(-1, 0); } else if (k === "ArrowDown") { e.preventDefault(); dir = "D"; move(1, 0); }
+  else if (k === "ArrowLeft") { e.preventDefault(); dir = "A"; move(0, -1); } else if (k === "ArrowRight") { e.preventDefault(); dir = "A"; move(0, 1); }
+  else if (k.length === 1) { const l = norm(k); if (/^[a-zñ]$/.test(l)) type(l); }
+});
+
+/* ---------- arranque ---------- */
+showList().catch(() => { $("load").textContent = "No se pudieron cargar los crucigramas. Recarga la página."; });
+PAS.registerSW("../sw.js");
+</script>
+</body>
+</html>

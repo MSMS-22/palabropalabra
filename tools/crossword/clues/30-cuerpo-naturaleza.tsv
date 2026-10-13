@@ -1,0 +1,180 @@
+cabeza	Parte del cuerpo donde está el cerebro	s
+cabello	Pelo de la cabeza	s
+frente	Parte de la cara sobre las cejas	s
+ceja	Pelo curvo sobre el ojo	s
+pestaña	Pelo que protege el borde del ojo	s
+nariz	Parte de la cara con la que se huele	s
+boca	Cavidad por la que se come y se habla	s
+labio	Borde carnoso de la boca	s
+diente	Pieza dura con la que se muerde	s
+lengua	Órgano del gusto dentro de la boca	s
+mejilla	Parte blanda y redondeada de la cara	s
+barbilla	Punta de la cara bajo el labio inferior	s
+oreja	Parte externa del oído	s
+cuello	Une la cabeza con el tronco	s
+garganta	Conducto por el que pasa el alimento al estómago	s
+hombro	Articulación entre el brazo y el tronco	s
+brazo	Miembro superior del cuerpo	s
+codo	Articulación que dobla el brazo	s
+muñeca	Articulación entre la mano y el antebrazo	s
+mano	Miembro con cinco dedos para agarrar	s
+dedo	Cada uno de los cinco extremos de la mano	s
+uña	Capa dura en la punta de los dedos	s
+pulgar	El dedo más grueso de la mano	s
+pecho	Parte del tronco bajo el cuello	s
+espalda	Parte posterior del tronco	s
+cintura	Parte estrecha del tronco sobre las caderas	s
+cadera	Zona del cuerpo donde se une la pierna al tronco	s
+vientre	Parte del cuerpo donde está el ombligo	s
+ombligo	Cicatriz redonda en medio del vientre	s
+pierna	Miembro inferior del cuerpo	s
+rodilla	Articulación que dobla la pierna	s
+tobillo	Articulación entre el pie y la pierna	s
+talón	Parte posterior del pie	s
+planta	Parte de abajo del pie	s
+hueso	Pieza dura del esqueleto	s
+músculo	Tejido que permite el movimiento	s
+cerebro	Órgano del pensamiento	s
+corazón	Órgano que bombea la sangre	s
+pulmón	Órgano con el que respiramos	s
+hígado	Órgano que filtra la sangre y produce bilis	s
+riñón	Órgano que filtra la orina	s
+estómago	Órgano donde se digiere la comida	s
+intestino	Largo tubo digestivo tras el estómago	s
+sangre	Líquido rojo que circula por las venas	s
+vena	Vaso por el que vuelve la sangre al corazón	s
+arteria	Vaso que lleva la sangre desde el corazón	s
+piel	Capa que cubre el cuerpo	s
+cráneo	Hueso que protege el cerebro	s
+columna	Eje de huesos que sostiene la espalda	s
+costilla	Hueso curvo que protege el tórax	s
+esqueleto	Conjunto de los huesos del cuerpo	s
+barba	Pelo del mentón y las mejillas	s
+bigote	Pelo sobre el labio superior	s
+arruga	Pliegue de la piel por la edad	s
+cicatriz	Marca que deja una herida curada	s
+herida	Corte o daño en la piel	s
+fiebre	Aumento de la temperatura corporal	s
+gripe	Enfermedad con fiebre, tos y malestar	s
+resfriado	Catarro común	s
+dolor	Sensación molesta en alguna parte del cuerpo	s
+salud	Estado de quien no está enfermo
+medicina	Remedio que se toma para curarse	s
+pastilla	Medicamento en forma de comprimido	s
+vacuna	Inyección que protege contra una enfermedad	s
+jarabe	Medicamento líquido y dulce	s
+hospital	Centro donde se atiende a los enfermos	s
+clínica	Centro privado de atención sanitaria	s
+médico	Profesional que cura a los enfermos	s
+enfermero	Persona que cuida a los pacientes	s
+dentista	Médico que cuida los dientes	s
+paciente	Persona que recibe atención médica	s
+cirugía	Especialidad médica que opera	s
+alergia	Reacción exagerada del cuerpo ante el polen u otras sustancias	s
+estornudo	Expulsión brusca de aire por la nariz	s
+bostezo	Apertura de la boca por sueño o aburrimiento	s
+sueño	Reposo del cuerpo y la mente por la noche	s
+descanso	Pausa para recuperar fuerzas	s
+ejercicio	Actividad física para mantenerse en forma	s
+montaña	Gran elevación natural del terreno	s
+colina	Elevación del terreno menor que un monte	s
+valle	Terreno hundido entre montañas	s
+llanura	Terreno extenso y plano	s
+meseta	Llanura elevada	s
+volcán	Montaña que expulsa lava	s
+cueva	Cavidad natural en la roca	s
+roca	Piedra grande y dura	s
+piedra	Trozo de mineral duro	s
+arena	Granos finos que cubren la playa	s
+playa	Orilla del mar cubierta de arena	s
+costa	Franja de tierra junto al mar	s
+isla	Tierra rodeada de agua	s
+océano	Inmensa extensión de agua salada	s
+lago	Gran masa de agua rodeada de tierra	s
+laguna	Lago pequeño de poca profundidad	s
+arroyo	Corriente de agua pequeña	s
+manantial	Lugar donde brota agua de la tierra	s
+cascada	Salto de agua desde una gran altura	s
+pantano	Lugar de aguas estancadas y fango	s
+desierto	Región seca de arena y pocas lluvias	s
+bosque	Terreno poblado de muchos árboles	s
+selva	Bosque tropical espeso y húmedo	s
+jungla	Selva densa del trópico	s
+pradera	Terreno amplio cubierto de hierba	s
+campo	Terreno fuera de la ciudad	s
+árbol	Planta grande con tronco y copa	s
+rama	Parte del árbol que sale del tronco	s
+hoja	Parte verde de la planta	s
+raíz	Parte de la planta que crece bajo tierra
+tronco	Tallo grueso y leñoso del árbol	s
+flor	Parte de la planta de colores y aroma	s
+rosa	Flor con espinas y aroma intenso	s
+tulipán	Flor holandesa de cáliz en forma de copa	s
+margarita	Flor de pétalos blancos y centro amarillo	s
+girasol	Flor que sigue al sol	s
+clavel	Flor de pétalos dentados, muy usada en bodas	s
+orquídea	Flor exótica y delicada	s
+jazmín	Flor blanca de perfume dulce	s
+lirio	Flor de seis pétalos y tallo largo	s
+hierba	Planta verde y baja que cubre el prado	s
+césped	Hierba corta de un jardín	s
+musgo	Planta diminuta que crece sobre las piedras	s
+cactus	Planta del desierto con espinas
+palmera	Árbol de los oasis con hojas en penacho	s
+pino	Árbol conífero de agujas	s
+roble	Árbol de madera dura que da bellotas	s
+encina	Árbol de hoja perenne y bellota dulce	s
+olivo	Árbol que da aceitunas	s
+sauce	Árbol de ramas colgantes junto al agua	s
+abeto	Conífero típico del árbol de Navidad	s
+cielo	Espacio azul sobre nuestras cabezas	s
+nube	Masa de vapor de agua en el cielo	s
+lluvia	Agua que cae de las nubes	s
+tormenta	Tempestad con truenos y relámpagos	s
+trueno	Estruendo que sigue al rayo	s
+relámpago	Destello de luz en una tormenta	s
+rayo	Descarga eléctrica entre nubes y tierra	s
+viento	Corriente de aire	s
+brisa	Viento suave y agradable	s
+niebla	Nube baja que dificulta ver	s
+nieve	Agua helada que cae en copos	s
+hielo	Agua congelada	s
+escarcha	Hielo fino sobre las superficies al amanecer	s
+granizo	Lluvia de bolas de hielo	s
+arcoíris	Franja de siete colores que aparece tras la lluvia	
+rocío	Gotas de agua sobre las plantas al amanecer	s
+clima	Conjunto de condiciones atmosféricas de una región	s
+tiempo	Estado de la atmósfera en un momento dado	s
+estación	Cada uno de los cuatro periodos del año	s
+primavera	Estación en la que florecen las plantas	s
+verano	Estación más calurosa del año	s
+otoño	Estación en la que caen las hojas	s
+invierno	Estación más fría del año	s
+luna	Satélite natural de la Tierra	s
+estrella	Cuerpo celeste que brilla de noche	s
+planeta	Cuerpo celeste que gira alrededor de una estrella	s
+cometa	Astro con cola luminosa	s
+galaxia	Conjunto enorme de estrellas y planetas	s
+universo	Todo lo que existe en el espacio	s
+amanecer	Momento en que sale el sol	s
+atardecer	Final de la tarde	s
+anochecer	Momento en que cae la noche	s
+noche	Periodo sin luz del sol	s
+mañana	Primeras horas del día	s
+tarde	Parte del día entre el mediodía y la noche	s
+fuego	Llama que produce la combustión	s
+humo	Gas gris que sale de lo que se quema	s
+ceniza	Polvo gris que queda tras quemar algo	s
+carbón	Mineral negro que se quema para dar calor	s
+metal	Material brillante que conduce la electricidad	s
+hierro	Metal duro de las herramientas	s
+plata	Metal blanco y brillante	s
+cobre	Metal rojizo usado en cables	s
+diamante	Piedra preciosa muy dura y transparente	s
+esmeralda	Piedra preciosa verde	s
+rubí	Piedra preciosa roja	s
+perla	Joya redonda que se forma en una ostra	s
+cristal	Material duro y transparente de las ventanas	s
+barro	Mezcla de tierra y agua	s
+polvo	Partículas finas que se depositan sobre los muebles	s
+tierra	Suelo donde crecen las plantas	s

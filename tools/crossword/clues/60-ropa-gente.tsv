@@ -1,0 +1,179 @@
+ropa	Prendas con las que nos vestimos
+camisa	Prenda con cuello y botones para el torso	s
+camiseta	Prenda ligera de manga corta sin botones	s
+blusa	Camisa femenina holgada	s
+jersey	Prenda de punto que abriga el torso	s
+suéter	Prenda de lana que se mete por la cabeza	s
+chaqueta	Prenda de abrigo con mangas y botones	s
+abrigo	Prenda gruesa para el invierno	s
+chaleco	Prenda sin mangas que se pone sobre la camisa	s
+pantalón	Prenda que cubre cada pierna	s
+falda	Prenda femenina que cae desde la cintura	s
+vestido	Prenda de una pieza para mujer	s
+traje	Conjunto de chaqueta y pantalón	s
+corbata	Tira de tela que se anuda al cuello	s
+bufanda	Prenda larga que abriga el cuello	s
+guante	Prenda que cubre cada mano	s
+gorro	Prenda que cubre la cabeza del frío	s
+sombrero	Prenda con ala que cubre la cabeza	s
+gorra	Prenda con visera para la cabeza	s
+pañuelo	Cuadrado de tela para sonarse	s
+calcetín	Prenda que cubre el pie bajo el zapato	s
+zapato	Calzado que cubre el pie	s
+zapatilla	Calzado cómodo para estar en casa o hacer deporte	s
+sandalia	Calzado abierto de verano	s
+cinturón	Tira que ajusta el pantalón	s
+bolso	Accesorio para llevar pertenencias	s
+gafas	Lentes que corrigen la vista
+anillo	Joya que se lleva en un dedo	s
+collar	Joya que rodea el cuello	s
+pulsera	Joya que rodea la muñeca	s
+pendiente	Joya que cuelga de la oreja	s
+joya	Adorno de metal precioso	s
+disfraz	Ropa que se usa para parecer otro personaje
+uniforme	Ropa igual para todos los miembros de un grupo	s
+pijama	Ropa para dormir	s
+bañador	Prenda para nadar	s
+bikini	Traje de baño de dos piezas	s
+delantal	Prenda que protege la ropa en la cocina	s
+bata	Prenda larga de estar por casa	s
+lana	Fibra que se esquila de las ovejas	s
+algodón	Fibra vegetal suave y blanca	s
+seda	Tejido fino y brillante	s
+cuero	Piel curtida de animal	s
+tela	Tejido con el que se hace la ropa	s
+encaje	Tejido de labores caladas	s
+terciopelo	Tela suave y aterciopelada	s
+madera	Material que procede de los árboles	s
+plástico	Material sintético y ligero	s
+vidrio	Material transparente y frágil	s
+acero	Aleación de hierro muy resistente	s
+cemento	Polvo que se mezcla con agua para construir	s
+ladrillo	Pieza de arcilla cocida para levantar muros	s
+azulejo	Baldosa de cerámica para paredes	s
+rojo	Color de la sangre	s
+azul	Color del cielo despejado	s
+verde	Color de las hojas	s
+amarillo	Color del limón	s
+morado	Color de la berenjena	s
+rosado	Color entre rojo y blanco	s
+blanco	Color de la nieve	s
+negro	Color de la noche	s
+gris	Color de la ceniza	s
+marrón	Color de la tierra	s
+dorado	Color del oro	s
+plateado	Color de la plata	s
+celeste	Color azul claro	s
+turquesa	Piedra y color entre azul y verde	s
+beige	Color de la arena
+madre	Mujer que tiene hijos	s
+padre	Varón que tiene hijos	s
+mamá	Forma cariñosa de llamar a la madre	s
+papá	Forma cariñosa de llamar al padre	s
+hijo	Persona respecto de sus padres
+hija	Mujer respecto de sus padres	s
+hermano	Hijo de los mismos padres	s
+hermana	Mujer hija de los mismos padres	s
+abuelo	Padre de tu padre o tu madre	s
+abuela	Madre de tu padre o tu madre	s
+nieto	Hijo de tu hijo	s
+nieta	Hija de tu hijo	s
+primo	Hijo de un tío	s
+prima	Hija de un tío	s
+sobrino	Hijo de un hermano	s
+sobrina	Hija de un hermano	s
+esposo	Hombre casado	s
+esposa	Mujer casada	s
+mujer	Persona adulta del sexo femenino	s
+hombre	Persona adulta del sexo masculino	s
+chico	Joven varón	s
+chica	Joven mujer	s
+niño	Persona de corta edad	s
+niña	Mujer de corta edad	s
+bebé	Niño recién nacido	s
+joven	Persona de pocos años	s
+anciano	Persona de mucha edad	s
+adulto	Persona que ha alcanzado la madurez	s
+amigo	Persona con la que se tiene confianza y afecto	s
+amiga	Mujer con la que se tiene confianza y afecto	s
+vecino	Persona que vive cerca de otra	s
+novio	Compañero de una relación amorosa	s
+novia	Compañera de una relación amorosa	s
+pareja	Dos personas unidas por afecto	s
+familia	Grupo de parientes que viven juntos	s
+gente	Conjunto de personas
+persona	Individuo de la especie humana	s
+público	Conjunto de asistentes a un espectáculo	s
+profesor	Persona que enseña en un colegio	s
+maestro	Docente de primaria	s
+alumno	Persona que recibe enseñanza	s
+estudiante	Persona que cursa una carrera o curso	s
+director	Persona que dirige un centro	s
+jefe	Persona que manda en un trabajo	s
+obrero	Trabajador manual	s
+albañil	Obrero que levanta paredes	s
+carpintero	Artesano que trabaja la madera	s
+fontanero	Profesional que repara las tuberías	s
+mecánico	Persona que arregla motores	s
+panadero	Persona que hace el pan	s
+carnicero	Persona que vende carne	s
+pescadero	Persona que vende peces y mariscos	s
+frutero	Persona que vende frutas	s
+camarero	Persona que sirve en un bar	s
+cocinero	Persona que prepara comidas	s
+peluquero	Persona que corta el pelo	s
+sastre	Persona que confecciona trajes a medida	s
+zapatero	Persona que arregla el calzado	s
+pintor	Artista que pinta cuadros	s
+escultor	Artista que talla figuras	s
+escritor	Persona que redacta libros	s
+poeta	Persona que escribe versos	s
+músico	Persona que toca un instrumento	s
+cantante	Persona que interpreta canciones	s
+actor	Persona que interpreta personajes	s
+actriz	Mujer que interpreta personajes	s
+payaso	Artista de circo de nariz roja	s
+mago	Artista que hace trucos de ilusionismo	s
+bailarín	Persona que danza profesionalmente	s
+cantautor	Persona que compone e interpreta sus propias canciones	s
+pintora	Mujer que pinta cuadros	s
+periodista	Profesional que informa de las noticias	s
+fotógrafo	Persona que hace fotos	s
+abogado	Letrado que defiende en un juicio	s
+juez	Persona que dicta sentencias	s
+policía	Agente que vela por el orden	s
+bombero	Persona que apaga incendios	s
+soldado	Militar de la tropa	s
+marinero	Persona que trabaja en un barco	s
+piloto	Persona que conduce un avión	s
+conductor	Persona que maneja un vehículo	s
+chófer	Conductor profesional de coche	s
+taxista	Conductor de un coche de alquiler	s
+cartero	Persona que reparte las cartas	s
+vendedor	Persona que ofrece mercancías a la clientela	s
+cajero	Persona que cobra en la tienda	s
+granjero	Persona que cuida una finca de animales	s
+agricultor	Persona que cultiva la tierra	s
+pastor	Persona que cuida el rebaño	s
+pescador	Persona que captura peces	s
+cazador	Persona que persigue animales	s
+ingeniero	Profesional técnico que diseña estructuras	s
+arquitecto	Profesional que proyecta edificios	s
+científico	Persona que investiga con método	s
+físico	Científico que estudia la materia y la energía	s
+químico	Científico que estudia las sustancias	s
+biólogo	Científico que estudia los seres vivos	s
+astronauta	Persona que viaja al espacio	s
+detective	Persona que investiga casos misteriosos	s
+ladrón	Persona que roba	s
+pirata	Bandido del mar	s
+guerrero	Persona que combate	s
+caballero	Hombre de modales corteses	s
+príncipe	Hijo del rey	s
+princesa	Hija del rey	s
+reina	Mujer soberana de un país con corona	s
+bruja	Mujer con poderes mágicos	s
+hada	Ser fantástico con varita mágica	s
+gigante	Ser de enorme tamaño	s
+fantasma	Aparición que asusta de noche	s
+dragón	Monstruo con alas que echa fuego	s
