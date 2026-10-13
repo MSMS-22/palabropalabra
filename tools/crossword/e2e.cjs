@@ -5,6 +5,8 @@
  * Requiere Playwright (npm i -g playwright) y Chromium. */
 "use strict";
 const { chromium } = require(process.env.PLAYWRIGHT_PATH || "playwright");
+// Playwright escribe la «ñ» como texto insertado (sin evento de teclado); se envía el evento keydown que generaría un teclado español
+async function typeKeys(page, text) { for (const part of text.split(/(ñ)/)) { if (part === "ñ") await page.evaluate(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "ñ", code: "Semicolon", bubbles: true }))); else if (part) await page.keyboard.type(part); } }
 const base = process.argv[2], from = +process.argv[3] || 1, to = +process.argv[4] || 400;
 
 (async () => {
@@ -35,7 +37,7 @@ const base = process.argv[2], from = +process.argv[3] || 1, to = +process.argv[4
       for (let guard = 0; guard < 200; guard++) {
         const letters = await page.evaluate(() => { for (const s of SLOTS) { const em = s.cells.filter((c) => ST.v[c] === "."); if (em.length) { sel = em[0]; dir = s.dir; renderAll(); return em.map((c) => P.g[c]).join(""); } } return null; });
         if (letters === null) break;
-        await page.keyboard.type(letters);
+        await typeKeys(page, letters);
       }
       await page.waitForTimeout(5);
       const res = await page.evaluate(() => ({ done: ST.done, helped: ST.helped, saved: !!PAS.get(pkey(P.id, ST.mode), null) && PAS.get(pkey(P.id, ST.mode), null).done }));
@@ -62,7 +64,7 @@ const base = process.argv[2], from = +process.argv[3] || 1, to = +process.argv[4
           for (let guard = 0; guard < 200; guard++) {
             const letters = await page.evaluate(() => { for (const s of SLOTS) { const em = s.cells.filter((c) => ST.v[c] === "."); if (em.length) { sel = em[0]; dir = s.dir; renderAll(); return em.map((c) => (P.x && P.x[c] ? P.x[c][0] : P.g[c])).join(""); } } return null; });
             if (letters === null) break;
-            await page.keyboard.type(letters);
+            await typeKeys(page, letters);
           }
           if (!(await page.evaluate(() => ST.done))) fail("no se aceptó una letra alternativa válida");
         }
