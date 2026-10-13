@@ -30,41 +30,53 @@ h1{font-size:clamp(18px,5vw,26px);margin:0;font-weight:800;letter-spacing:.02em}
 .pz button.d.s::after{content:"★";position:absolute;right:4px;top:0;font-size:11px;color:#ffd54f}
 .pz button small{display:block;font-size:9px;font-weight:600;opacity:.7;line-height:1}
 .sum{font-size:13px;color:var(--muted);margin:2px 0 8px}
-/* ---- juego ---- */
+/* ---- juego (estilo autodefinido: las pistas van dentro de la cuadrícula) ---- */
+:root{--lc:#fff;--lt:#1a1a1b;--cc:#ececf3;--ct:#222;--hatch:#9a9ab0;--wsel:#cfe3f7;--csel:#7db4ea;--acc:#4a47a3;--bd:#b9bac8;--rc:#2e7d32}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--lc:#6b6b7e;--lt:#fff;--cc:#101012;--ct:#f2f2f2;--hatch:#555566;--wsel:#4a78a8;--csel:#3f86c9;--bd:#1d1d22;--rc:#9be7a8}}
+:root[data-theme="dark"]{--lc:#6b6b7e;--lt:#fff;--cc:#101012;--ct:#f2f2f2;--hatch:#555566;--wsel:#4a78a8;--csel:#3f86c9;--bd:#1d1d22;--rc:#9be7a8}
+body.ingame>header{display:none}
 #game{flex:1;min-height:0;display:flex;flex-direction:column}
-.info{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--muted);padding:6px 2px 2px}
-.info button{font-weight:700}
-#timer{font-variant-numeric:tabular-nums;min-width:64px;text-align:left}
-main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px 0}
-#wrap{position:relative;width:min(100%,calc(100dvh - 350px),560px);aspect-ratio:1}
-#board{container-type:inline-size;display:grid;width:100%;height:100%;border:2px solid var(--muted);background:var(--muted);gap:1px}
+.top{display:flex;align-items:center;gap:2px;padding:6px 0}
+.top .ib{width:42px;height:42px;font-size:24px}
+.top #timer{flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.top .acc{background:var(--acc);color:#fff;font-weight:700;font-size:17px;padding:9px 16px;border-radius:10px}
+#wrap{position:relative;flex:1;min-height:0;display:flex}
+#scroll{flex:1;min-height:0;overflow:auto;display:flex;touch-action:pan-x pan-y;border:1px solid var(--bd);border-radius:4px;background:var(--bd)}
+#board{display:grid;margin:auto;gap:1px;background:var(--bd);flex:none}
 #board.paused{filter:blur(14px)}
-.c{position:relative;display:grid;place-items:center;background:var(--bg);cursor:pointer;min-width:0}
-.c.b{background:var(--fg)}
-.c .n{position:absolute;left:2px;top:1px;font-size:calc(100cqw / var(--n) * .3);line-height:1;font-weight:700;color:var(--muted)}
-.c .v{font-size:calc(100cqw / var(--n) * .58);font-weight:600;text-transform:uppercase;line-height:1;color:var(--mine)}
-.c.w{background:var(--peer)}.c.sel{background:var(--sel)}
-.c.g .v{color:var(--given);font-weight:800}
-.c.r .v{color:var(--ok)}
+#board>div{min-width:0;min-height:0;position:relative}
+.c{background:var(--lc);color:var(--lt);display:grid;place-items:center;cursor:pointer}
+.c .v{font-size:calc(var(--cs) * .56);font-weight:600;text-transform:uppercase;line-height:1}
+.c.w{background:var(--wsel)}.c.sel{background:var(--csel)}
+.c.g{box-shadow:inset 0 -3px 0 var(--acc)}
+.c.r .v{color:var(--rc)}
 .c.x{background:var(--errbg)}.c.x .v{color:var(--err)}
 .c.hint{outline:3px solid var(--ok);outline-offset:-3px;z-index:1}
+.k{background:var(--cc);color:var(--ct);display:flex;flex-direction:column;overflow:hidden}
+.k .q{flex:1;min-height:0;display:grid;place-items:center;text-align:center;text-transform:uppercase;line-height:1.04;padding:1px 5px 1px 2px;font-weight:600;hyphens:auto;overflow-wrap:anywhere;overflow:hidden;position:relative;cursor:pointer;-webkit-hyphens:auto}
+.k .q.D{padding:1px 2px 5px 2px}
+.k .q+.q{border-top:1px solid var(--bd)}
+.k .q.on{background:var(--acc);color:#fff}
+.q.A::after{content:"";position:absolute;right:0;top:50%;margin-top:-4px;border:4px solid transparent;border-left:5px solid currentColor;border-right:0}
+.q.D::after{content:"";position:absolute;bottom:0;left:50%;margin-left:-4px;border:4px solid transparent;border-top:5px solid currentColor;border-bottom:0}
+.z{background-color:var(--cc);background-image:linear-gradient(to top right,transparent calc(50% - 1px),var(--hatch) calc(50% - 1px),var(--hatch) calc(50% + 1px),transparent calc(50% + 1px))}
 #pause{position:absolute;inset:0;display:grid;place-items:center;z-index:3}
-#clue{width:100%;display:flex;align-items:center;gap:6px;background:var(--peer);border-radius:10px;padding:4px 6px;min-height:52px}
-#clue button{width:34px;height:34px;border-radius:8px;font-size:18px;flex:none}
-#clue button:hover{background:var(--line)}
-#clueT{flex:1;font-size:14px;font-weight:600;line-height:1.25;text-align:center}
-#clueT b{color:var(--ok);margin-right:4px}
-#kb{display:flex;flex-direction:column;gap:5px;padding:6px 0 4px}
-.kr{display:flex;gap:4px;justify-content:center}
-.k{flex:1;max-width:40px;height:clamp(38px,6dvh,48px);border-radius:6px;background:var(--key);color:var(--key-fg);font-weight:700;font-size:16px;text-transform:uppercase;display:grid;place-items:center}
-.k.w{flex:1.5;max-width:60px}
-.k:active{filter:brightness(.9)}
-@media (hover:hover) and (pointer:fine){#kb{display:none}#wrap{width:min(100%,calc(100dvh - 300px),560px)}}
-.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:2px 0 8px}
-.tl{display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 0;border-radius:8px;font-size:11px;font-weight:600;color:var(--muted);line-height:1.2}
-.tl b{font-size:19px;color:var(--fg);font-weight:400}
-.tl:hover{background:var(--line)}.tl:disabled{opacity:.35;cursor:default}
-.tl i{font-style:normal;color:var(--fg);font-weight:700}
+#clue{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 2px;min-height:64px;margin-top:6px}
+#clue button{width:44px;height:44px;font-size:30px;flex:none;color:var(--muted)}
+#clueT{flex:1;font-size:clamp(17px,5.4vw,24px);font-weight:600;line-height:1.2;text-align:center}
+#clueT small{display:block;font-size:12px;color:var(--muted);font-weight:600}
+#slots{display:flex;justify-content:center;gap:6px;padding:10px 0 4px;min-height:62px}
+.sl{width:min(46px,calc((100% - 6px * (var(--len) - 1)) / var(--len)));height:46px;border-bottom:4px solid var(--muted);display:grid;place-items:center;font-size:28px;font-weight:700;text-transform:uppercase;border-radius:6px 6px 0 0}
+.sl.f{background:var(--acc);color:#fff;border-bottom-color:#2d2a77}
+.sl.cur:not(.f){border-bottom-color:var(--csel)}
+.sl.x{background:var(--err);color:#fff}
+#bank{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;padding:8px 4px calc(10px + env(safe-area-inset-bottom))}
+.bk{height:clamp(42px,6.6dvh,54px);border-radius:8px;background:var(--key);color:var(--key-fg);font-size:26px;font-weight:500;text-transform:uppercase;box-shadow:0 3px 0 #0003}
+.bk:active{filter:brightness(.9);transform:translateY(2px);box-shadow:none}
+.bk.del{font-size:22px}
+.aid{display:grid;grid-template-columns:40px 1fr;grid-template-rows:auto auto;align-items:center;text-align:left;width:100%;padding:10px 12px;margin:8px 0;border:1px solid var(--line);border-radius:12px;column-gap:8px}
+.aid b{grid-row:1/3;font-size:26px;font-weight:400}.aid span{font-weight:700}.aid i{font-style:normal;font-size:12px;color:var(--muted)}
+.aid:disabled{opacity:.4}.aid:not(:disabled):hover{background:var(--line)}
 .help p{margin:8px 0;font-size:14px}
 .cl{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:60dvh;overflow:auto;font-size:13px}
 .cl h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
@@ -96,18 +108,17 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;j
 </section>
 
 <section id="game" hidden>
-  <div class="info"><button id="bBack">← Lista</button><button id="timer" aria-label="Pausa">00:00</button><span id="modeL"></span></div>
-  <main>
-    <div id="wrap"><div id="board" role="grid"></div><div id="pause" hidden><button class="btn main" id="bResume">Continuar</button></div></div>
-    <div id="clue"><button id="cPrev" aria-label="Pista anterior">‹</button><div id="clueT"></div><button id="cNext" aria-label="Pista siguiente">›</button></div>
-  </main>
-  <div id="kb"></div>
-  <div class="tools">
-    <button class="tl" id="tCheck"><b>✔️</b><span>Revisar</span></button>
-    <button class="tl" id="tLetter"><b>🔤</b><span>Letra <i id="nL"></i></span></button>
-    <button class="tl" id="tWord"><b>📖</b><span>Palabra <i id="nW"></i></span></button>
-    <button class="tl" id="tClues"><b>📋</b><span>Pistas</span></button>
+  <div class="top">
+    <button class="ib" id="bBack" aria-label="Volver a la lista">←</button>
+    <button class="ib" id="bClues" aria-label="Lista de pistas">☰</button>
+    <button class="ib" id="bTheme" aria-label="Cambiar tema">☀</button>
+    <button id="timer" aria-label="Pausa">00:00</button>
+    <button class="acc" id="bAid">Pistas</button>
   </div>
+  <div id="wrap"><div id="scroll"><div id="board" role="grid"></div></div><div id="pause" hidden><button class="btn main" id="bResume">Continuar</button></div></div>
+  <div id="clue"><button id="cPrev" aria-label="Pista anterior">‹</button><div id="clueT"></div><button id="cNext" aria-label="Pista siguiente">›</button></div>
+  <div id="slots"></div>
+  <div id="bank"></div>
 </section>
 
 <div id="toast" role="status"></div>
@@ -115,6 +126,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;j
 <dialog id="dHelp"><button class="ib x" data-close aria-label="Cerrar">✕</button><div class="help" id="helpBody"></div></dialog>
 <dialog id="dStats"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="statsBody"></div></dialog>
 <dialog id="dSet"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="setBody"></div></dialog>
+<dialog id="dAid"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="aidBody"></div></dialog>
 <dialog id="dClues"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="cluesBody"></div></dialog>
 
 <script>
@@ -177,25 +189,36 @@ async function openPuzzle(id, mode) {
   const first = SLOTS.findIndex((s) => s.dir === "A" && !slotDone(s)); const s0 = SLOTS[first < 0 ? 0 : first];
   dir = s0.dir; sel = s0.cells.find((c) => !correct(c)) ?? s0.cells[0];
   $("list").hidden = true; $("game").hidden = false; $("load").hidden = true;
-  $("modeL").textContent = MODES[mode]; buildBoard(); renderAll(); save();
+  document.body.classList.add("ingame"); $("timer").title = MODES[mode]; buildBoard(); renderAll(); save();
   if (ST.done) setTimeout(showResult, 200);
 }
 
-/* ---------- tablero ---------- */
-let cells = [];
+/* ---------- tablero (estilo autodefinido) ----------
+ * Se dibuja una cuadrícula ampliada de (n+1)×(n+1): la pista de cada palabra va en la casilla que la precede
+ * (una casilla negra o la fila/columna extra del borde). Los índices del juego siguen siendo los del crucigrama original. */
+let cells = [], M = 0, CS = 36, QS = [], bankSlot = -1, lastSel = -2;
+function layout() {
+  if (!P) return; const avail = Math.min(innerWidth, 620) - 26; CS = Math.max(36, Math.floor(avail / M)); const b = $("board");
+  b.style.setProperty("--cs", CS + "px"); b.style.gridTemplateColumns = `repeat(${M},${CS}px)`; b.style.gridAutoRows = CS + "px";
+  for (const x of QS) x.q.style.fontSize = Math.max(6, Math.min(CS * 0.25, (CS - 9) / Math.sqrt(0.62 * Math.max(x.text.length, 6)))).toFixed(1) + "px";
+}
 function buildBoard() {
-  const b = $("board"); b.textContent = ""; b.style.setProperty("--n", P.n); b.style.gridTemplateColumns = `repeat(${P.n},1fr)`; b.classList.remove("won", "paused"); $("pause").hidden = true; cells = [];
-  const nums = new Map(); SLOTS.forEach((s) => nums.set(s.cells[0], s.num));
-  for (let i = 0; i < P.n * P.n; i++) {
-    const d = el("div", P.g[i] === "#" ? "c b" : "c"); d.dataset.i = i;
-    const n = el("span", "n", nums.get(i) || ""), v = el("span", "v");
-    if (P.g[i] !== "#") { d.setAttribute("role", "gridcell"); d.append(n, v); }
-    b.appendChild(d); cells.push({ d, v, key: "" });
+  M = P.n + 1; const b = $("board"); b.textContent = ""; b.classList.remove("won", "paused"); $("pause").hidden = true; cells = new Array(P.n * P.n); QS = []; bankSlot = -1; lastSel = -2;
+  const host = new Map();                 // casilla de la cuadrícula ampliada -> {A: palabra horizontal, D: palabra vertical}
+  SLOTS.forEach((s, si) => { const st = s.cells[0], r = (st / P.n) | 0, c = st % P.n, vi = s.dir === "A" ? (r + 1) * M + c : r * M + (c + 1); const o = host.get(vi) || {}; o[s.dir] = si; host.set(vi, o); });
+  for (let vr = 0; vr < M; vr++) for (let vc = 0; vc < M; vc++) {
+    const vi = vr * M + vc, oi = vr > 0 && vc > 0 ? (vr - 1) * P.n + (vc - 1) : -1;
+    let d;
+    if (oi >= 0 && P.g[oi] !== "#") { d = el("div", "c"); d.dataset.i = oi; d.setAttribute("role", "gridcell"); const v = el("span", "v"); d.appendChild(v); cells[oi] = { d, v, key: "" }; }
+    else if (host.has(vi)) { d = el("div", "k"); const h = host.get(vi); for (const dd of ["A", "D"]) if (h[dd] !== undefined) { const si = h[dd], q = el("div", "q " + dd, SLOTS[si].clue); q.dataset.s = si; d.appendChild(q); QS.push({ q, text: SLOTS[si].clue, si, on: false }); } }
+    else d = el("div", "z");
+    b.appendChild(d);
   }
+  layout();
 }
 const curSlot = () => { const si = sel >= 0 ? CELL[sel][dir] : -1; return si >= 0 ? SLOTS[si] : null; };
 function renderAll() {
-  const s = curSlot(), inW = new Set(s ? s.cells : []);
+  const s = curSlot(), inW = new Set(s ? s.cells : []), si = s ? SLOTS.indexOf(s) : -1;
   for (let i = 0; i < P.n * P.n; i++) {
     if (P.g[i] === "#") continue;
     const c = cells[i], v = ST.v[i] === "." ? "" : ST.v[i];
@@ -204,12 +227,55 @@ function renderAll() {
     if (wrong.has(i)) cls += " x"; if (i === hintCell) cls += " hint";
     const key = cls + "|" + v; if (key === c.key) continue; c.key = key; c.d.className = cls; c.v.textContent = v;
   }
+  for (const x of QS) { const on = x.si === si; if (on !== x.on) { x.on = on; x.q.classList.toggle("on", on); } }
   const L = $("clueT"); L.textContent = "";
-  if (s) { L.append(el("b", "", `${s.num}${s.dir === "A" ? "H" : "V"}`), document.createTextNode(`${s.clue} (${s.cells.length})`)); }
-  const lr = MAX_LETTERS - ST.lu, wr = MAX_WORDS - ST.wu;
-  $("nL").textContent = `${lr}/${MAX_LETTERS}`; $("nW").textContent = `${wr}/${MAX_WORDS}`;
-  $("tLetter").disabled = lr <= 0 || ST.done; $("tWord").disabled = wr <= 0 || ST.done; $("tCheck").disabled = ST.done;
+  if (s) { L.append(document.createTextNode(s.clue)); L.append(el("small", "", `${s.num}${s.dir === "A" ? " horizontal" : " vertical"} · ${s.cells.length} letras`)); }
+  renderBottom(s, si);
   $("timer").textContent = (paused ? "⏸ " : "") + fmt(ST.el);
+  if (sel !== lastSel) { lastSel = sel; if (sel >= 0 && cells[sel]) cells[sel].d.scrollIntoView({ block: "nearest", inline: "nearest" }); }
+}
+
+/* ---------- huecos de la palabra y banco de letras ---------- */
+function mulberry(a) { return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function bankLetters(s, si) {                 // las letras de la palabra + letras de relleno, siempre en el mismo orden para esa palabra
+  const rnd = mulberry(P.id * 7919 + si * 104729 + 17), word = s.cells.map((c) => P.g[c]), pool = "aaaaaaaeeeeeeeeooooooiiiissssnnnnrrrrlllltttuuuccdddmmppbbggvvyyqhfzjx";
+  const total = Math.max(14, word.length * 2), out = word.slice(), count = (l) => out.filter((x) => x === l).length;
+  for (let guard = 0; out.length < total && guard < 800; guard++) { const l = pool[Math.floor(rnd() * pool.length)]; if (count(l) < Math.max(2, word.filter((x) => x === l).length + 1)) out.push(l); }
+  for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; }
+  return out;
+}
+function renderBottom(s, si) {
+  const slots = $("slots"), bank = $("bank"), show = !!s && !ST.done;
+  slots.hidden = bank.hidden = !show; if (!show) { bankSlot = -1; return; }
+  slots.style.setProperty("--len", s.cells.length); slots.textContent = "";
+  s.cells.forEach((c) => { const f = ST.v[c] !== "."; const b = el("button", "sl" + (f ? " f" : "") + (c === sel ? " cur" : "") + (wrong.has(c) ? " x" : ""), f ? ST.v[c] : ""); b.dataset.c = c; b.setAttribute("aria-label", f ? "Letra " + ST.v[c] : "Hueco vacío"); slots.appendChild(b); });
+  if (bankSlot !== si) {
+    bankSlot = si; bank.textContent = "";
+    bankLetters(s, si).forEach((l) => { const k = el("button", "bk", l); k.dataset.l = l; bank.appendChild(k); });
+    const d = el("button", "bk del", "⌫"); d.dataset.l = "⌫"; d.setAttribute("aria-label", "Borrar la última letra"); bank.appendChild(d);
+  }
+}
+function bankTap(l) {
+  if (!P || ST.done || paused) return;
+  const s = curSlot(); if (!s) return;
+  if (l === "⌫") { const c = [...s.cells].reverse().find((x) => ST.v[x] !== "." && !locked(x)); if (c === undefined) return; ST.v = ST.v.slice(0, c) + "." + ST.v.slice(c + 1); wrong.delete(c); sel = c; hintCell = -1; renderAll(); save(); return; }
+  const c = s.cells.find((x) => ST.v[x] === "." && !locked(x));
+  if (c === undefined) return toast("La palabra está completa: toca una letra para quitarla");
+  sel = c; type(l);
+}
+function slotTap(c) {
+  if (!P || ST.done || paused) return; sel = c;
+  if (!locked(c) && ST.v[c] !== ".") { ST.v = ST.v.slice(0, c) + "." + ST.v.slice(c + 1); wrong.delete(c); save(); }
+  hintCell = -1; renderAll();
+}
+function selectSlot(si) { if (paused) return; const s = SLOTS[si]; dir = s.dir; sel = s.cells.find((c) => !correct(c)) ?? s.cells[0]; hintCell = -1; renderAll(); }
+function showAid() {
+  if (!P || ST.done) return; const b = $("aidBody"); b.textContent = ""; b.appendChild(el("h2", "", "Pistas"));
+  const add = (icon, label, sub, fn, off) => { const x = el("button", "aid"); x.append(el("b", "", icon), el("span", "", label), el("i", "", sub)); x.disabled = !!off; x.onclick = () => { $("dAid").close(); fn(); }; b.appendChild(x); };
+  add("✔️", "Revisar", "Marca las letras incorrectas · ilimitado", check);
+  add("🔤", "Revelar una letra", `${MAX_LETTERS - ST.lu} de ${MAX_LETTERS} disponibles · la de la casilla elegida`, revealLetter, ST.lu >= MAX_LETTERS);
+  add("📖", "Revelar la palabra", `${MAX_WORDS - ST.wu} de ${MAX_WORDS} disponible · la palabra elegida`, revealWord, ST.wu >= MAX_WORDS);
+  openDlg($("dAid"));
 }
 
 /* ---------- selección y escritura ---------- */
@@ -308,7 +374,7 @@ const stateOf = (id) => { const s = PAS.get(pkey(id), null); return !s ? "n" : s
 function seg(parent, items, current, onPick) { parent.textContent = ""; items.forEach(([v, label]) => { const b = el("button", "", label); b.setAttribute("aria-pressed", String(v === current)); b.onclick = () => onPick(v); parent.appendChild(b); }); }
 async function showList() {
   await loadMeta(); if (P && ST && !ST.done) save(); P = null; ST = null;
-  $("game").hidden = true; $("list").hidden = false; $("load").hidden = true;
+  $("game").hidden = true; $("list").hidden = false; $("load").hidden = true; document.body.classList.remove("ingame");
   seg($("fMode"), Object.entries(MODES), S.mode, (v) => { S.mode = v; saveSettings(); showList(); });
   seg($("fSize"), [[0, "Todos"], ...META.sizes.map((s) => [s.n, `${s.n}×${s.n}`])], S.size, (v) => { S.size = v; saveSettings(); showList(); });
   seg($("fState"), [["all", "Todos"], ["n", "Nuevos"], ["p", "En curso"], ["d", "Completados"]], S.state, (v) => { S.state = v; saveSettings(); showList(); });
@@ -370,10 +436,15 @@ function showClues() {
 }
 
 /* ---------- eventos ---------- */
-$("board").addEventListener("pointerdown", (e) => { const c = e.target.closest(".c"); if (c && !c.classList.contains("b")) { e.preventDefault(); select(+c.dataset.i); } });
-(function () { const kb = $("kb"); for (const row of ["qwertyuiop", "asdfghjklñ", "zxcvbnm"]) { const r = el("div", "kr"); for (const l of row) { const k = el("button", "k", l); k.dataset.k = l; r.appendChild(k); } if (row[0] === "z") { const b = el("button", "k w", "⌫"); b.dataset.k = "Backspace"; b.setAttribute("aria-label", "Borrar"); r.appendChild(b); } kb.appendChild(r); } })();
-$("kb").addEventListener("click", (e) => { const k = e.target.closest("[data-k]"); if (!k) return; k.dataset.k === "Backspace" ? backspace() : type(k.dataset.k); });
-$("tCheck").onclick = check; $("tLetter").onclick = revealLetter; $("tWord").onclick = revealWord; $("tClues").onclick = showClues;
+$("board").addEventListener("pointerdown", (e) => {
+  const q = e.target.closest(".q"); if (q) { e.preventDefault(); return selectSlot(+q.dataset.s); }
+  const c = e.target.closest(".c"); if (c) { e.preventDefault(); select(+c.dataset.i); }
+});
+$("bank").addEventListener("click", (e) => { const k = e.target.closest("[data-l]"); if (k) bankTap(k.dataset.l); });
+$("slots").addEventListener("click", (e) => { const b = e.target.closest("[data-c]"); if (b) slotTap(+b.dataset.c); });
+$("bAid").onclick = showAid; $("bClues").onclick = showClues;
+$("bTheme").onclick = () => { const t = PAS.prefs().theme, dark = t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches); PAS.setPrefs({ theme: dark ? "light" : "dark" }); };
+addEventListener("resize", layout);
 $("cPrev").onclick = () => gotoSlot(-1); $("cNext").onclick = () => gotoSlot(1);
 $("timer").onclick = () => setPause(!paused); $("bResume").onclick = () => setPause(false);
 $("bBack").onclick = showList; $("bHelp").onclick = showHelp; $("bStats").onclick = async () => { await loadMeta(); showStats(); }; $("bSet").onclick = showSettings;

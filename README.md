@@ -37,6 +37,7 @@ Para añadir un juego: crea una carpeta con su `index.html` (usa `../shared.css`
 
 ## Crucigramas
 - **400 crucigramas** en español: 250 de 9×9 y 150 de 11×11. Se elige libremente cuál jugar (lista con filtros por tamaño y estado, botón «Aleatorio»).
+- **Estilo «de flechas»:** las pistas van dentro de la cuadrícula (con flecha → o ↓), la palabra activa se resalta en azul, y se escribe con una fila de casillas de la palabra y un banco de letras (las de la palabra más señuelos) o con el teclado físico. Barra superior con volver, lista, tema, cronómetro y menú «Pistas».
 - **Dos modos:** sin letras sugeridas (cuadrícula vacía) y con letras sugeridas (≈28 % de las casillas ya puestas y al menos una por palabra). El progreso se guarda por crucigrama y modo.
 - **Ayudas por crucigrama:** hasta **3 letras** sueltas y **1 palabra entera**. «Revisar» (marca errores) es ilimitado y no cuenta como ayuda.
 - **Racha:** crucigramas completados seguidos **sin usar letras ni palabras de ayuda** (por modo). Si completas uno con ayuda, la racha vuelve a 0.
