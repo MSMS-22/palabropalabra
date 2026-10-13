@@ -9,6 +9,7 @@ Colección de juegos de navegador, sin servidor ni build (HTML, CSS y JS estáti
 | Home «Pasatiempos» | `/` | Tarjetas de los juegos con tu racha actual |
 | Palabra o Palabro | `/palabra/` | Wordle en español e inglés, modo fácil y difícil, 4–8 letras |
 | Sudoku | `/sudoku/` | Fácil, medio y difícil; notas que se borran solas; pistas |
+| 2048 | `/2048/` | Tres tamaños (5×5, 4×4, 3×3), deslizar con el dedo o las flechas, deshacer y racha |
 | Crucigramas | `/crucigrama/` | 400 crucigramas en español (250 de 9×9 y 150 de 11×11), con o sin letras sugeridas |
 
 ```
@@ -16,6 +17,7 @@ index.html   shared.css   shared.js   sw.js     ← home, tema común, preferenc
 palabra/     index.html + data/ (diccionarios)
 sudoku/      index.html + engine.js (generador y solver)
 crucigrama/  index.html + data/ (400 crucigramas en paquetes JSON)
+2048/        index.html + engine.js (reglas puras) + engine.test.cjs
 tools/build_dict.py                               ← genera palabra/data
 tools/crossword/                                  ← banco de pistas, generador, validador y prueba e2e
 ```
@@ -26,6 +28,12 @@ Para añadir un juego: crea una carpeta con su `index.html` (usa `../shared.css`
 - **Notas:** botón ✏️ (o tecla `N`; `Mayús`+número anota directamente). Al colocar un número desaparece de las notas de su fila, columna y bloque. Deshacer restaura también las notas borradas. ✨ Auto-notas rellena todos los candidatos.
 - **Pistas:** 3 por partida; explican por qué va ese número. La victoria cuenta, pero el mejor tiempo solo lo marcan las partidas sin pistas.
 - **Racha:** victorias seguidas por dificultad; perder o abandonar una partida empezada la reinicia.
+
+## 2048
+- Tres tamaños: **Fácil 5×5** y **Clásico 4×4** (meta: ficha 2048) y **Difícil 3×3** (meta: ficha 256). Partidas ilimitadas.
+- Se juega deslizando el dedo, arrastrando con el ratón o con las flechas/WASD. Tiene deshacer (última jugada), puntuación y mejor puntuación por tamaño.
+- **Racha:** partidas ganadas seguidas por tamaño; perder o abandonar una partida a medias la reinicia. Tras ganar se puede seguir jugando.
+- Las reglas viven en `2048/engine.js` y se prueban con `node 2048/engine.test.cjs` (≈ 40 000 jugadas aleatorias comprobando que la suma de fichas y la puntuación son coherentes).
 
 ## Crucigramas
 - **400 crucigramas** en español: 250 de 9×9 y 150 de 11×11. Se elige libremente cuál jugar (lista con filtros por tamaño y estado, botón «Aleatorio»).

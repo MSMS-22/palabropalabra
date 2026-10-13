@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#121213">
+<meta name="description" content="2048: desliza las fichas y únelas hasta llegar a 2048. Tres tamaños de tablero, racha de victorias y partidas ilimitadas.">
+<title>2048 · Pasatiempos</title>
+<script src="../shared.js"></script>
+<link rel="stylesheet" href="../shared.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23edc22e'/%3E%3Ctext x='16' y='22' font-size='13' font-family='sans-serif' font-weight='800' text-anchor='middle' fill='white'%3E2048%3C/text%3E%3C/svg%3E">
+<style>
+body{background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;
+max-width:560px;margin:0 auto;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);overflow:hidden;touch-action:manipulation;user-select:none}
+header{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 0;border-bottom:1px solid var(--line)}
+header .ib{width:36px;height:36px;font-size:18px}
+h1{font-size:clamp(20px,6vw,28px);margin:0;font-weight:800;letter-spacing:.02em}
+.hbar{display:flex;gap:2px;align-items:center;min-width:76px}.hbar:last-child{justify-content:flex-end}
+.streak{font-weight:700;font-size:15px;padding:0 4px;white-space:nowrap}
+#modes{margin:8px 0 6px}#modes button{padding:6px 6px;font-size:14px;min-width:0}
+.scores{display:flex;gap:8px;justify-content:center;margin:4px 0}
+.sc{background:var(--peer);border-radius:8px;padding:4px 14px;text-align:center;min-width:92px}
+.sc span{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sc b{font-size:22px;font-variant-numeric:tabular-nums}
+.goal{text-align:center;color:var(--muted);font-size:13px;margin:2px 0 4px}
+main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:4px 0}
+#wrap{width:min(100%,calc(100dvh - 330px),520px);aspect-ratio:1}
+#board{container-type:inline-size;position:relative;width:100%;height:100%;background:var(--line);border-radius:10px;touch-action:none;overflow:hidden}
+#cells,#tiles{--gap:2.4cqw;--pad:2.4cqw;--cell:calc((100cqw - 2 * var(--pad) - (var(--n) - 1) * var(--gap)) / var(--n))}
+#cells{position:absolute;inset:0;display:grid;padding:var(--pad);gap:var(--gap);grid-template-columns:repeat(var(--n),1fr)}
+.bc{background:var(--peer);border-radius:6px}
+.tile{position:absolute;left:var(--pad);top:var(--pad);width:var(--cell);height:var(--cell);border-radius:6px;display:grid;place-items:center;font-weight:800;line-height:1;
+font-size:calc(var(--cell) * .46);font-variant-numeric:tabular-nums;color:#776e65;background:#eee4da;
+transform:translate(calc(var(--c) * (var(--cell) + var(--gap))),calc(var(--r) * (var(--cell) + var(--gap))));transition:transform 110ms ease-in-out}
+.tile[data-l="3"]{font-size:calc(var(--cell) * .36)}.tile[data-l="4"]{font-size:calc(var(--cell) * .29)}.tile[data-l="5"],.tile[data-l="6"]{font-size:calc(var(--cell) * .23)}
+.tile.v4{background:#ede0c8}.tile.v8{background:#f2b179;color:#fff}.tile.v16{background:#f59563;color:#fff}.tile.v32{background:#f67c5f;color:#fff}
+.tile.v64{background:#f65e3b;color:#fff}.tile.v128{background:#edcf72;color:#fff}.tile.v256{background:#edcc61;color:#fff}.tile.v512{background:#edc850;color:#fff}
+.tile.v1024{background:#edc53f;color:#fff}.tile.v2048{background:#edc22e;color:#fff;box-shadow:0 0 18px 4px #edc22e88}.tile.big{background:#3c3a32;color:#fff}
+.tile.new{animation:appear 160ms 100ms backwards}.tile.pop{animation:pop 160ms}
+@keyframes appear{from{scale:0;opacity:0}}@keyframes pop{50%{scale:1.18}}
+.tools{display:flex;gap:8px;justify-content:center}
+.hint{color:var(--muted);font-size:12px;text-align:center;padding-bottom:8px}
+.help p{margin:8px 0;font-size:14px}
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
+#toast.on{opacity:1}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 14px;text-align:center}.times b{display:block;font-size:22px}.times span{font-size:11px;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar"><a class="ib" href="../" aria-label="Pasatiempos" title="Pasatiempos">🏠</a><button class="ib" id="bHelp" aria-label="Ayuda">?</button></div>
+  <h1>2048</h1>
+  <div class="hbar"><span class="streak" id="streak" title="Racha"></span><button class="ib" id="bStats" aria-label="Estadísticas">📊</button><button class="ib" id="bSet" aria-label="Ajustes">⚙️</button></div>
+</header>
+<div class="seg" id="modes" role="group"></div>
+<div class="scores"><div class="sc"><span id="lScore"></span><b id="score">0</b></div><div class="sc"><span id="lBest"></span><b id="best">0</b></div></div>
+<div class="goal" id="goal"></div>
+<main>
+  <div id="wrap"><div id="board" role="application" aria-label="Tablero"><div id="cells"></div><div id="tiles"></div></div></div>
+  <div class="tools"><button class="btn" id="bUndo"></button><button class="btn main" id="bNew"></button></div>
+</main>
+<div class="hint" id="hint"></div>
+<div id="toast" role="status"></div>
+<dialog id="dHelp"><button class="ib x" data-close aria-label="Cerrar">✕</button><div class="help" id="helpBody"></div></dialog>
+<dialog id="dStats"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="statsBody"></div></dialog>
+<dialog id="dSet"><button class="ib x" data-close aria-label="Cerrar">✕</button><div id="setBody"></div></dialog>
+<dialog id="dEnd"><div id="endBody"></div></dialog>
+
+<script src="engine.js"></script>
+<script>
+"use strict";
+const E = G2048, MODES = { easy: { n: 5, goal: 2048 }, classic: { n: 4, goal: 2048 }, hard: { n: 3, goal: 256 } }, ORDER = ["easy", "classic", "hard"];
+const T = {
+  es: {
+    easy: "Fácil 5×5", classic: "Clásico 4×4", hard: "Difícil 3×3", score: "Puntos", best: "Mejor", undo: "↶ Deshacer", newG: "🔄 Nueva partida",
+    goal: (g) => `Llega a la ficha ${g}`, hint: "Desliza o usa las flechas · Z deshace · N nueva partida",
+    abandon: "Si empiezas otra partida ahora, esta cuenta como perdida y tu racha vuelve a 0. ¿Continuar?",
+    wonT: "¡Lo lograste!", wonP: (g) => `Llegaste a la ficha ${g}.`, keep: "Seguir jugando", over: "Sin movimientos", overP: "No quedan jugadas posibles.", maxTile: "Ficha máxima",
+    played: "Jugadas", winPct: "% Victorias", streak: "Racha", bestStreak: "Mejor racha", bestScore: "Mejor puntuación", stats: "Estadísticas", settings: "Ajustes",
+    language: "Idioma", theme: "Modo oscuro", themeAuto: "Auto", on: "Sí", off: "No", helpT: "Cómo jugar",
+    h1: (g) => `Desliza las fichas con el dedo o con las flechas. Cuando dos fichas con el mismo número chocan, se unen en una con la suma. ¡Llega a la ficha ${g}!`,
+    h2: "Tras cada movimiento aparece una ficha nueva (un 2 casi siempre, a veces un 4). Pierdes si el tablero se llena y no quedan uniones posibles.",
+    h3: "Tamaños: Fácil 5×5 y Clásico 4×4 (meta 2048) y Difícil 3×3 (meta 256). Puedes jugar todas las partidas que quieras.",
+    h4: "La racha cuenta las partidas ganadas seguidas en cada tamaño: perder o abandonar una partida a medias la reinicia a 0. Al ganar puedes seguir jugando para subir tu puntuación.",
+    h5: "Teclado: flechas o WASD para mover, Z para deshacer la última jugada, N para una partida nueva.", mode: "Tamaño",
+  },
+  en: {
+    easy: "Easy 5×5", classic: "Classic 4×4", hard: "Hard 3×3", score: "Score", best: "Best", undo: "↶ Undo", newG: "🔄 New game",
+    goal: (g) => `Reach the ${g} tile`, hint: "Swipe or use the arrow keys · Z undoes · N new game",
+    abandon: "If you start a new game now, this one counts as a loss and your streak resets to 0. Continue?",
+    wonT: "You did it!", wonP: (g) => `You reached the ${g} tile.`, keep: "Keep playing", over: "No moves left", overP: "There are no possible moves.", maxTile: "Top tile",
+    played: "Played", winPct: "Win %", streak: "Streak", bestStreak: "Best streak", bestScore: "Best score", stats: "Statistics", settings: "Settings",
+    language: "Language", theme: "Dark mode", themeAuto: "Auto", on: "On", off: "Off", helpT: "How to play",
+    h1: (g) => `Swipe the tiles with your finger or the arrow keys. When two tiles with the same number collide they merge into their sum. Reach the ${g} tile!`,
+    h2: "A new tile appears after every move (usually a 2, sometimes a 4). You lose when the board fills up and no merges are left.",
+    h3: "Sizes: Easy 5×5 and Classic 4×4 (goal 2048) and Hard 3×3 (goal 256). Play as many games as you like.",
+    h4: "Your streak counts consecutive wins per size: losing or abandoning a game in progress resets it to 0. After winning you can keep playing for a higher score.",
+    h5: "Keyboard: arrows or WASD to move, Z to undo the last move, N for a new game.", mode: "Size",
+  },
+};
+
+/* ---------- utilidades ---------- */
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+let UI = PAS.prefs().ui || ((navigator.language || "es").startsWith("en") ? "en" : "es");
+const t = () => T[UI];
+let mode = PAS.get("g48.mode", "classic"); if (!MODES[mode]) mode = "classic";
+const getStats = (m = mode) => Object.assign({ played: 0, wins: 0, streak: 0, best: 0, bestScore: 0, bestTile: 0 }, PAS.get("g48.stats." + m, {}));
+const putStats = (s, m = mode) => PAS.set("g48.stats." + m, s);
+const renderStreak = () => { $("streak").textContent = "🔥 " + getStats().streak; };
+
+/* ---------- partida ---------- */
+let G = null, elAt = [], busy = false, queued = null;
+function freshGame(m) { const n = MODES[m].n; return { mode: m, n, goal: MODES[m].goal, grid: E.newGame(n), score: 0, won: false, over: false, moves: 0, prev: null }; }
+const save = () => PAS.set("g48.game", G);
+function recordResult(win) {
+  const s = getStats(G.mode); s.played++;
+  if (win) { s.wins++; s.streak++; s.best = Math.max(s.best, s.streak); } else s.streak = 0;
+  putStats(s, G.mode); renderStreak();
+}
+function loadGame() {
+  const g = PAS.get("g48.game", null), m = MODES[mode];
+  const ok = g && g.mode === mode && g.n === m.n && Array.isArray(g.grid) && g.grid.length === m.n && g.grid.every((r) => Array.isArray(r) && r.length === m.n);
+  G = ok ? Object.assign({ prev: null }, g) : freshGame(mode);
+  if (!ok) save();
+}
+
+/* ---------- fichas (DOM) ---------- */
+const cls = (v) => "tile " + (v > 2048 ? "big" : v >= 4 ? "v" + v : "");
+function makeTile(v, r, c, extra) {
+  const d = el("div", cls(v) + (extra ? " " + extra : ""), String(v)); d.dataset.l = String(String(v).length); d.style.setProperty("--r", r); d.style.setProperty("--c", c);
+  $("tiles").appendChild(d); return d;
+}
+function setValue(d, v) { d.className = cls(v); d.textContent = String(v); d.dataset.l = String(String(v).length); }
+function buildBoard() {
+  const n = G.n; $("cells").textContent = ""; $("tiles").textContent = "";
+  for (const id of ["cells", "tiles"]) $(id).style.setProperty("--n", n);
+  $("cells").style.gridTemplateColumns = `repeat(${n},1fr)`;
+  for (let i = 0; i < n * n; i++) $("cells").appendChild(el("div", "bc"));
+  renderTiles();
+}
+function renderTiles() {
+  $("tiles").textContent = ""; elAt = Array.from({ length: G.n }, () => Array(G.n).fill(null));
+  G.grid.forEach((row, r) => row.forEach((v, c) => { if (v) elAt[r][c] = makeTile(v, r, c); }));
+}
+function renderInfo() {
+  $("score").textContent = G.score; $("best").textContent = getStats(G.mode).bestScore;
+  $("bUndo").disabled = !G.prev || G.over; renderStreak();
+}
+function renderStatic() {
+  document.documentElement.lang = UI;
+  const m = $("modes"); m.textContent = "";
+  ORDER.forEach((k) => { const b = el("button", "", t()[k]); b.setAttribute("aria-pressed", String(k === mode)); b.onclick = () => switchMode(k); m.appendChild(b); });
+  $("lScore").textContent = t().score; $("lBest").textContent = t().best; $("bUndo").textContent = t().undo; $("bNew").textContent = t().newG;
+  $("goal").textContent = t().goal(MODES[mode].goal); $("hint").textContent = t().hint;
+  if (G) renderInfo();
+}
+
+/* ---------- jugadas ---------- */
+function setPos(d, r, c) { d.style.setProperty("--r", r); d.style.setProperty("--c", c); }
+function doMove(dir) {
+  if (!G || G.over || document.querySelector("dialog[open]")) return;
+  if (busy) { queued = dir; return; }
+  const r = E.move(G.grid, dir); if (!r.moved) return;
+  busy = true; queued = null;
+  G.prev = { grid: G.grid, score: G.score };
+  const next = Array.from({ length: G.n }, () => Array(G.n).fill(null)), absorbed = [], merges = [];
+  for (const tr of r.trace) {
+    const d = elAt[tr.fr][tr.fc]; setPos(d, tr.tr, tr.tc);
+    if (tr.merge) { absorbed.push(d); merges.push([tr.tr, tr.tc]); } else next[tr.tr][tr.tc] = d;
+  }
+  elAt = next; G.grid = r.grid; G.score += r.score; G.moves++;
+  setTimeout(() => {
+    absorbed.forEach((d) => d.remove());
+    for (const [tr, tc] of merges) { const d = elAt[tr][tc]; setValue(d, G.grid[tr][tc]); d.classList.add("pop"); }
+    const s = E.spawn(G.grid); if (s) { G.grid = s.grid; elAt[s.r][s.c] = makeTile(s.v, s.r, s.c, "new"); }
+    afterMove(); busy = false;
+    if (queued) { const q = queued; queued = null; doMove(q); }
+  }, 115);
+}
+function afterMove() {
+  const st = getStats(G.mode); let ch = false;
+  if (G.score > st.bestScore) { st.bestScore = G.score; ch = true; }
+  const mt = E.maxTile(G.grid); if (mt > st.bestTile) { st.bestTile = mt; ch = true; }
+  if (ch) putStats(st, G.mode);
+  let dlg = null;
+  if (!G.won && mt >= G.goal) { G.won = true; recordResult(true); dlg = "won"; }
+  if (!E.canMove(G.grid)) { G.over = true; if (!G.won) recordResult(false); dlg = "over"; }
+  save(); renderInfo();
+  if (dlg) setTimeout(() => showEnd(dlg), 350);
+}
+function undo() {
+  if (!G || !G.prev || G.over || busy) return;
+  G.grid = G.prev.grid; G.score = G.prev.score; G.prev = null; G.moves = Math.max(0, G.moves - 1);
+  renderTiles(); save(); renderInfo();
+}
+async function newGame(force) {
+  if (!force && G && G.moves > 0 && !G.won && !G.over) { if (!confirm(t().abandon)) return false; recordResult(false); }
+  G = freshGame(mode); busy = false; queued = null; save(); buildBoard(); renderInfo(); return true;
+}
+function switchMode(k) {
+  if (k === mode) return;
+  if (G && G.moves > 0 && !G.won && !G.over) { if (!confirm(t().abandon)) return; recordResult(false); }
+  mode = k; PAS.set("g48.mode", k); PAS.set("g48.game", null); loadGame(); renderStatic(); buildBoard();
+}
+
+/* ---------- diálogos ---------- */
+const openDlg = (d) => { if (!d.open) d.showModal(); };
+document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => b.closest("dialog").close()));
+document.querySelectorAll("dialog").forEach((d) => d.addEventListener("click", (e) => { if (e.target === d && d.id !== "dEnd") d.close(); }));
+function seg(parent, items, current, onPick) { const s = el("div", "seg"); items.forEach(([v, label]) => { const b = el("button", "", label); b.setAttribute("aria-pressed", String(v === current)); b.onclick = () => onPick(v); s.appendChild(b); }); parent.appendChild(s); }
+function statsBlock(body, m) {
+  const s = getStats(m), g = el("div", "stats");
+  [[s.played, t().played], [s.played ? Math.round((s.wins / s.played) * 100) : 0, t().winPct], [s.streak, t().streak], [s.best, t().bestStreak]].forEach(([v, l]) => { const c = el("div"); c.append(el("b", "", v), el("span", "", l)); g.appendChild(c); });
+  body.appendChild(g);
+  const tm = el("div", "times");
+  [[s.bestScore, t().bestScore], [s.bestTile || "–", t().maxTile]].forEach(([v, l]) => { const c = el("div"); c.append(el("b", "", v), el("span", "", l)); tm.appendChild(c); });
+  body.appendChild(tm);
+}
+function showEnd(kind) {
+  const b = $("endBody"); b.textContent = ""; const res = el("div", "res");
+  if (kind === "won") res.append(el("div", "w", t().wonT), el("p", "", t().wonP(G.goal)));
+  else res.append(el("div", "w", t().over), el("p", "", `${t().overP} ${t().score}: ${G.score}`));
+  b.appendChild(res); statsBlock(b, G.mode);
+  const a = el("div", "acts");
+  if (kind === "won" && !G.over) { const k = el("button", "btn", t().keep); k.onclick = () => $("dEnd").close(); a.appendChild(k); }
+  const n = el("button", "btn main", t().newG); n.onclick = () => { $("dEnd").close(); newGame(true); }; a.appendChild(n);
+  b.appendChild(a); openDlg($("dEnd"));
+}
+function showStats(m = mode) {
+  const b = $("statsBody"); b.textContent = ""; b.appendChild(el("h2", "", t().stats));
+  const wrap = el("div"); wrap.style.marginBottom = "12px"; b.appendChild(wrap); seg(wrap, ORDER.map((k) => [k, t()[k]]), m, (k) => showStats(k));
+  statsBlock(b, m); openDlg($("dStats"));
+}
+function showSettings() {
+  const b = $("setBody"); b.textContent = ""; b.appendChild(el("h2", "", t().settings)); const P0 = PAS.prefs();
+  const opt = (title, items, cur, fn) => { const o = el("div", "opt"); o.appendChild(el("p", "", title)); seg(o, items, cur, fn); b.appendChild(o); };
+  opt(t().language, [["es", "Español"], ["en", "English"]], UI, (v) => { UI = v; PAS.setPrefs({ ui: v }); renderStatic(); showSettings(); });
+  opt(t().theme, [["auto", t().themeAuto], ["dark", t().on], ["light", t().off]], P0.theme || "auto", (v) => { PAS.setPrefs({ theme: v }); showSettings(); });
+  openDlg($("dSet"));
+}
+function showHelp() {
+  const b = $("helpBody"); b.textContent = ""; b.appendChild(el("h2", "", t().helpT));
+  [t().h1(MODES[mode].goal), t().h2, t().h3, t().h4, t().h5].forEach((x) => b.appendChild(el("p", "", x))); openDlg($("dHelp"));
+}
+
+/* ---------- eventos ---------- */
+const KEYS = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down", a: "left", d: "right", w: "up", s: "down", A: "left", D: "right", W: "up", S: "down" };
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey || document.querySelector("dialog[open]")) return;
+  if (KEYS[e.key]) { e.preventDefault(); doMove(KEYS[e.key]); }
+  else if (e.key === "z" || e.key === "Z") undo(); else if (e.key === "n" || e.key === "N") newGame(false);
+});
+let t0 = null;
+const wrap = $("wrap");
+wrap.addEventListener("touchstart", (e) => { if (e.touches.length === 1) t0 = [e.touches[0].clientX, e.touches[0].clientY]; }, { passive: true });
+wrap.addEventListener("touchmove", (e) => { if (t0) e.preventDefault(); }, { passive: false });
+wrap.addEventListener("touchend", (e) => {
+  if (!t0) return; const t1 = e.changedTouches[0], dx = t1.clientX - t0[0], dy = t1.clientY - t0[1]; t0 = null;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+  doMove(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up");
+});
+// ratón: arrastrar también funciona
+let m0 = null; wrap.addEventListener("pointerdown", (e) => { if (e.pointerType === "mouse") m0 = [e.clientX, e.clientY]; });
+addEventListener("pointerup", (e) => { if (!m0 || e.pointerType !== "mouse") return; const dx = e.clientX - m0[0], dy = e.clientY - m0[1]; m0 = null; if (Math.max(Math.abs(dx), Math.abs(dy)) < 30) return; doMove(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up"); });
+$("bUndo").onclick = undo; $("bNew").onclick = () => newGame(false);
+$("bHelp").onclick = showHelp; $("bStats").onclick = () => showStats(); $("bSet").onclick = showSettings;
+
+/* ---------- arranque ---------- */
+loadGame(); renderStatic(); buildBoard();
+PAS.registerSW("../sw.js");
+</script>
+</body>
+</html>

@@ -55,24 +55,30 @@ footer{margin-top:26px;text-align:center;color:var(--muted);font-size:12px}
     <h2>Crucigramas</h2><p id="d3"></p>
     <div class="row"><span class="streak" id="s3"></span><span class="go" id="g3"></span></div>
   </a>
+  <a class="card" href="2048/">
+    <div class="pv s" aria-hidden="true"><svg viewBox="0 0 90 90"><rect x="3" y="3" width="84" height="84" rx="8" fill="var(--line)"/><g font-family="system-ui" font-weight="800" text-anchor="middle"><rect x="9" y="9" width="35" height="35" rx="5" fill="#eee4da"/><text x="26.5" y="33" font-size="18" fill="#776e65">2</text><rect x="46" y="9" width="35" height="35" rx="5" fill="#f59563"/><text x="63.5" y="33" font-size="18" fill="#fff">16</text><rect x="9" y="46" width="35" height="35" rx="5" fill="#f2b179"/><text x="26.5" y="70" font-size="18" fill="#fff">8</text><rect x="46" y="46" width="35" height="35" rx="5" fill="#edc22e"/><text x="63.5" y="70" font-size="13" fill="#fff">2048</text></g></svg></div>
+    <h2>2048</h2><p id="d4"></p>
+    <div class="row"><span class="streak" id="s4"></span><span class="go" id="g4"></span></div>
+  </a>
 </main>
 <footer id="foot"></footer>
 <script>
 "use strict";
 const T = {
-  es: { tag: "Juega todas las partidas que quieras.", d1: "Adivina la palabra en español o inglés. Modo fácil y difícil.", d2: "Tres niveles, notas que se borran solas y pistas.", d3: "400 crucigramas con pistas, con o sin letras sugeridas.", go: "Jugar →", streak: "Racha", foot: "Tus rachas y partidas se guardan en este navegador." },
-  en: { tag: "Play as many games as you like.", d1: "Guess the word in Spanish or English. Easy and hard modes.", d2: "Three levels, notes that clear themselves, and hints.", d3: "400 crosswords (in Spanish), with or without suggested letters.", go: "Play →", streak: "Streak", foot: "Your streaks and games are saved in this browser." },
+  es: { tag: "Juega todas las partidas que quieras.", d1: "Adivina la palabra en español o inglés. Modo fácil y difícil.", d2: "Tres niveles, notas que se borran solas y pistas.", d3: "400 crucigramas con pistas, con o sin letras sugeridas.", d4: "Une las fichas hasta llegar a 2048. Tres tamaños de tablero.", go: "Jugar →", streak: "Racha", foot: "Tus rachas y partidas se guardan en este navegador." },
+  en: { tag: "Play as many games as you like.", d1: "Guess the word in Spanish or English. Easy and hard modes.", d2: "Three levels, notes that clear themselves, and hints.", d3: "400 crosswords (in Spanish), with or without suggested letters.", d4: "Merge tiles to reach 2048. Three board sizes.", go: "Play →", streak: "Streak", foot: "Your streaks and games are saved in this browser." },
 };
 let UI = PAS.prefs().ui || ((navigator.language || "es").startsWith("en") ? "en" : "es");
 const best = (keys) => Math.max(0, ...keys.map((k) => (PAS.get(k, {}) || {}).streak || 0));
 function render() {
   const t = T[UI]; document.documentElement.lang = UI;
-  $("tag").textContent = t.tag; $("d1").textContent = t.d1; $("d2").textContent = t.d2; $("d3").textContent = t.d3; $("foot").textContent = t.foot;
-  $("g1").textContent = $("g2").textContent = $("g3").textContent = t.go; $("bLang").textContent = UI === "es" ? "EN" : "ES";
+  $("tag").textContent = t.tag; $("d1").textContent = t.d1; $("d2").textContent = t.d2; $("d3").textContent = t.d3; $("d4").textContent = t.d4; $("foot").textContent = t.foot;
+  $("g1").textContent = $("g2").textContent = $("g3").textContent = $("g4").textContent = t.go; $("bLang").textContent = UI === "es" ? "EN" : "ES";
   const w = best(["es", "en"].flatMap((l) => ["easy", "hard"].map((m) => `pp.stats.${l}.${m}`)));
   const s = best(["easy", "medium", "hard"].map((d) => "sd.stats." + d));
   const c = best(["sin", "con"].map((m) => "cw.stats." + m));
   $("s3").textContent = `🔥 ${t.streak}: ${c}`;
+  $("s4").textContent = `🔥 ${t.streak}: ${best(["easy", "classic", "hard"].map((m) => "g48.stats." + m))}`;
   $("s1").textContent = `🔥 ${t.streak}: ${w}`; $("s2").textContent = `🔥 ${t.streak}: ${s}`;
 }
 function $(id) { return document.getElementById(id); }
