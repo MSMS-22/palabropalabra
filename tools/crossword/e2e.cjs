@@ -17,6 +17,7 @@ const base = process.argv[2], from = +process.argv[3] || 1, to = +process.argv[4
   for (let id = from; id <= to; id++) for (const mode of ["sin", "con"]) {
     const fail = (m) => fails.push(`#${id} ${mode}: ${m}`);
     try {
+      await page.evaluate(() => document.querySelectorAll("dialog[open]").forEach((d) => d.close()));   // el diálogo de victoria bloquea el teclado
       await page.evaluate(([i, m]) => openPuzzle(i, m), [id, mode]);
       const info = await page.evaluate(() => {
         const whites = [...P.g].filter((c) => c !== "#").length, e = [];
@@ -39,6 +40,7 @@ const base = process.argv[2], from = +process.argv[3] || 1, to = +process.argv[4
       await page.waitForTimeout(5);
       const res = await page.evaluate(() => ({ done: ST.done, helped: ST.helped, saved: !!PAS.get(pkey(P.id, ST.mode), null) && PAS.get(pkey(P.id, ST.mode), null).done }));
       if (!res.done) fail("no se detectó como completado"); else if (res.helped || !res.saved) fail("estado final incorrecto"); else ok++;
+      await page.evaluate(() => document.querySelectorAll("dialog[open]").forEach((d) => d.close()));
       // límites de ayuda en otra copia del mismo crucigrama (se reinicia el progreso de esta prueba)
       await page.evaluate(([i, m]) => { PAS.set(pkey(i, m), null); return openPuzzle(i, m); }, [id, mode]);
       const help = await page.evaluate(() => {
@@ -53,6 +55,7 @@ const base = process.argv[2], from = +process.argv[3] || 1, to = +process.argv[4
       help.forEach(fail);
       // letras alternativas válidas en casillas sin cruce: deben aceptarse como solución
       if (mode === "sin") {
+        await page.evaluate(() => document.querySelectorAll("dialog[open]").forEach((d) => d.close()));
         await page.evaluate(([i, m]) => { PAS.set(pkey(i, m), null); return openPuzzle(i, m); }, [id, mode]);
         const hasAlt = await page.evaluate(() => !!(P.x && Object.keys(P.x).length));
         if (hasAlt) {

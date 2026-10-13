@@ -287,6 +287,7 @@ function nextId() {
   return any.length ? any[Math.floor(Math.random() * any.length)] : null;
 }
 function showResult() {
+  if (!P || !ST || !ST.done) return;          // el aviso puede dispararse tras salir del crucigrama
   const b = $("statsBody"); b.textContent = "";
   const res = el("div", "res"); res.append(el("div", "w", "¡Crucigrama resuelto!"), el("p", "", `Nº ${P.id} · ${P.n}×${P.n} · ${fmt(ST.el)}${ST.helped ? " · con ayuda" : " · ⭐ sin ayuda"}`)); b.appendChild(res);
   statsBlock(b, ST.mode);
