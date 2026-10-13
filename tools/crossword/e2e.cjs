@@ -41,7 +41,7 @@ const base = process.argv[2], from = +process.argv[3] || 1, to = +process.argv[4
       }
       await page.waitForTimeout(5);
       const res = await page.evaluate(() => ({ done: ST.done, helped: ST.helped, saved: !!PAS.get(pkey(P.id, ST.mode), null) && PAS.get(pkey(P.id, ST.mode), null).done }));
-      if (!res.done) fail("no se detectó como completado"); else if (res.helped || !res.saved) fail("estado final incorrecto"); else ok++;
+      if (!res.done) fail("no se detectó como completado: " + JSON.stringify(await page.evaluate(() => ({ pausado: paused, dialogo: !!document.querySelector("dialog[open]"), vacias: [...ST.v].filter((c) => c === ".").length, mal: [...Array(P.n * P.n).keys()].filter((i) => P.g[i] !== "#" && ST.v[i] !== "." && !correct(i)), id: P.id, modo: ST.mode })))); else if (res.helped || !res.saved) fail("estado final incorrecto"); else ok++;
       await page.evaluate(() => document.querySelectorAll("dialog[open]").forEach((d) => d.close()));
       // límites de ayuda en otra copia del mismo crucigrama (se reinicia el progreso de esta prueba)
       await page.evaluate(([i, m]) => { PAS.set(pkey(i, m), null); return openPuzzle(i, m); }, [id, mode]);
