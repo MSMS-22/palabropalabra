@@ -21,7 +21,7 @@ crucigrama/  index.html + data/ (400 crucigramas en paquetes JSON)
 tools/build_dict.py                               ← genera palabra/data
 tools/crossword/                                  ← banco de pistas, generador, validador y prueba e2e
 ```
-Para añadir un juego: crea una carpeta con su `index.html` (usa `../shared.css` y `../shared.js`), añade su tarjeta en `index.html` y su ruta a `SHELL` en `sw.js`.
+Para añadir un juego: crea una carpeta con su `index.html` (usa `../shared.css` y `../shared.js`), añade una entrada a la lista `GAMES` de `index.html` (la home genera las tarjetas y sus rachas a partir de ella) y su ruta a `SHELL` en `sw.js`.
 
 ## Sudoku
 - **Tableros:** `sudoku/engine.js` genera una solución completa por backtracking, quita casillas manteniendo la **solución única** y califica el nivel con un solver «humano» por técnicas. Fácil = solo individuales (38–44 pistas); medio = pares, tríos y bloqueos (30–35); difícil = X-Wing, XY-Wing o Swordfish (23–29). Se generan en el momento (≈ 1–150 ms).

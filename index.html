@@ -39,47 +39,44 @@ footer{margin-top:26px;text-align:center;color:var(--muted);font-size:12px}
   <div><h1>Pasa<span>tiempos</span></h1><p class="tag" id="tag"></p></div>
   <div class="hb"><button class="ib" id="bLang" aria-label="Idioma" style="font-size:14px;font-weight:700"></button><button class="ib" id="bTheme" aria-label="Tema">🌓</button></div>
 </header>
-<main class="grid">
-  <a class="card" href="palabra/">
-    <div class="pv w" aria-hidden="true"><i class="lg">P</i><i class="ln">A</i><i class="ly">L</i><i class="ln">A</i><i class="lg">B</i><i class="ln">R</i><i class="lg">A</i><i class="lg">O</i><i class="ly">P</i><i class="lg">A</i></div>
-    <h2>Palabra o Palabro</h2><p id="d1"></p>
-    <div class="row"><span class="streak" id="s1"></span><span class="go" id="g1"></span></div>
-  </a>
-  <a class="card" href="sudoku/">
-    <div class="pv s" aria-hidden="true"><svg viewBox="0 0 90 90"><rect x="2" y="2" width="86" height="86" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><path d="M30.7 2v86M59.3 2v86M2 30.7h86M2 59.3h86" stroke="currentColor" stroke-width="3"/><path d="M16.3 2v86M45 2v86M73.7 2v86M2 16.3h86M2 45h86M2 73.7h86" stroke="currentColor" stroke-width="1" opacity=".4"/><g font-family="system-ui" font-size="13" font-weight="700" fill="var(--mine)" text-anchor="middle"><text x="16.3" y="21">5</text><text x="45" y="50">3</text><text x="73.7" y="79">9</text><text x="73.7" y="21">1</text><text x="16.3" y="79">7</text></g></svg></div>
-    <h2>Sudoku</h2><p id="d2"></p>
-    <div class="row"><span class="streak" id="s2"></span><span class="go" id="g2"></span></div>
-  </a>
-  <a class="card" href="crucigrama/">
-    <div class="pv s" aria-hidden="true"><svg viewBox="0 0 90 90"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="84" height="84" rx="4"/><path d="M31 3v84M59 3v84M3 31h84M3 59h84" opacity=".5"/></g><g fill="currentColor"><rect x="31" y="3" width="28" height="28"/><rect x="3" y="59" width="28" height="28"/><rect x="59" y="31" width="28" height="28"/></g><g font-family="system-ui" font-size="15" font-weight="800" fill="var(--mine)" text-anchor="middle"><text x="17" y="23">C</text><text x="73" y="23">R</text><text x="45" y="50">U</text><text x="17" y="50">Z</text><text x="73" y="78">O</text><text x="45" y="78">S</text></g></svg></div>
-    <h2>Crucigramas</h2><p id="d3"></p>
-    <div class="row"><span class="streak" id="s3"></span><span class="go" id="g3"></span></div>
-  </a>
-  <a class="card" href="2048/">
-    <div class="pv s" aria-hidden="true"><svg viewBox="0 0 90 90"><rect x="3" y="3" width="84" height="84" rx="8" fill="var(--line)"/><g font-family="system-ui" font-weight="800" text-anchor="middle"><rect x="9" y="9" width="35" height="35" rx="5" fill="#eee4da"/><text x="26.5" y="33" font-size="18" fill="#776e65">2</text><rect x="46" y="9" width="35" height="35" rx="5" fill="#f59563"/><text x="63.5" y="33" font-size="18" fill="#fff">16</text><rect x="9" y="46" width="35" height="35" rx="5" fill="#f2b179"/><text x="26.5" y="70" font-size="18" fill="#fff">8</text><rect x="46" y="46" width="35" height="35" rx="5" fill="#edc22e"/><text x="63.5" y="70" font-size="13" fill="#fff">2048</text></g></svg></div>
-    <h2>2048</h2><p id="d4"></p>
-    <div class="row"><span class="streak" id="s4"></span><span class="go" id="g4"></span></div>
-  </a>
+<main class="grid" id="games">
+  <noscript><p>Juegos: <a href="palabra/">Palabra o Palabro</a> · <a href="sudoku/">Sudoku</a> · <a href="crucigrama/">Crucigramas</a> · <a href="2048/">2048</a></p></noscript>
 </main>
 <footer id="foot"></footer>
 <script>
 "use strict";
 const T = {
-  es: { tag: "Juega todas las partidas que quieras.", d1: "Adivina la palabra en español o inglés. Modo fácil y difícil.", d2: "Tres niveles, notas que se borran solas y pistas.", d3: "400 crucigramas con pistas, con o sin letras sugeridas.", d4: "Une las fichas hasta llegar a 2048. Tres tamaños de tablero.", go: "Jugar →", streak: "Racha", foot: "Tus rachas y partidas se guardan en este navegador." },
-  en: { tag: "Play as many games as you like.", d1: "Guess the word in Spanish or English. Easy and hard modes.", d2: "Three levels, notes that clear themselves, and hints.", d3: "400 crosswords (in Spanish), with or without suggested letters.", d4: "Merge tiles to reach 2048. Three board sizes.", go: "Play →", streak: "Streak", foot: "Your streaks and games are saved in this browser." },
+  es: { tag: "Juega todas las partidas que quieras.", go: "Jugar →", streak: "Racha", foot: "Tus rachas y partidas se guardan en este navegador." },
+  en: { tag: "Play as many games as you like.", go: "Play →", streak: "Streak", foot: "Your streaks and games are saved in this browser." },
 };
+/* Lista única de juegos: para añadir uno nuevo basta con una entrada aquí (y su carpeta). */
+const GAMES = [
+  { href: "palabra/", title: "Palabra o Palabro", pv: "<div class=\"pv w\" aria-hidden=\"true\"><i class=\"lg\">P</i><i class=\"ln\">A</i><i class=\"ly\">L</i><i class=\"ln\">A</i><i class=\"lg\">B</i><i class=\"ln\">R</i><i class=\"lg\">A</i><i class=\"lg\">O</i><i class=\"ly\">P</i><i class=\"lg\">A</i></div>",
+    desc: { es: "Adivina la palabra en español o inglés. Modo fácil y difícil.", en: "Guess the word in Spanish or English. Easy and hard modes." },
+    streaks: () => ["es","en"].flatMap((l) => ["easy","hard"].map((m) => `pp.stats.${l}.${m}`)) },
+  { href: "sudoku/", title: "Sudoku", pv: "<div class=\"pv s\" aria-hidden=\"true\"><svg viewBox=\"0 0 90 90\"><rect x=\"2\" y=\"2\" width=\"86\" height=\"86\" rx=\"6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/><path d=\"M30.7 2v86M59.3 2v86M2 30.7h86M2 59.3h86\" stroke=\"currentColor\" stroke-width=\"3\"/><path d=\"M16.3 2v86M45 2v86M73.7 2v86M2 16.3h86M2 45h86M2 73.7h86\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\".4\"/><g font-family=\"system-ui\" font-size=\"13\" font-weight=\"700\" fill=\"var(--mine)\" text-anchor=\"middle\"><text x=\"16.3\" y=\"21\">5</text><text x=\"45\" y=\"50\">3</text><text x=\"73.7\" y=\"79\">9</text><text x=\"73.7\" y=\"21\">1</text><text x=\"16.3\" y=\"79\">7</text></g></svg></div>",
+    desc: { es: "Tres niveles, notas que se borran solas y pistas.", en: "Three levels, notes that clear themselves, and hints." },
+    streaks: () => ["easy","medium","hard"].map((d) => "sd.stats." + d) },
+  { href: "crucigrama/", title: "Crucigramas", pv: "<div class=\"pv s\" aria-hidden=\"true\"><svg viewBox=\"0 0 90 90\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"3\" width=\"84\" height=\"84\" rx=\"4\"/><path d=\"M31 3v84M59 3v84M3 31h84M3 59h84\" opacity=\".5\"/></g><g fill=\"currentColor\"><rect x=\"31\" y=\"3\" width=\"28\" height=\"28\"/><rect x=\"3\" y=\"59\" width=\"28\" height=\"28\"/><rect x=\"59\" y=\"31\" width=\"28\" height=\"28\"/></g><g font-family=\"system-ui\" font-size=\"15\" font-weight=\"800\" fill=\"var(--mine)\" text-anchor=\"middle\"><text x=\"17\" y=\"23\">C</text><text x=\"73\" y=\"23\">R</text><text x=\"45\" y=\"50\">U</text><text x=\"17\" y=\"50\">Z</text><text x=\"73\" y=\"78\">O</text><text x=\"45\" y=\"78\">S</text></g></svg></div>",
+    desc: { es: "400 crucigramas con pistas, con o sin letras sugeridas.", en: "400 crosswords (in Spanish), with or without suggested letters." },
+    streaks: () => ["sin","con"].map((m) => "cw.stats." + m) },
+  { href: "2048/", title: "2048", pv: "<div class=\"pv s\" aria-hidden=\"true\"><svg viewBox=\"0 0 90 90\"><rect x=\"3\" y=\"3\" width=\"84\" height=\"84\" rx=\"8\" fill=\"var(--line)\"/><g font-family=\"system-ui\" font-weight=\"800\" text-anchor=\"middle\"><rect x=\"9\" y=\"9\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#eee4da\"/><text x=\"26.5\" y=\"33\" font-size=\"18\" fill=\"#776e65\">2</text><rect x=\"46\" y=\"9\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#f59563\"/><text x=\"63.5\" y=\"33\" font-size=\"18\" fill=\"#fff\">16</text><rect x=\"9\" y=\"46\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#f2b179\"/><text x=\"26.5\" y=\"70\" font-size=\"18\" fill=\"#fff\">8</text><rect x=\"46\" y=\"46\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#edc22e\"/><text x=\"63.5\" y=\"70\" font-size=\"13\" fill=\"#fff\">2048</text></g></svg></div>",
+    desc: { es: "Une las fichas hasta llegar a 2048. Tres tamaños de tablero.", en: "Merge tiles to reach 2048. Three board sizes." },
+    streaks: () => ["easy","classic","hard"].map((m) => "g48.stats." + m) },
+];
+
 let UI = PAS.prefs().ui || ((navigator.language || "es").startsWith("en") ? "en" : "es");
 const best = (keys) => Math.max(0, ...keys.map((k) => (PAS.get(k, {}) || {}).streak || 0));
 function render() {
   const t = T[UI]; document.documentElement.lang = UI;
-  $("tag").textContent = t.tag; $("d1").textContent = t.d1; $("d2").textContent = t.d2; $("d3").textContent = t.d3; $("d4").textContent = t.d4; $("foot").textContent = t.foot;
-  $("g1").textContent = $("g2").textContent = $("g3").textContent = $("g4").textContent = t.go; $("bLang").textContent = UI === "es" ? "EN" : "ES";
-  const w = best(["es", "en"].flatMap((l) => ["easy", "hard"].map((m) => `pp.stats.${l}.${m}`)));
-  const s = best(["easy", "medium", "hard"].map((d) => "sd.stats." + d));
-  const c = best(["sin", "con"].map((m) => "cw.stats." + m));
-  $("s3").textContent = `🔥 ${t.streak}: ${c}`;
-  $("s4").textContent = `🔥 ${t.streak}: ${best(["easy", "classic", "hard"].map((m) => "g48.stats." + m))}`;
-  $("s1").textContent = `🔥 ${t.streak}: ${w}`; $("s2").textContent = `🔥 ${t.streak}: ${s}`;
+  $("tag").textContent = t.tag; $("foot").textContent = t.foot; $("bLang").textContent = UI === "es" ? "EN" : "ES";
+  const box = $("games"); box.textContent = "";
+  for (const g of GAMES) {
+    const a = document.createElement("a"); a.className = "card"; a.href = g.href;
+    let streak = 0; try { streak = best(g.streaks()); } catch { /* sin datos guardados */ }
+    a.innerHTML = g.pv + `<h2>${g.title}</h2><p>${g.desc[UI]}</p><div class="row"><span class="streak">🔥 ${t.streak}: ${streak}</span><span class="go">${t.go}</span></div>`;
+    box.appendChild(a);
+  }
 }
 function $(id) { return document.getElementById(id); }
 $("bLang").onclick = () => { UI = UI === "es" ? "en" : "es"; PAS.setPrefs({ ui: UI }); render(); };
