@@ -53,7 +53,7 @@ body.ingame>header{display:none}
 .c.x{background:var(--errbg)}.c.x .v{color:var(--err)}
 .c.hint{outline:3px solid var(--ok);outline-offset:-3px;z-index:1}
 .k{background:var(--cc);color:var(--ct);display:flex;flex-direction:column;overflow:hidden}
-.k .q{flex:1;min-height:0;display:grid;place-items:center;text-align:center;text-transform:uppercase;line-height:1.04;padding:1px 5px 1px 2px;font-weight:600;hyphens:auto;overflow-wrap:anywhere;overflow:hidden;position:relative;cursor:pointer;-webkit-hyphens:auto}
+.k .q{flex:1;min-height:0;display:grid;place-items:center;text-align:center;text-transform:uppercase;line-height:1.04;padding:1px 5px 1px 2px;font-weight:600;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word;overflow:hidden;position:relative;cursor:pointer}
 .k .q.D{padding:1px 2px 5px 2px}
 .k .q+.q{border-top:1px solid var(--bd)}
 .k .q.on{background:var(--acc);color:#fff}
@@ -197,10 +197,25 @@ async function openPuzzle(id, mode) {
  * Se dibuja una cuadrícula ampliada de (n+1)×(n+1): la pista de cada palabra va en la casilla que la precede
  * (una casilla negra o la fila/columna extra del borde). Los índices del juego siguen siendo los del crucigrama original. */
 let cells = [], M = 0, CS = 36, QS = [], bankSlot = -1, lastSel = -2;
-function layout() {
-  if (!P) return; const avail = Math.min(innerWidth, 620) - 26; CS = Math.max(36, Math.floor(avail / M)); const b = $("board");
+const FS_MAX = 15, FS_MIN = 8.5;
+function fitClue(q) {                    // mayor tamaño de letra con el que la pista cabe entera en su recuadro
+  let lo = FS_MIN, hi = FS_MAX, best = FS_MIN;
+  const fits = (f) => { q.style.fontSize = f + "px"; return q.scrollHeight <= q.clientHeight + 1 && q.scrollWidth <= q.clientWidth + 1; };
+  if (fits(hi)) return hi;
+  while (hi - lo > 0.5) { const m = (lo + hi) / 2; if (fits(m)) { best = m; lo = m; } else hi = m; }
+  q.style.fontSize = best + "px"; return best;
+}
+function layout(force) {
+  if (!P) return; const avail = Math.min(innerWidth, 900) - 26; CS = force || Math.min(88, Math.max(66, Math.floor(avail / M)));
+  if (force) return place();
+  let bad = place(); while (bad && CS < 128) { CS += 6; bad = place(); }   // si alguna pista no cabe, se agranda la cuadrícula (se desplaza con el dedo)
+  return bad;
+}
+function place() {
+  const b = $("board");
   b.style.setProperty("--cs", CS + "px"); b.style.gridTemplateColumns = `repeat(${M},${CS}px)`; b.style.gridAutoRows = CS + "px";
-  for (const x of QS) x.q.style.fontSize = Math.max(6, Math.min(CS * 0.25, (CS - 9) / Math.sqrt(0.62 * Math.max(x.text.length, 6)))).toFixed(1) + "px";
+  let bad = 0; for (const x of QS) { const f = fitClue(x.q); x.q.classList.toggle("tight", f <= FS_MIN); if (!(x.q.scrollHeight <= x.q.clientHeight + 1)) bad++; }
+  return bad;
 }
 function buildBoard() {
   M = P.n + 1; const b = $("board"); b.textContent = ""; b.classList.remove("won", "paused"); $("pause").hidden = true; cells = new Array(P.n * P.n); QS = []; bankSlot = -1; lastSel = -2;
