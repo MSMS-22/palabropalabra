@@ -19,15 +19,17 @@ let fails = 0; const ok = (c, m) => { if (!c) { fails++; console.log("FALLO:", m
   const ins = await p.$$("input.nm"); const nm = ["Ana", "Luis", "ana", "Eva"]; for (let i = 0; i < 4; i++) await ins[i].fill(nm[i]);
   await p.click(".big"); ok(/repetidos/i.test(await p.textContent(".err")), "error por repetidos"); await ins[2].fill("Pedro"); await p.click(".big");
   // 4) cartas
-  await p.waitForSelector(".pbtn"); let impostors = 0, word = null, cat = null;
+  await p.waitForSelector(".pbtn"); let impostors = 0, word = null, cat = null; const hidden = [];
   for (let i = 0; i < 4; i++) {
     await (await p.$$(".pbtn"))[i].click(); await p.waitForSelector("#secret");
     const blur0 = await p.$eval("#secret span", (e) => getComputedStyle(e).filter); ok(/blur/.test(blur0), "palabra difuminada al inicio");
+    hidden.push(await p.$eval("#secret", (e) => e.outerHTML + "|" + e.getBoundingClientRect().width + "x" + e.getBoundingClientRect().height + "|" + getComputedStyle(e).borderColor + "|" + getComputedStyle(e).color));
     await p.click("#secret"); await p.waitForTimeout(250); const blur1 = await p.$eval("#secret span", (e) => getComputedStyle(e).filter); ok(blur1 === "none", "palabra visible tras tocar");
     const txt = (await p.textContent("#secret span")).trim(); const c = (await p.textContent(".cat2")).split(": ")[1];
     if (/IMPOSTOR/.test(txt)) impostors++; else { if (word && word !== txt) ok(false, "palabras distintas"); word = txt; }
     cat = c; await p.click("text=Listo");
   }
+  ok(new Set(hidden).size === 1, "la carta tapada es idéntica para impostores y no impostores (sin pistas)"); ok(!hidden.some((h) => /IMPOSTOR/i.test(h) || (word && h.includes(word))), "el texto real no está en el DOM mientras está oculto");
   ok(impostors === 2, "2 impostores repartidos, hay " + impostors); ok(["Animales", "Ciudades y países"].includes(cat), "categoría elegida: " + cat);
   ok(!(await p.$eval(".big", (e) => e.disabled)), "empezar habilitado cuando todos vieron");
   await p.click(".big");
