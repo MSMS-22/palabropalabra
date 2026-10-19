@@ -10,12 +10,14 @@ Colección de juegos de navegador, sin servidor ni build (HTML, CSS y JS estáti
 | Palabra o Palabro | `/palabra/` | Wordle en español e inglés, modo fácil y difícil, 4–8 letras |
 | Sudoku | `/sudoku/` | Fácil, medio y difícil; notas que se borran solas; pistas |
 | 2048 | `/2048/` | Tres tamaños (5×5, 4×4, 3×3), deslizar con el dedo o las flechas, deshacer y racha |
+| El Impostor | `/impostor/` | Juego de grupo con un solo móvil: 8 categorías (≥50 referencias cada una), palabra secreta difuminada, impostores al azar y marcador |
 | Crucigramas | `/crucigrama/` | 400 crucigramas en español (250 de 9×9 y 150 de 11×11), con o sin letras sugeridas |
 
 ```
 index.html   shared.css   shared.js   sw.js     ← home, tema común, preferencias, caché sin conexión
 palabra/     index.html + data/ (diccionarios)
 sudoku/      index.html + engine.js (generador y solver)
+impostor/    index.html + words.js (palabras por categoría)
 crucigrama/  index.html + data/ (400 crucigramas en paquetes JSON)
 2048/        index.html + engine.js (reglas puras) + engine.test.cjs
 tools/build_dict.py                               ← genera palabra/data
@@ -67,3 +69,9 @@ Cada línea del banco es `palabra<TAB>pista<TAB>s`; la `s` genera automáticamen
 ### Diccionarios
 `tools/build_dict.py` genera `palabra/data/` expandiendo los diccionarios Hunspell de LibreOffice (`es_ES`, `en_US`: conjugaciones, plurales, femeninos) y ordenando las soluciones con listas de frecuencia (hermitdave/FrequencyWords). En inglés se aceptan además las palabras de `dwyl/english-words`. Ver la cabecera del script para las fuentes y el comando.
 Los diccionarios conservan sus licencias originales (LibreOffice/dictionaries, FrequencyWords CC-BY-SA 4.0, english-words Unlicense).
+
+## El Impostor
+- **Categorías:** Comida, Animales, Futbolistas, Ciudades y países, Objetos cotidianos, Trabajos y oficios, Famosos de la cultura pop y Marcas famosas (≥50 referencias muy conocidas cada una, en `impostor/words.js`). Se puede elegir cualquier combinación o todas.
+- **Partida:** elegir categorías → nº de jugadores (3–20) y de impostores (1 a jugadores−1) → registrar nombres → cada jugador toca su nombre y ve la categoría y la palabra secreta (difuminada hasta tocarla) o «ERES EL IMPOSTOR» → se juega y se revelan los impostores uno a uno → puntos con + y − (+2 impostor que sobrevive, −1 si lo descubren) → siguiente palabra.
+- **Aleatoriedad:** `crypto.getRandomValues` con barajado Fisher-Yates y sin sesgo; los impostores se vuelven a sortear cada ronda y las palabras no se repiten hasta agotar la categoría.
+- **Pruebas:** `node tools/impostor/validate.cjs` (contenido) y `node tools/impostor/e2e.cjs <url>` (flujo completo y reparto estadístico de impostores).
