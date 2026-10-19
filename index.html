@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#121213">
-<meta name="description" content="Pasatiempos: Palabra o Palabro y Sudoku. Juega todas las partidas que quieras, con rachas y niveles de dificultad.">
+<meta name="description" content="Pasatiempos: Palabra o Palabro, Sudoku, Crucigramas, 2048 y El Impostor. Juega todas las partidas que quieras, con rachas y niveles de dificultad.">
 <title>Pasatiempos</title>
 <script src="shared.js"></script>
 <link rel="stylesheet" href="shared.css">
@@ -40,7 +40,7 @@ footer{margin-top:26px;text-align:center;color:var(--muted);font-size:12px}
   <div class="hb"><button class="ib" id="bLang" aria-label="Idioma" style="font-size:14px;font-weight:700"></button><button class="ib" id="bTheme" aria-label="Tema">🌓</button></div>
 </header>
 <main class="grid" id="games">
-  <noscript><p>Juegos: <a href="palabra/">Palabra o Palabro</a> · <a href="sudoku/">Sudoku</a> · <a href="crucigrama/">Crucigramas</a> · <a href="2048/">2048</a></p></noscript>
+  <noscript><p>Juegos: <a href="palabra/">Palabra o Palabro</a> · <a href="sudoku/">Sudoku</a> · <a href="crucigrama/">Crucigramas</a> · <a href="2048/">2048</a> · <a href="impostor/">El Impostor</a></p></noscript>
 </main>
 <footer id="foot"></footer>
 <script>
@@ -63,6 +63,9 @@ const GAMES = [
   { href: "2048/", title: "2048", pv: "<div class=\"pv s\" aria-hidden=\"true\"><svg viewBox=\"0 0 90 90\"><rect x=\"3\" y=\"3\" width=\"84\" height=\"84\" rx=\"8\" fill=\"var(--line)\"/><g font-family=\"system-ui\" font-weight=\"800\" text-anchor=\"middle\"><rect x=\"9\" y=\"9\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#eee4da\"/><text x=\"26.5\" y=\"33\" font-size=\"18\" fill=\"#776e65\">2</text><rect x=\"46\" y=\"9\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#f59563\"/><text x=\"63.5\" y=\"33\" font-size=\"18\" fill=\"#fff\">16</text><rect x=\"9\" y=\"46\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#f2b179\"/><text x=\"26.5\" y=\"70\" font-size=\"18\" fill=\"#fff\">8</text><rect x=\"46\" y=\"46\" width=\"35\" height=\"35\" rx=\"5\" fill=\"#edc22e\"/><text x=\"63.5\" y=\"70\" font-size=\"13\" fill=\"#fff\">2048</text></g></svg></div>",
     desc: { es: "Une las fichas hasta llegar a 2048. Tres tamaños de tablero.", en: "Merge tiles to reach 2048. Three board sizes." },
     streaks: () => ["easy","classic","hard"].map((m) => "g48.stats." + m) },
+  { href: "impostor/", title: "El Impostor", pv: "<div class=\"pv s\" aria-hidden=\"true\"><svg viewBox=\"0 0 90 90\"><circle cx=\"45\" cy=\"38\" r=\"22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/><path d=\"M20 78c4-14 14-20 25-20s21 6 25 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/><g font-family=\"system-ui\" font-weight=\"800\" text-anchor=\"middle\" fill=\"var(--mine)\"><text x=\"45\" y=\"50\" font-size=\"34\">?</text></g></svg></div>",
+    desc: { es: "Un móvil, una palabra secreta y un impostor entre vosotros.", en: "One phone, one secret word and an impostor among you." },
+    streaks: () => [] },
 ];
 
 let UI = PAS.prefs().ui || ((navigator.language || "es").startsWith("en") ? "en" : "es");
@@ -74,7 +77,7 @@ function render() {
   for (const g of GAMES) {
     const a = document.createElement("a"); a.className = "card"; a.href = g.href;
     let streak = 0; try { streak = best(g.streaks()); } catch { /* sin datos guardados */ }
-    a.innerHTML = g.pv + `<h2>${g.title}</h2><p>${g.desc[UI]}</p><div class="row"><span class="streak">🔥 ${t.streak}: ${streak}</span><span class="go">${t.go}</span></div>`;
+    a.innerHTML = g.pv + `<h2>${g.title}</h2><p>${g.desc[UI]}</p><div class="row"><span class="streak">${g.streaks().length ? `🔥 ${t.streak}: ${streak}` : ""}</span><span class="go">${t.go}</span></div>`;
     box.appendChild(a);
   }
 }

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#121213">
+<meta name="description" content="El Impostor: juego de grupo con un solo móvil. Elige categorías, reparte palabras secretas y descubre quién es el impostor.">
+<title>El Impostor · Pasatiempos</title>
+<script src="../shared.js"></script>
+<link rel="stylesheet" href="../shared.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23c62828'/%3E%3Ctext x='16' y='23' font-size='20' font-family='sans-serif' font-weight='800' text-anchor='middle' fill='white'%3E%3F%3C/text%3E%3C/svg%3E">
+<style>
+:root{--acc:#c62828;--accfg:#fff}
+body{background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:560px;margin:0 auto;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom);display:flex;flex-direction:column;height:auto;min-height:100%;touch-action:manipulation}
+header{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:clamp(20px,6vw,26px);font-weight:800}
+header .ib{width:36px;height:36px;font-size:18px}
+.hb{display:flex;gap:2px;min-width:76px}.hb:last-child{justify-content:flex-end}
+main{flex:1;padding:14px 0 24px;display:flex;flex-direction:column;gap:12px}
+h2{margin:0;font-size:20px}
+p.lead{margin:0;color:var(--muted);font-size:15px}
+.rules{background:var(--peer);border-radius:10px;padding:10px 12px;font-size:14px;display:flex;gap:2px 14px;justify-content:center;flex-wrap:wrap;font-weight:600;align-items:center}
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cat{display:flex;align-items:center;gap:8px;padding:12px;border:2px solid var(--line);border-radius:12px;font-weight:700;text-align:left;font-size:15px}
+.cat span.e{font-size:22px}
+.cat[aria-pressed="true"]{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent)}
+.cat small{display:block;color:var(--muted);font-weight:500;font-size:12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.row b{font-size:17px}
+.step{display:flex;align-items:center;gap:10px}
+.step button{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);font-size:22px;font-weight:800}
+.step button:disabled{opacity:.35}
+.step output{min-width:32px;text-align:center;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.big{width:100%;padding:14px;border-radius:12px;font-size:17px;font-weight:800;border:0;background:var(--acc);color:var(--accfg)}
+.big:disabled{opacity:.4}
+.big.alt{background:var(--peer);color:var(--fg);border:1px solid var(--line)}
+.btns{display:flex;flex-direction:column;gap:8px;margin-top:auto}
+input.nm{width:100%;padding:12px;font:inherit;font-size:17px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+input.nm:focus{outline:0;border-color:var(--acc)}
+.names{display:flex;flex-direction:column;gap:8px}
+.pbtn{display:flex;justify-content:space-between;align-items:center;padding:16px;border:2px solid var(--line);border-radius:12px;font-size:18px;font-weight:700;background:var(--card)}
+.pbtn.seen{opacity:.55;border-style:dashed}
+.pbtn i{font-style:normal;color:var(--ok)}
+.card{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:14px}
+.card .who{font-size:34px;font-weight:800;word-break:break-word}
+.card .cat2{font-size:18px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+#secret{display:grid;place-items:center;min-height:150px;padding:16px;border-radius:16px;border:3px solid var(--line);background:var(--peer);font-size:clamp(26px,8vw,40px);font-weight:800;line-height:1.15;word-break:break-word;cursor:pointer;user-select:none;position:relative;overflow:hidden}
+#secret span{filter:blur(16px);transition:filter .15s}
+#secret.on span{filter:none}
+#secret.imp{border-color:var(--acc);color:var(--acc)}
+#secret small{position:absolute;bottom:8px;left:0;right:0;font-size:13px;font-weight:600;color:var(--muted)}
+#secret.on small{display:none}
+.play{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:12px}
+.first{font-size:18px}.first b{color:var(--acc)}
+.rev{padding:14px;border-radius:12px;border:2px dashed var(--acc);color:var(--acc);font-weight:800;font-size:17px;background:none}
+.rev.done{border-style:solid;background:var(--acc);color:var(--accfg);cursor:default}
+.word{font-size:15px;color:var(--muted)}.word b{color:var(--fg);font-size:18px}
+.srow{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.srow .n{flex:1;font-size:18px;font-weight:700;word-break:break-word}
+.srow .n small{display:block;color:var(--acc);font-size:12px;font-weight:700}
+.srow output{min-width:36px;text-align:center;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.srow button{width:44px;height:44px;border-radius:10px;border:2px solid var(--line);font-size:24px;font-weight:800}
+.srow button.p{border-color:var(--ok);color:var(--ok)}.srow button.m{border-color:var(--acc);color:var(--acc)}
+.err{color:var(--err);font-size:14px;min-height:1.2em;margin:0}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--acc:#ef5350;--accfg:#121213}}
+:root[data-theme="dark"]{--acc:#ef5350;--accfg:#121213}
+</style>
+</head>
+<body>
+<header>
+  <div class="hb"><a class="ib" href="../" aria-label="Inicio">🏠</a></div>
+  <h1 id="title">El Impostor</h1>
+  <div class="hb"><button class="ib" id="bLang" style="font-size:14px;font-weight:700" aria-label="Idioma"></button><button class="ib" id="bTheme" aria-label="Tema">🌓</button></div>
+</header>
+<main id="app"></main>
+<noscript><p>Este juego necesita JavaScript.</p></noscript>
+<script src="words.js"></script>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const T = {
+  es: {
+    title: "El Impostor", pickCats: "Elige las categorías", pickLead: "Puedes marcar las que quieras.", all: "Todas", none: "Ninguna", next: "Siguiente",
+    cat: { comida: "Comida", animales: "Animales", futbolistas: "Futbolistas", ciudades: "Ciudades y países", objetos: "Objetos cotidianos", oficios: "Trabajos y oficios", pop: "Famosos de la cultura pop", marcas: "Marcas famosas" },
+    refs: (n) => n + " referencias", players: "Jugadores", impostors: "Impostores", settings: "Jugadores e impostores", maxImp: "Máximo: todos menos uno. Lo habitual es como mucho la mitad.",
+    warnImp: "Con tantos impostores, casi nadie sabe la palabra.", register: "Registra a los jugadores", nameN: (i) => "Jugador " + i, nameErr: "Escribe un nombre para cada jugador.", dupErr: "Hay nombres repetidos.",
+    start: "Repartir palabras", whoAreYou: "Toca tu nombre", whoLead: "Cada uno mira su carta en secreto y pasa el móvil.", seen: "visto", allSeen: "Empezar partida", pending: (n) => "Faltan " + n + " por mirar",
+    category: "Categoría", tapReveal: "Toca para ver", tapHide: "Toca para ocultar", imp: "ERES EL IMPOSTOR", done: "Listo, ocultar", back: "Volver",
+    playing: "¡A jugar!", starts: "Empieza", discuss: "Cada uno da una pista sobre la palabra sin decirla. ¡Descubrid al impostor!", revealN: (n) => "Revelar impostor " + n, isImp: "era el impostor", theWord: "La palabra era", revealWord: "Revelar la palabra", toScores: "Contar puntos",
+    scores: "Puntos", rules: ["+2 impostor que sobrevive", "−1 impostor descubierto"], impTag: "impostor", nextWord: "Siguiente palabra", end: "Terminar partida", endConfirm: "¿Terminar y volver a empezar? Se borrarán los puntos.", resetScores: "Poner puntos a 0",
+    help: "Cómo se juega", helpBody: ["Un solo móvil: se pasa de mano en mano.", "Todos reciben la misma palabra secreta salvo el/los impostor/es, que solo conocen la categoría.", "Por turnos, cada jugador dice una pista sobre la palabra sin nombrarla. El impostor disimula.", "Al final se vota quién es el impostor.", "Si sobrevive: +2 puntos. Si lo descubren: −1 punto."], close: "Cerrar",
+  },
+  en: {
+    title: "The Impostor", pickCats: "Choose categories", pickLead: "Pick as many as you like.", all: "All", none: "None", next: "Next",
+    cat: { comida: "Food", animales: "Animals", futbolistas: "Footballers", ciudades: "Cities & countries", objetos: "Everyday objects", oficios: "Jobs & trades", pop: "Pop culture stars", marcas: "Famous brands" },
+    refs: (n) => n + " items", players: "Players", impostors: "Impostors", settings: "Players and impostors", maxImp: "Maximum: everyone but one. Usually at most half.",
+    warnImp: "With this many impostors, hardly anyone knows the word.", register: "Register the players", nameN: (i) => "Player " + i, nameErr: "Enter a name for every player.", dupErr: "There are repeated names.",
+    start: "Deal the words", whoAreYou: "Tap your name", whoLead: "Look at your card in secret, then pass the phone.", seen: "seen", allSeen: "Start the game", pending: (n) => n + " still to look",
+    category: "Category", tapReveal: "Tap to reveal", tapHide: "Tap to hide", imp: "YOU ARE THE IMPOSTOR", done: "Done, hide", back: "Back",
+    playing: "Let's play!", starts: "Starts", discuss: "Each player gives a clue about the word without saying it. Find the impostor!", revealN: (n) => "Reveal impostor " + n, isImp: "was the impostor", theWord: "The word was", revealWord: "Reveal the word", toScores: "Count points",
+    scores: "Points", rules: ["+2 impostor survives", "−1 impostor caught"], impTag: "impostor", nextWord: "Next word", end: "End game", endConfirm: "End and start over? Points will be erased.", resetScores: "Reset points",
+    help: "How to play", helpBody: ["One phone, passed around.", "Everyone gets the same secret word except the impostor(s), who only know the category.", "In turns, each player gives a clue about the word without naming it. The impostor bluffs.", "At the end, vote for the impostor.", "If they survive: +2 points. If caught: −1 point."], close: "Close",
+  },
+};
+const EMO = { comida: "🍕", animales: "🦁", futbolistas: "⚽", ciudades: "🌍", objetos: "🔑", oficios: "👷", pop: "⭐", marcas: "🏷️" };
+const CATS = Object.keys(window.IMPOSTOR_WORDS);
+let UI = PAS.prefs().ui || ((navigator.language || "es").startsWith("en") ? "en" : "es");
+const t = () => T[UI];
+
+/* ── aleatoriedad con la API criptográfica del navegador (sin sesgo de módulo) ── */
+function rnd(n) {
+  if (n <= 1) return 0;
+  const lim = Math.floor(0x100000000 / n) * n, b = new Uint32Array(1);
+  do crypto.getRandomValues(b); while (b[0] >= lim);
+  return b[0] % n;
+}
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+/* ── estado (se guarda para no perder la partida si se recarga la página) ── */
+const KEY = "imp.state";
+const fresh = () => ({ screen: "cats", cats: CATS.slice(), n: 4, k: 1, names: [], scores: [], used: {}, round: null });
+let S = Object.assign(fresh(), PAS.get(KEY, {}));
+if (!Array.isArray(S.cats) || !S.cats.every((c) => CATS.includes(c))) S = fresh();
+const save = () => PAS.set(KEY, S);
+const maxK = () => S.n - 1;
+
+/* Elige categoría y palabra: categoría al azar entre las marcadas, palabra sin repetir hasta agotar */
+function pickWord() {
+  const cat = S.cats[rnd(S.cats.length)], all = window.IMPOSTOR_WORDS[cat];
+  let left = all.filter((w) => !(S.used[cat] || []).includes(w));
+  if (!left.length) { S.used[cat] = []; left = all.slice(); }
+  const word = left[rnd(left.length)]; (S.used[cat] = S.used[cat] || []).push(word);
+  return { cat, word };
+}
+function newRound() {
+  const { cat, word } = pickWord(), order = shuffle([...Array(S.names.length).keys()]);
+  S.round = { cat, word, imps: order.slice(0, S.k), seen: [], first: rnd(S.names.length), revealed: 0, wordShown: false };
+  S.screen = "cards"; save(); render();
+}
+
+/* ── pantallas ── */
+function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+function btn(txt, cls, fn) { const b = el("button", cls, txt); b.type = "button"; b.onclick = fn; return b; }
+const go = (s) => { S.screen = s; save(); render(); scrollTo(0, 0); };
+
+function vCats(a) {
+  a.append(el("h2", 0, t().pickCats), el("p", "lead", t().pickLead));
+  const g = el("div", "cats"); a.append(g);
+  for (const c of CATS) {
+    const b = el("button", "cat"); b.type = "button"; b.setAttribute("aria-pressed", S.cats.includes(c));
+    b.innerHTML = `<span class="e">${EMO[c]}</span><span>${t().cat[c]}<small>${t().refs(window.IMPOSTOR_WORDS[c].length)}</small></span>`;
+    b.onclick = () => { S.cats = S.cats.includes(c) ? S.cats.filter((x) => x !== c) : CATS.filter((x) => x === c || S.cats.includes(x)); save(); render(); };
+    g.append(b);
+  }
+  const r = el("div", "btns"); a.append(r);
+  const two = el("div", "row"); two.append(btn(t().all, "btn", () => { S.cats = CATS.slice(); save(); render(); }), btn(t().none, "btn", () => { S.cats = []; save(); render(); })); two.style.justifyContent = "center";
+  const nx = btn(t().next, "big", () => go("settings")); nx.disabled = !S.cats.length;
+  r.append(two, nx);
+}
+function stepper(label, val, min, max, set) {
+  const r = el("div", "row"), s = el("div", "step"), o = el("output", 0, val);
+  const m = btn("−", 0, () => set(val - 1)), p = btn("+", 0, () => set(val + 1)); m.disabled = val <= min; p.disabled = val >= max;
+  m.setAttribute("aria-label", "−"); p.setAttribute("aria-label", "+");
+  s.append(m, o, p); r.append(el("b", 0, label), s); return r;
+}
+function vSettings(a) {
+  a.append(el("h2", 0, t().settings));
+  a.append(stepper(t().players, S.n, 3, 20, (v) => { S.n = v; S.k = Math.min(S.k, maxK()); save(); render(); }));
+  a.append(stepper(t().impostors, S.k, 1, maxK(), (v) => { S.k = v; save(); render(); }));
+  a.append(el("p", "lead", S.k > S.n / 2 ? "⚠️ " + t().warnImp : t().maxImp));
+  const r = el("div", "btns"); r.append(btn(t().next, "big", () => { S.names = Array.from({ length: S.n }, (_, i) => S.names[i] || ""); go("names"); }), btn(t().back, "big alt", () => go("cats"))); a.append(r);
+}
+function vNames(a) {
+  a.append(el("h2", 0, t().register));
+  const box = el("div", "names"), inputs = [];
+  S.names.forEach((nm, i) => { const inp = el("input", "nm"); inp.value = nm; inp.maxLength = 18; inp.placeholder = t().nameN(i + 1); inp.autocomplete = "off"; inp.setAttribute("aria-label", t().nameN(i + 1)); inp.oninput = () => { S.names[i] = inp.value; save(); err.textContent = ""; }; inputs.push(inp); box.append(inp); });
+  const err = el("p", "err"); a.append(box, err);
+  const r = el("div", "btns");
+  r.append(btn(t().start, "big", () => {
+    const ns = S.names.map((x) => x.trim()); S.names = ns;
+    if (ns.some((x) => !x)) { err.textContent = t().nameErr; return; }
+    if (new Set(ns.map((x) => x.toLowerCase())).size !== ns.length) { err.textContent = t().dupErr; return; }
+    S.scores = ns.map((_, i) => S.scores[i] || 0); newRound();
+  }), btn(t().back, "big alt", () => go("settings"))); a.append(r);
+  if (inputs[0] && !S.names[0]) inputs[0].focus();
+}
+function vCards(a) {
+  const R = S.round; a.append(el("h2", 0, t().whoAreYou), el("p", "lead", t().whoLead));
+  const box = el("div", "names"); a.append(box);
+  S.names.forEach((nm, i) => { const done = R.seen.includes(i), b = el("button", "pbtn" + (done ? " seen" : "")); b.type = "button"; b.append(el("span", 0, nm)); if (done) b.append(el("i", 0, "✓ " + t().seen)); b.onclick = () => { S.cardOf = i; go("card"); }; box.append(b); });
+  const left = S.names.length - R.seen.length, r = el("div", "btns");
+  const st = btn(left ? t().pending(left) : t().allSeen, "big", () => go("play")); st.disabled = left > 0; r.append(st); a.append(r);
+}
+function vCard(a) {
+  const R = S.round, i = S.cardOf, isImp = R.imps.includes(i), c = el("div", "card");
+  const sec = el("div", "", ""); sec.id = "secret"; if (isImp) sec.classList.add("imp");
+  const sp = el("span", 0, isImp ? t().imp : R.word), hint = el("small", 0, t().tapReveal); sec.append(sp, hint);
+  const toggle = () => { const on = sec.classList.toggle("on"); hint.textContent = on ? t().tapHide : t().tapReveal; };
+  sec.onclick = toggle; sec.tabIndex = 0; sec.setAttribute("role", "button"); sec.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
+  c.append(el("div", "who", S.names[i]), el("div", "cat2", t().category + ": " + t().cat[R.cat]), sec); a.append(c);
+  const r = el("div", "btns"); r.append(btn(t().done, "big", () => { if (!R.seen.includes(i)) R.seen.push(i); go("cards"); })); a.append(r);
+}
+function vPlay(a) {
+  const R = S.round, c = el("div", "play"); a.append(c);
+  c.append(el("h2", 0, t().playing));
+  const f = el("p", "first"); f.innerHTML = `${t().starts}: <b></b>`; f.querySelector("b").textContent = S.names[R.first]; c.append(f, el("p", "lead", t().discuss));
+  for (let j = 0; j < R.imps.length; j++) {
+    const shown = j < R.revealed;
+    if (shown) c.append(el("div", "rev done", `🕵️ ${S.names[R.imps[j]]} ${t().isImp}`));
+    else if (j === R.revealed) c.append(btn(t().revealN(j + 1), "rev", () => { R.revealed++; save(); render(); }));
+  }
+  if (R.revealed >= R.imps.length || R.wordShown) {
+    if (R.wordShown) { const w = el("p", "word"); w.innerHTML = `${t().theWord}: <b></b>`; w.querySelector("b").textContent = R.word; c.append(w); }
+    else c.append(btn(t().revealWord, "big alt", () => { R.wordShown = true; save(); render(); }));
+  }
+  const r = el("div", "btns"); r.append(btn(t().toScores, "big", () => go("scores"))); a.append(r);
+}
+function vScores(a) {
+  const R = S.round; a.append(el("h2", 0, t().scores));
+  const ru = el("div", "rules"); for (const x of t().rules) ru.append(el("span", 0, x)); a.append(ru);
+  const box = el("div", "names"); a.append(box);
+  S.names.forEach((nm, i) => {
+    const row = el("div", "srow"), n = el("div", "n", nm); if (R && R.imps.includes(i)) n.append(el("small", 0, "🕵️ " + t().impTag));
+    const out = el("output", 0, S.scores[i]), m = btn("−", "m", () => { S.scores[i]--; out.textContent = S.scores[i]; save(); }), p = btn("+", "p", () => { S.scores[i]++; out.textContent = S.scores[i]; save(); });
+    m.setAttribute("aria-label", "−1 " + nm); p.setAttribute("aria-label", "+1 " + nm); row.append(n, m, out, p); box.append(row);
+  });
+  const r = el("div", "btns");
+  r.append(btn(t().nextWord, "big", newRound), btn(t().resetScores, "big alt", () => { S.scores = S.names.map(() => 0); save(); render(); }), btn(t().end, "big alt", () => { if (confirm(t().endConfirm)) { S = Object.assign(fresh(), { cats: S.cats, n: S.n, k: S.k, names: S.names }); S.screen = "cats"; save(); render(); } }));
+  a.append(r);
+}
+const VIEWS = { cats: vCats, settings: vSettings, names: vNames, cards: vCards, card: vCard, play: vPlay, scores: vScores };
+function render() {
+  if (["cards", "card", "play", "scores"].includes(S.screen) && !S.round) S.screen = "cats";
+  const a = $("app"); a.textContent = ""; document.documentElement.lang = UI; $("title").textContent = t().title; document.title = t().title + " · Pasatiempos"; $("bLang").textContent = UI === "es" ? "EN" : "ES";
+  VIEWS[S.screen](a);
+}
+$("bLang").onclick = () => { UI = UI === "es" ? "en" : "es"; PAS.setPrefs({ ui: UI }); render(); };
+$("bTheme").onclick = () => { const p = PAS.prefs().theme; PAS.setPrefs({ theme: p === "dark" ? "light" : p === "light" ? "auto" : "dark" }); };
+window.addEventListener("pagehide", () => { if (S.screen === "card") { S.screen = "cards"; save(); } });   // al volver, la carta no queda a la vista
+if (S.screen === "card") S.screen = "cards";
+render(); PAS.registerSW("../sw.js");
+</script>
+</body>
+</html>
