@@ -44,8 +44,8 @@ input.nm:focus{outline:0;border-color:var(--acc)}
 .card{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:14px}
 .card .who{font-size:34px;font-weight:800;word-break:break-word}
 .card .cat2{font-size:18px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-#secret{display:grid;place-items:center;min-height:150px;padding:16px;border-radius:16px;border:3px solid var(--line);background:var(--peer);font-size:clamp(26px,8vw,40px);font-weight:800;line-height:1.15;word-break:break-word;cursor:pointer;user-select:none;position:relative;overflow:hidden}
-#secret span{filter:blur(16px);transition:filter .15s}
+#secret{display:grid;place-items:center;height:170px;padding:16px;border-radius:16px;border:3px solid var(--line);background:var(--peer);font-size:clamp(24px,7vw,36px);font-weight:800;line-height:1.15;word-break:break-word;cursor:pointer;user-select:none;position:relative;overflow:hidden}
+#secret span{filter:blur(14px);transition:filter .15s;color:var(--fg);text-align:center;max-width:100%}
 #secret.on span{filter:none}
 #secret.imp{border-color:var(--acc);color:var(--acc)}
 #secret small{position:absolute;bottom:8px;left:0;right:0;font-size:13px;font-weight:600;color:var(--muted)}
@@ -85,7 +85,7 @@ const T = {
     refs: (n) => n + " referencias", players: "Jugadores", impostors: "Impostores", settings: "Jugadores e impostores", maxImp: "Máximo: todos menos uno. Lo habitual es como mucho la mitad.",
     warnImp: "Con tantos impostores, casi nadie sabe la palabra.", register: "Registra a los jugadores", nameN: (i) => "Jugador " + i, nameErr: "Escribe un nombre para cada jugador.", dupErr: "Hay nombres repetidos.",
     start: "Repartir palabras", whoAreYou: "Toca tu nombre", whoLead: "Cada uno mira su carta en secreto y pasa el móvil.", seen: "visto", allSeen: "Empezar partida", pending: (n) => "Faltan " + n + " por mirar",
-    category: "Categoría", tapReveal: "Toca para ver", tapHide: "Toca para ocultar", imp: "ERES EL IMPOSTOR", done: "Listo, ocultar", back: "Volver",
+    category: "Categoría", tapReveal: "Toca para ver", decoy: "Palabra secreta aquí", tapHide: "Toca para ocultar", imp: "ERES EL IMPOSTOR", done: "Listo, ocultar", back: "Volver",
     playing: "¡A jugar!", starts: "Empieza", discuss: "Cada uno da una pista sobre la palabra sin decirla. ¡Descubrid al impostor!", revealN: (n) => "Revelar impostor " + n, isImp: "era el impostor", theWord: "La palabra era", revealWord: "Revelar la palabra", toScores: "Contar puntos",
     scores: "Puntos", rules: ["+2 impostor que sobrevive", "−1 impostor descubierto"], impTag: "impostor", nextWord: "Siguiente palabra", end: "Terminar partida", endConfirm: "¿Terminar y volver a empezar? Se borrarán los puntos.", resetScores: "Poner puntos a 0",
     help: "Cómo se juega", helpBody: ["Un solo móvil: se pasa de mano en mano.", "Todos reciben la misma palabra secreta salvo el/los impostor/es, que solo conocen la categoría.", "Por turnos, cada jugador dice una pista sobre la palabra sin nombrarla. El impostor disimula.", "Al final se vota quién es el impostor.", "Si sobrevive: +2 puntos. Si lo descubren: −1 punto."], close: "Cerrar",
@@ -96,7 +96,7 @@ const T = {
     refs: (n) => n + " items", players: "Players", impostors: "Impostors", settings: "Players and impostors", maxImp: "Maximum: everyone but one. Usually at most half.",
     warnImp: "With this many impostors, hardly anyone knows the word.", register: "Register the players", nameN: (i) => "Player " + i, nameErr: "Enter a name for every player.", dupErr: "There are repeated names.",
     start: "Deal the words", whoAreYou: "Tap your name", whoLead: "Look at your card in secret, then pass the phone.", seen: "seen", allSeen: "Start the game", pending: (n) => n + " still to look",
-    category: "Category", tapReveal: "Tap to reveal", tapHide: "Tap to hide", imp: "YOU ARE THE IMPOSTOR", done: "Done, hide", back: "Back",
+    category: "Category", tapReveal: "Tap to reveal", decoy: "Secret word goes here", tapHide: "Tap to hide", imp: "YOU ARE THE IMPOSTOR", done: "Done, hide", back: "Back",
     playing: "Let's play!", starts: "Starts", discuss: "Each player gives a clue about the word without saying it. Find the impostor!", revealN: (n) => "Reveal impostor " + n, isImp: "was the impostor", theWord: "The word was", revealWord: "Reveal the word", toScores: "Count points",
     scores: "Points", rules: ["+2 impostor survives", "−1 impostor caught"], impTag: "impostor", nextWord: "Next word", end: "End game", endConfirm: "End and start over? Points will be erased.", resetScores: "Reset points",
     help: "How to play", helpBody: ["One phone, passed around.", "Everyone gets the same secret word except the impostor(s), who only know the category.", "In turns, each player gives a clue about the word without naming it. The impostor bluffs.", "At the end, vote for the impostor.", "If they survive: +2 points. If caught: −1 point."], close: "Close",
@@ -128,7 +128,7 @@ const maxK = () => S.n - 1;
 function pickWord() {
   const cat = S.cats[rnd(S.cats.length)], all = window.IMPOSTOR_WORDS[cat];
   let left = all.filter((w) => !(S.used[cat] || []).includes(w));
-  if (!left.length) { S.used[cat] = []; left = all.slice(); }
+  if (!left.length) { const last = (S.used[cat] || []).slice(-1)[0]; S.used[cat] = []; left = all.filter((w) => w !== last); }   // al rebarajar no se repite la última
   const word = left[rnd(left.length)]; (S.used[cat] = S.used[cat] || []).push(word);
   return { cat, word };
 }
@@ -193,10 +193,12 @@ function vCards(a) {
 }
 function vCard(a) {
   const R = S.round, i = S.cardOf, isImp = R.imps.includes(i), c = el("div", "card");
-  const sec = el("div", "", ""); sec.id = "secret"; if (isImp) sec.classList.add("imp");
-  const sp = el("span", 0, isImp ? t().imp : R.word), hint = el("small", 0, t().tapReveal); sec.append(sp, hint);
-  const toggle = () => { const on = sec.classList.toggle("on"); hint.textContent = on ? t().tapHide : t().tapReveal; };
-  sec.onclick = toggle; sec.tabIndex = 0; sec.setAttribute("role", "button"); sec.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
+  /* Oculta no solo con blur: mientras está tapada, el recuadro muestra un texto señuelo idéntico para todos
+     (mismo largo, mismo color, mismo borde), así el difuminado no delata si eres impostor ni cuánto mide la palabra. */
+  const sec = el("div", "", ""); sec.id = "secret";
+  const real = isImp ? t().imp : R.word, decoy = t().decoy, sp = el("span", 0, decoy), hint = el("small", 0, t().tapReveal); sec.append(sp, hint);
+  const toggle = () => { const on = sec.classList.toggle("on"); sp.textContent = on ? real : decoy; sec.classList.toggle("imp", on && isImp); hint.textContent = on ? t().tapHide : t().tapReveal; };
+  sec.onclick = toggle; sec.tabIndex = 0; sec.setAttribute("role", "button"); sec.setAttribute("aria-label", t().tapReveal); sec.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
   c.append(el("div", "who", S.names[i]), el("div", "cat2", t().category + ": " + t().cat[R.cat]), sec); a.append(c);
   const r = el("div", "btns"); r.append(btn(t().done, "big", () => { if (!R.seen.includes(i)) R.seen.push(i); go("cards"); })); a.append(r);
 }
